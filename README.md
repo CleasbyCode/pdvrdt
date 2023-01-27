@@ -7,6 +7,8 @@ Embed & extract arbitrary data of up to ~1MB within a PNG image. You can then up
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/demo_image.png)  
 {***Image demo: PNG image embedded with pdf document***} 
 
+[pdvrdt for Reddit Video Demo](https://www.youtube.com/watch_popup?v=xK7pxxl6Ro0)
+
 ***PDVRDT data embedded images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
 
 This program works on Linux and Windows.
