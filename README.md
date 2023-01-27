@@ -5,9 +5,9 @@ PNG Data Vehicle for **Reddit**, (PDVRDT v1.0).
 Embed & extract arbitrary data of up to ~1MB within a PNG image. You can then upload and share your data embedded image file on **Reddit**. 
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/demo_image.png)  
-{***Image demo: PNG image embedded with pdf document***} 
+{***Image demo: PDF document embedded within PNG image***} 
 
-[**pdvrdt for Reddit Video Demo**](https://www.youtube.com/watch_popup?v=xK7pxxl6Ro0)
+[**PDVRDT for Reddit Video Demo**](https://www.youtube.com/watch_popup?v=xK7pxxl6Ro0)
 
 ***Note: PDVRDT data embedded images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
 
