@@ -9,7 +9,7 @@ Embed & extract arbitrary data of up to ~1MB within a PNG image. You can then up
 
 [**pdvrdt for Reddit Video Demo**](https://www.youtube.com/watch_popup?v=xK7pxxl6Ro0)
 
-***PDVRDT data embedded images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
+***Note: PDVRDT data embedded images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
 
 This program works on Linux and Windows.
 
