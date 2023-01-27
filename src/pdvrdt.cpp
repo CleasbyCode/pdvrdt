@@ -78,10 +78,9 @@ void processFiles(char* argv[]) {
 
 	// Open file success, now check file size requirements.
 	const int
-		MAX_PNG_SIZE_BYTES = 19922944,		  // Reddit PNG size limit set at 19MB.
+		MAX_PNG_SIZE_BYTES = 19922944,		// Reddit PNG size limit set at 19MB.
 		MAX_DATAFILE_SIZE_BYTES = 1048444;	// 1MB (1,048,576 bytes max zlib uncompressed iCCP file size) - 132 bytes 
-											                  // = 1,048,444 bytes max zlib uncompressed size for arbitary data.
-
+							// = 1,048,444 bytes max zlib uncompressed size for arbitary data.
 	// Get size of files.
 	readImg.seekg(0, readImg.end),
 	readFile.seekg(0, readFile.end);
@@ -93,10 +92,10 @@ void processFiles(char* argv[]) {
 	if ((IMG_SIZE + MAX_DATAFILE_SIZE_BYTES) > MAX_PNG_SIZE_BYTES
 		|| DATA_SIZE > MAX_DATAFILE_SIZE_BYTES) {
 
-		// File size check failure, display relevant error message and terminate program.
+		// File size check failure, display relevant error message and exit program.
 		const std::string
-			SIZE_ERR_PNG = "\nSize Error: PNG image must not exceed Reddit's file size limit of 19MB.\n\n",
-			SIZE_ERR_DATA = "\nSize Error: Your data file must not exceed 1,048,444 bytes.\n\n",
+			SIZE_ERR_PNG = "\nFile Size Error: PNG image must not exceed Reddit's file size limit of 19MB.\n\n",
+			SIZE_ERR_DATA = "\nFile Size Error: Your data file must not exceed 1,048,444 bytes.\n\n",
 
 		ERR_MSG = IMG_SIZE + MAX_DATAFILE_SIZE_BYTES > MAX_PNG_SIZE_BYTES ? SIZE_ERR_PNG :  SIZE_ERR_DATA;
 
@@ -112,7 +111,7 @@ void processFiles(char* argv[]) {
 void processEmbeddedImage(char* argv[]) {
 
 	const std::string IMG_FILE = argv[1];
-	const int MAX_PNG_SIZE = 20971520;		// Don't allow image files greater than 20MB.
+	const int MAX_PNG_SIZE = 20971520;	// Don't allow image files greater than 20MB.
 
 	std::ifstream readImg(IMG_FILE, std::ios::binary);
 
@@ -122,7 +121,7 @@ void processEmbeddedImage(char* argv[]) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	// Get size of files.
+	// Get size of file.
 	readImg.seekg(0, readImg.end);
 
 	const ptrdiff_t IMG_SIZE = readImg.tellg();
@@ -132,8 +131,10 @@ void processEmbeddedImage(char* argv[]) {
 		std::exit(EXIT_FAILURE);
 	}
 
+	// Reset file position.
 	readImg.seekg(0, readImg.beg);
 
+	// Image file will be stored in this vector.
 	std::vector<unsigned char> image_file_vec{ 0 / sizeof(unsigned char) };
 
 	// Read PNG image file into vector "image_file_vec", begining at index location 0.
@@ -153,12 +154,13 @@ void processEmbeddedImage(char* argv[]) {
 	}
 
 	int
-		iccpLengthIndex = 33, // Start of index location of 4 byte iCCP chunk length field.
-		iccpChunkLength = (image_file_vec[iccpLengthIndex + 1] << 16) | image_file_vec[iccpLengthIndex + 2] << 8 | image_file_vec[iccpLengthIndex + 3], // Get iCCP chunk length.
-		zlibChunkIndex = 54, // Start of index location of zlib chunk within iCCP chunk (78,9C...)
+		iccpLengthIndex = 33, 	// Start of index location of 4 byte iCCP chunk length field.
+					// Get iCCP chunk length.
+		iccpChunkLength = (image_file_vec[iccpLengthIndex + 1] << 16) | image_file_vec[iccpLengthIndex + 2] << 8 | image_file_vec[iccpLengthIndex + 3], 
+		zlibChunkIndex = 54, 	// Start of index location of zlib chunk within iCCP chunk (78,9C...)
 		zlibChunkSize = iccpChunkLength - 13; 
 
-	// Erase top part of image_file_vec (53 bytes), so that start of vector is the beginning of the zlib chunk.
+	// Erase top part of image_file_vec (54 bytes), so that start of vector is the beginning of the zlib chunk.
 	image_file_vec.erase(image_file_vec.begin(), image_file_vec.begin() + zlibChunkIndex);
 
 	// Erase all bytes of image_file_vec after zlib chunk. image_file_vec should now just contain the zlib chunk.
@@ -191,7 +193,8 @@ void processEmbeddedImage(char* argv[]) {
 	readTmp.seekg(0, readTmp.end);
 
 	const ptrdiff_t TMP_SIZE = readTmp.tellg();
-
+	
+	// Reset file position. 
 	readTmp.seekg(0, readTmp.beg);
 
 	tmp_file_vec.resize(TMP_SIZE / sizeof(unsigned char));
@@ -206,6 +209,9 @@ void processEmbeddedImage(char* argv[]) {
 
 		// File requirements check failure, display relevant error message and exit program.
 		std::cerr << "\nProfile Error: iCCP Profile does not seem to be a PDVRDT embedded profile.\n\n";
+		readTmp.close();
+		remove("PDV_EMBEDDED_PROFILE_TMP.z");
+		remove("PDV_EMBEDDED_PROFILE_TMP");
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -331,6 +337,9 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 
 		// Open file failure, display relevant error message and exit program.
 		std::cerr << "Read Error: Unable to open PDV_PROFILE_TMP.z\n\n";
+		readProfile.close();
+		remove("PDV_PROFILE_TMP.z");
+		remove("PDV_PROFILE_TMP");
 		std::exit(EXIT_FAILURE);
 	}
 
