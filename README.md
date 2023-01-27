@@ -31,7 +31,7 @@ Your file will be compressed again in zlib format when embedded into the image f
 
 Compile and run the program under Windows or **Linux**.
 
-## Usage (Linux)
+## Usage (Linux - Inserting data file into PNG image)
 
 ```c
 $ g++ pdvrdt.cpp -o pdvrdt
@@ -55,6 +55,10 @@ Created output file: pdv_embedded_image_file.png
 
 All done! You can now upload and share this data embedded PNG image on Reddit.
 
+```
+## Usage (Linux - Extacting data file from PNG image)
+
+```c
 $ ./pdvrdt
 
 Usage:-
