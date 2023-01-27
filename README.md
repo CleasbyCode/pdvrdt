@@ -16,13 +16,16 @@ This program works on Linux and Windows.
 PDVRDT currently requires the external program '***zlib-flate***'.
 
 If not already installed, you can install zlib-flate for Linux with '***apt install qpdf***'.  
-For Windows you can download the installer from [***Sourceforge***](https://sourceforge.net/projects/qpdf/)
+
+For Windows you can download the installer from [***Sourceforge***](https://sourceforge.net/projects/qpdf/).  
+After installing on Windows, make sure to add the path to your environment variables system path (e.g. **C:\Program Files\qpdf 11.2.0\bin**).
  
 1,048,444 bytes is the (zlib) uncompressed limit for your arbitrary data.  
 132 bytes is used for the barebones iCCP profile. (132 + 1048444 = 1,048,576 / 1MB).
 
-To maximise the amount of data you can embed in your image file, I recommend compressing your 
-data file(s) to zip, rar, etc. Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
+To maximise the amount of data you can embed in your image file, I recommend first compressing your 
+data file(s) to zip, rar, etc.  
+Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
 
 Your file will be compressed again in zlib format when embedded into the image file (iCCP profile chunk).
 
