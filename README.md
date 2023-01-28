@@ -82,4 +82,9 @@ All done! Embedded data file has been extracted from PNG image. Please check you
 $
 ```
 
+Other editions of **pdv** you may find useful:-  
+
+* [pdvzip - PNG Data Vehicle for Twitter, ZIP Edition](https://github.com/CleasbyCode/pdvzip)  
+* [pdvps - PNG Data Vehicle for Twitter, PowerShell Edition](https://github.com/CleasbyCode/pdvps)   
+
 ##
