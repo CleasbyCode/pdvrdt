@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 		displayInfo();
 	}
 	else if (argc < 2 || argc > 3) {
-		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\tExtract: pdvrdt  <png_image>\n\tHelp:\t pdvrdt  --info\n\n";
+		std::cout << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\tExtract: pdvrdt  <png_image>\n\tHelp:\t pdvrdt  --info\n\n";
 	}
 	else if (argc == 3) {
 		processFiles(argv);
@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-// Attempt to open user supplied files. Check file sizes meet requirements.
+// Attempt to open user image and data file. Check file sizes meet program requirements.
 void processFiles(char* argv[]) {
 
 	const std::string
@@ -108,7 +108,7 @@ void processFiles(char* argv[]) {
 	readFilesIntoVectors(readImg, readFile, IMG_FILE, DATA_FILE, IMG_SIZE, DATA_SIZE);
 }
 
-// Attempt to open user supplied PNG image & extract embedded data file from this image file.
+// Attempt to open user image file and extract embedded data file from it.
 void processEmbeddedImage(char* argv[]) {
 
 	const std::string IMG_FILE = argv[1];
