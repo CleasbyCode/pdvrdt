@@ -408,7 +408,7 @@ void eraseChunks(std::vector<unsigned char>& image_file_vec) {
 	while (chunk--) {
 		const ptrdiff_t CHUNK_INDEX = search(image_file_vec.begin(), image_file_vec.end(), CHUNKS_TO_REMOVE[chunk].begin(), CHUNKS_TO_REMOVE[chunk].end()) - image_file_vec.begin() - 4;
 		if (firstIdatIndex > CHUNK_INDEX) {
-			int chunkLength = (image_file_vec[CHUNK_INDEX + 2] << 8) | image_file_vec[CHUNK_INDEX + 3];
+			int chunkLength = ( image_file_vec[CHUNK_INDEX + 1] << 16) | image_file_vec[CHUNK_INDEX + 2] << 8 | image_file_vec[CHUNK_INDEX + 3];
 			image_file_vec.erase(image_file_vec.begin() + CHUNK_INDEX, image_file_vec.begin() + CHUNK_INDEX + (chunkLength + 12));
 			// Update first IDAT index location after removing found chunk
 			firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), IDAT_ID.begin(), IDAT_ID.end()) - image_file_vec.begin() - 4;
