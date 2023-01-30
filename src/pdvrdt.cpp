@@ -239,7 +239,7 @@ void processEmbeddedImage(char* argv[]) {
 void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const std::string& IMG_FILE, const std::string& DATA_FILE, const ptrdiff_t& IMG_SIZE, const ptrdiff_t& DATA_SIZE) {
 
 	// User data file inserted and stored at the end of this uncompressed iCCP file.
-	// The first 132 bytes of this barebones iCCP file is not really required, but it does prevent some image dispay programs from showing an error message.
+	// The first 132 bytes of this barebones iCCP file is not really required, but it does prevent some image display programs from showing an error message.
 	std::vector<unsigned char>
 		iccp_file_vec{
 			0x00, 0x00, 0x00, 0x00, 0x20, 0x50, 0x44, 0x56, 0x52, 0x44, 0x54, 0x20,
