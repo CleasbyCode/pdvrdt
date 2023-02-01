@@ -44,17 +44,12 @@ Usage:-
 	Extract: pdvrdt  <png_image>
 	Help:	 pdvrdt  --info
 
-$ ./pdvrdt demo_image.png training_file.pdf
+$ ./pdvrdt boat.png document.pdf
 
-Created output file: PDV_PROFILE_TMP
-
-Using zlib-flate to compress PDV_PROFILE_TMP
-
-zlib-flate created compressed output file: PDV_PROFILE_TMP.z
-
-Created output file: pdv_embedded_image_file.png
-
-All done! You can now upload and share this data embedded PNG image on Reddit.
+All done!  
+  
+Created output file: 'pdvrdt_image_file.png'
+You can now upload and share this PNG image on Reddit.
 
 ```
 ## Usage (Linux - Extacting data file from PNG image)
@@ -67,19 +62,12 @@ Usage:-
 	Extract: pdvrdt  <png_image>
 	Help:	 pdvrdt  --info
         
-$ ./pdvrdt pdv_embedded_image_file.png
+$ ./pdvrdt pdvrdt_image_file.png
 
-Created output file: PDV_EMBEDDED_PROFILE_TMP.z
+All done!
 
-Using zlib-flate to uncompress PDV_EMBEDDED_PROFILE_TMP.z
+Created output file: 'pdvrdt_extracted_file.pdf'
 
-zlib-flate created uncompressed output file: PDV_EMBEDDED_PROFILE_TMP
-
-Created output file: pdv_extracted_file.pdf
-
-All done! Embedded data file has been extracted from PNG image. Please check your file.
-
-$
 ```
 
 Other editions of **pdv** you may find useful:-  
