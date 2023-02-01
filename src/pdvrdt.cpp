@@ -6,37 +6,45 @@
 #include <string>
 #include <vector>
 
-// The following two functions to compute CRC for the iCCP chunk (slightly modified by me) was taken from: https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
+// The following two functions to compute CRC (slightly modified) was taken from: https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
 
-// Update a running CRC with the bytes buf[0..len-1]--the CRC should be initialized to all 1's, 
-// and the transmitted value is the 1's complement of the final running CRC.
-unsigned long updateCrc(const unsigned long&, unsigned char*, const size_t&);
+	unsigned long updateCrc(const unsigned long&, unsigned char*, const size_t&);
 
-// Return the CRC of the bytes buf[0..len-1].
-unsigned long crc(unsigned char*, const size_t&);
+	unsigned long crc(unsigned char*, const size_t&);
 
 //  End of CRC functions.
 
-// Open user image & data file. Display error and exit program if any file fails to open.
+// Open user image & data file and check file size requirements. Display error & exit program if any file fails to open or exceeds file size limits.
 void processFiles(char* []);
 
-// Open user data embedded PNG image, then proceed to extract embedded data from the image. 
+// Open pdvrdt embedded PNG image file, then proceed to extract data file from the image. 
 void processEmbeddedImage(char* []);
 
 // Read in and store PNG image & data file into vectors.
 void readFilesIntoVectors(std::ifstream&, std::ifstream&, const std::string&, const std::string&, const ptrdiff_t&, const ptrdiff_t&);
 
-// Search and remove chunks types in the PNG image. 
+// Find and remove chunk types from the PNG image. 
 void eraseChunks(std::vector<unsigned char>&);
 
 // Write vector contents out to file.
 void writeFile(std::vector<unsigned char>&, const std::string&);
 
-// Function used to insert updated chunk length or CRC values into relevant vector index locations.
+// Inserts updated chunk length or CRC values into relevant vector index locations.
 void insertChunkLength(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
 
-// Display program help information.
+// Display program infomation.
 void displayInfo();
+
+const std::string
+	ICCP_ID = "iCCPICC\x20Profile",
+	PDV_ID = "\x20PDVRDT\x20",
+	PNG_ID = "\x89PNG",
+	EMBEDDED_FILE = "pdvrdt_image_file.png",
+	READ_ERR_MSG = "\nRead Error: Unable to open/read file: ",
+	TMP_COMPRESSED_FILE = "PDVRDT_PROFILE_TMP.z",
+	TMP_UNCOMPRESSED_FILE = "PDVRDT_PROFILE_TMP",
+	ZLIB_UNCOMPRESS_CMD = "zlib-flate -uncompress < " + TMP_COMPRESSED_FILE + " > " + TMP_UNCOMPRESSED_FILE,
+	ZLIB_COMPRESS_CMD = "zlib-flate -compress < " + TMP_UNCOMPRESSED_FILE + " > " + TMP_COMPRESSED_FILE;
 
 int main(int argc, char** argv) {
 
@@ -44,7 +52,7 @@ int main(int argc, char** argv) {
 		displayInfo();
 	}
 	else if (argc < 2 || argc > 3) {
-		std::cout << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\tExtract: pdvrdt  <png_image>\n\tHelp:\t pdvrdt  --info\n\n";
+		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\tExtract: pdvrdt  <png_image>\n\tHelp:\t pdvrdt  --info\n\n";
 	}
 	else if (argc == 3) {
 		processFiles(argv);
@@ -55,7 +63,6 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-// Attempt to open user image and data file. Check file sizes meet program requirements.
 void processFiles(char* argv[]) {
 
 	const std::string
@@ -68,10 +75,8 @@ void processFiles(char* argv[]) {
 
 	if (!readImg || !readFile) {
 
-		// Open file failure, display relevant error message and terminate program.
-		const std::string
-			READ_ERR_MSG = "Read Error: Unable to open/read file: ",
-			ERR_MSG = !readImg ? "\nPNG " + READ_ERR_MSG + "'" + IMG_FILE + "'\n\n" : "\nData " + READ_ERR_MSG + "'" + DATA_FILE + "'\n\n";
+		// Open file failure, display relevant error message and exit program.
+		const std::string ERR_MSG = !readImg ? READ_ERR_MSG + "'" + IMG_FILE + "'\n\n" : READ_ERR_MSG + "'" + DATA_FILE + "'\n\n";
 
 		std::cerr << ERR_MSG;
 		std::exit(EXIT_FAILURE);
@@ -95,7 +100,7 @@ void processFiles(char* argv[]) {
 
 		// File size check failure, display relevant error message and exit program.
 		const std::string
-			SIZE_ERR_PNG = "\nFile Size Error: PNG image must not exceed Reddit's file size limit of 19MB.\n\n",
+			SIZE_ERR_PNG = "\nImage Size Error: PNG image must not exceed Reddit's file size limit of 19MB.\n\n",
 			SIZE_ERR_DATA = "\nFile Size Error: Your data file must not exceed 1,048,444 bytes.\n\n",
 
 		ERR_MSG = IMG_SIZE + MAX_DATAFILE_SIZE_BYTES > MAX_PNG_SIZE_BYTES ? SIZE_ERR_PNG :  SIZE_ERR_DATA;
@@ -108,138 +113,96 @@ void processFiles(char* argv[]) {
 	readFilesIntoVectors(readImg, readFile, IMG_FILE, DATA_FILE, IMG_SIZE, DATA_SIZE);
 }
 
-// Attempt to open user image file and extract embedded data file from it.
+// Extract embedded data file from PNG image.
 void processEmbeddedImage(char* argv[]) {
 
 	const std::string IMG_FILE = argv[1];
-	const int MAX_PNG_SIZE = 20971520;	// Don't allow image files greater than 20MB.
 
 	std::ifstream readImg(IMG_FILE, std::ios::binary);
-	
+
 	if (!readImg) {
-
-		std::cerr << "PNG Read Error: Unable to open/read file: '" + IMG_FILE + "'\n\n";
+		std::cerr << READ_ERR_MSG + IMG_FILE + "'\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
-	// Get size of image file.
-	readImg.seekg(0, readImg.end);
+	// Read pdvrdt data embedded PNG image into vector "image_file_vec".
+	std::vector<unsigned char> image_file_vec((std::istreambuf_iterator<char>(readImg)), std::istreambuf_iterator<char>());
 
-	const ptrdiff_t IMG_SIZE = readImg.tellg();
+	// Check for iCCP profile chunk.
+	const std::string ICCP_CHECK{ image_file_vec.begin() + 37, image_file_vec.begin() + 37 + ICCP_ID.length() };	// Attemp to get iCCP id from vector.
 
-	if (IMG_SIZE > MAX_PNG_SIZE) {
-		std::cerr << "\nPNG Size Error: Image too large. File is greater than 20MB.\n\n";
-		std::exit(EXIT_FAILURE);
-	}
+	if (ICCP_CHECK != ICCP_ID) {
 
-	// Reset file read position.
-	readImg.seekg(0, readImg.beg);
-
-	// Image file will be stored in this vector.
-	std::vector<unsigned char> image_file_vec{ 0 / sizeof(unsigned char) };
-
-	// Read PNG image file into vector "image_file_vec", begining at index location 0.
-	image_file_vec.resize(IMG_SIZE / sizeof(unsigned char));
-	readImg.read((char*)&image_file_vec[0], IMG_SIZE);
-
-	// Check image for iCCP profile chunk at specified vector index location.
-	const std::string 
-		ICCP_ID = "iCCPICC\x20Profile",
-		ICCP_HDR{ image_file_vec.begin() + 37, image_file_vec.begin() + 37 + ICCP_ID.length() };
-
-	if (ICCP_HDR != ICCP_ID) {
-
-		// Did not find iCCP chunk, display relevant error message and exit program.
+		// File requirements check failure, display relevant error message and exit program.
 		std::cerr << "\nPNG Error: Image file does not appear to contain a valid iCCP profile.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
 	int
-		iccpLengthIndex = 33, 	// Start of index location of 4 byte iCCP chunk length field.
-					// Get iCCP chunk length.
-		iccpChunkLength = (image_file_vec[iccpLengthIndex + 1] << 16) | image_file_vec[iccpLengthIndex + 2] << 8 | image_file_vec[iccpLengthIndex + 3], 
-		zlibChunkIndex = 54, 	// Start of index location of zlib chunk within iCCP chunk (78,9C...)
-		zlibChunkSize = iccpChunkLength - 13; 
+	iccpLengthIndex = 33, // Start of index location of 4 byte iCCP chunk length field.
+	iccpChunkLength = (image_file_vec[iccpLengthIndex + 1] << 16) | image_file_vec[iccpLengthIndex + 2] << 8 | image_file_vec[iccpLengthIndex + 3], // Get iCCP chunk length.
+	zlibChunkIndex = 54, // Start of index location of zlib compressed file within iCCP chunk (78,9C...)
+	zlibChunkSize = iccpChunkLength - 13; 
 
-	// Erase top part of image_file_vec (54 bytes), so that start of vector is the beginning of the zlib chunk (iCCP profile).
+	// From vector index 0, erase 53 bytes so that start of vector is now the beginning of the zlib compressed data.
 	image_file_vec.erase(image_file_vec.begin(), image_file_vec.begin() + zlibChunkIndex);
 
-	// Erase all bytes of image_file_vec after zlib chunk. image_file_vec should now just contain the zlib chunk.
+	// Erase all bytes of "image_file_vec" after zlib compressed file. Vector should now just contain the zlib compressed data.
 	image_file_vec.erase(image_file_vec.begin() + zlibChunkSize, image_file_vec.end());
-
-	// Write this compressed zlib chunk out to a temporary file. File will be deleted later.
-	const std::string IMG_NAME = "PDV_EMBEDDED_PROFILE_TMP.z";
-
-	writeFile(image_file_vec, IMG_NAME);
-
-	// We will now use (for the time being) the external program "zlib-flate" to uncompress the zlib chunk file.
-	// Make sure "zlib-flate" is installed.
 	
-	std::cout << "Using zlib-flate to uncompress " << IMG_NAME << "\n";
+	// Write vector contents of compressed iCCP profile out to file.
+	writeFile(image_file_vec, TMP_COMPRESSED_FILE);
 
-	system("zlib-flate -uncompress < PDV_EMBEDDED_PROFILE_TMP.z > PDV_EMBEDDED_PROFILE_TMP");
+	// We now use (for the time being) the external program "zlib-flate" to uncompress the iCCP profile.
+	system(ZLIB_UNCOMPRESS_CMD.c_str());
 
-	std::cout << "\nzlib-flate created uncompressed output file: PDV_EMBEDDED_PROFILE_TMP\n";
-	
-	// vector will store the uncompressed zlib (temporary) file.
-	std::vector<unsigned char> tmp_file_vec{ 0 / sizeof(unsigned char) };
-
-	std::ifstream readTmp("PDV_EMBEDDED_PROFILE_TMP", std::ios::binary);
+	std::ifstream readTmp(TMP_UNCOMPRESSED_FILE, std::ios::binary);
 
 	if (!readTmp) {
-		std::cerr << "Read Error: Unable to open/read file: PDV_EMBEDDED_PROFILE_TMP\n\n";
+
+		std::cerr << READ_ERR_MSG + TMP_UNCOMPRESSED_FILE + "\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
-	// Get size of file.
-	readTmp.seekg(0, readTmp.end);
-	const ptrdiff_t TMP_SIZE = readTmp.tellg();
-	
-	// Reset file read position. 
-	readTmp.seekg(0, readTmp.beg);
-	
-	// Read into vector contains for the uncompressed zlib (temporary) file.
-	tmp_file_vec.resize(TMP_SIZE / sizeof(unsigned char));
-	readTmp.read((char*)&tmp_file_vec[0], TMP_SIZE);
+	// Read in and store uncompressed iCCP profile in vector "tmp_file_vec".
+	std::vector<unsigned char> tmp_file_vec((std::istreambuf_iterator<char>(readTmp)), std::istreambuf_iterator<char>());
 
 	const std::string
-		PDV_ID = "\x20PDVRDT\x20",
-		PDV_HDR{ tmp_file_vec.begin() + 4, tmp_file_vec.begin() + 4 + PDV_ID.length() },	  // Get file header from vector.
-		FILE_EXT = { tmp_file_vec.begin() + 13, tmp_file_vec.begin() + 13 + tmp_file_vec[12] };   // Get embedded file extension from vector. 
+		PDV_CHECK{ tmp_file_vec.begin() + 4, tmp_file_vec.begin() + 4 + PDV_ID.length() },	// Attempt to get PDVRDT id from vector "tmp_file_vec".
+		FILE_EXT = { tmp_file_vec.begin() + 13, tmp_file_vec.begin() + 13 + tmp_file_vec[12] }, // Get embedded file extension from vector "tmp_file_vec". 
+		EXTRACTED_FILE = "pdvrdt_extracted_file" + FILE_EXT;
 
-	if (PDV_HDR != PDV_ID) {
+	if (PDV_CHECK != PDV_ID) {
 
-		// Did not find PDVRDT header within uncompressed zlib file, display relevant error message and exit program.
-		std::cerr << "\nProfile Error: iCCP profile (zlib file) does not seem to be a PDVRDT embedded profile.\n\n";
-		readTmp.close();
-		// Delete temporary files.
-		remove("PDV_EMBEDDED_PROFILE_TMP.z");
-		remove("PDV_EMBEDDED_PROFILE_TMP");
+		// File requirements check failure, display relevant error message and exit program.
+		std::cerr << "\nProfile Error: iCCP Profile does not seem to be a PDVRDT modified profile.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
-	// Erase 132 bytes from beginning of vector "tmp_file_vec", which removes the barebones iCCP profile data. User embedded data file remains.
+	// Erase first 132 bytes from "tmp_file_vec", which removes the barebones iCCP profile data. Embedded data file remains.
 	tmp_file_vec.erase(tmp_file_vec.begin(), tmp_file_vec.begin() + 132);
-
-	const std::string EXTRACTED_FILE = "pdv_extracted_file" + FILE_EXT;
 
 	readTmp.close();
 
 	// Delete temporary files.
-	remove("PDV_EMBEDDED_PROFILE_TMP.z");
-	remove("PDV_EMBEDDED_PROFILE_TMP");
+	remove(TMP_COMPRESSED_FILE.c_str());
+	remove(TMP_UNCOMPRESSED_FILE.c_str());
 
-	// Write user embedded data from vector out to file.
+	// Write embedded arbitrary data out to file.
 	writeFile(tmp_file_vec, EXTRACTED_FILE);
 
-	std::cout << "All done! Embedded data file has been extracted from PNG image. Please check your file.\n\n";
+	std::cout << "\nAll done!\n\nCreated output file: '" + EXTRACTED_FILE + "'\n\n";
 
 }
 
 void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const std::string& IMG_FILE, const std::string& DATA_FILE, const ptrdiff_t& IMG_SIZE, const ptrdiff_t& DATA_SIZE) {
 
-	// User data file inserted and stored at the end of this uncompressed iCCP file.
-	// The first 132 bytes of this barebones iCCP file is not really required, but it does prevent some image display programs from showing an error message.
+	// Reset position of files. 
+	readImg.seekg(0, readImg.beg),
+	readFile.seekg(0, readFile.beg);
+
+	// User data file is inserted and stored at the end of this uncompressed iCCP profile.
+	// The first 132 bytes of this vector contain the barebones (uncompressed) iCCP profile. 
 	std::vector<unsigned char>
 		iccp_file_vec{
 			0x00, 0x00, 0x00, 0x00, 0x20, 0x50, 0x44, 0x56, 0x52, 0x44, 0x54, 0x20,
@@ -254,98 +217,77 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 	},
-		// zlib compressed iCCP data chunk (including user embedded data file) will be stored here, within the PNG iCCP profile chunk.
+		// zlib compressed iCCP profile (with user data file) will be inserted and stored here, within the PNG iCCP profile chunk.
 		iccp_chunk_vec
 	{
 			0x00, 0x00, 0x00, 0x00, 0x69, 0x43, 0x43, 0x50, 0x49, 0x43, 0x43, 0x20,
 			0x50, 0x72, 0x6F, 0x66, 0x69, 0x6C, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00 },
 
-		// User image file inserted and stored in the vector "image_file_vec".
-		image_file_vec{ 0 / sizeof(unsigned char) };
+		// Read in user image file and store in "image_file_vec" vector.
+		image_file_vec((std::istreambuf_iterator<char>(readImg)), std::istreambuf_iterator<char>());
 
-	// Reset read position of files. 
-	readImg.seekg(0, readImg.beg),
-	readFile.seekg(0, readFile.beg);
-
-	// Read PNG image file into vector "image_file_vec", beginning at index location 0.
-	image_file_vec.resize(IMG_SIZE / sizeof(unsigned char));
-	readImg.read((char*)&image_file_vec[0], IMG_SIZE);
-
-	// Read user data file into vector "iccp_file_vec", beginning at the end of the iCCP file, index location 132.
+	// Read user data file into vector "iccp_file_vec", beginning at the end of the iCCP profile, index location 132.
 	iccp_file_vec.resize(DATA_SIZE + iccp_file_vec.size() / sizeof(unsigned char));
 	readFile.read((char*)&iccp_file_vec[132], DATA_SIZE);
 
-	// Make sure image file has a valid PNG header.
+	// Make sure image file has valid PNG header.
 	const std::string
-		PNG_ID = "\x89PNG",
-		IMG_HDR{ image_file_vec.begin(), image_file_vec.begin() + PNG_ID.length() };	// Get file header from vector. 
+		PNG_CHECK{ image_file_vec.begin(), image_file_vec.begin() + PNG_ID.length() };	// Get image header from vector. 
 		
-	if (IMG_HDR != PNG_ID) {
+	if (PNG_CHECK != PNG_ID) {
 
-		// No PNG header id found, display relevant error message and exit program.
-		std::cerr << "\nImage Header Error: File does not appear to be a valid PNG image.\n";
+		// File requirements check failure, display relevant error message and exit program.
+		std::cerr << "\nImage Error: File does not appear to be a valid PNG image.\n";
 		std::exit(EXIT_FAILURE);
 	}
 
-	// Find and remove unwanted chunk types from user PNG image.
+	// Find and remove unwanted chunks.
 	eraseChunks(image_file_vec);
 
 	ptrdiff_t 
 		dot = DATA_FILE.find_last_of('.'),
-		iccpFileSizeIndex = 1,		// Start index location inside the iCCP file of its uncompressed file size (first 4 bytes, only 3 bytes used).
-		iccpChunkLengthIndex = 1,	// Start index location within the PNG iCCP chunk, of its 4 byte chunk length field (only 3 bytes used).
-		iccpFileExtensionLengthIndex = 12,	// Index location inside the iCCP file, storing the length value of the embedded file's extension (1 byte).
-		iccpFileExtensionIndex = 13,		// Start index location inside the iCCP file, storing the file extension for the embedded file (max 5 bytes).
-		dataFileNameLength = DATA_FILE.length(); // Filename character length of user's data file.
+		iccpFileSizeIndex = 1,			// Start index location within the iCCP file of its uncompressed file size (first 4 bytes, only 3 bytes used).
+		iccpChunkLengthIndex = 1,		// Start index location within the PNG iCCP chunk, of its 4 byte chunk length field (only 3 bytes used).
+		iccpFileExtensionLengthIndex = 12,	// Index location within the iCCP file, storing the length value of the embedded file's extension (1 byte).
+		iccpFileExtensionIndex = 13,		// Start index location within the iCCP file, storing the file extension for the embedded file (max 5 bytes).
+		dataFileNameLength = DATA_FILE.length(); // Character length of user data file's name.
 
-	// Call function to insert new file size value into "iccp_file_vec" vector's index size field. 
-	// Uncompressed file size can't exceed 1MB (1,048,576 bytes), so only 3 bytes maximum (bits = 24) of the 4 byte size field is used.
+	// Call function to insert new file length value into "iccp_file_vec" vector's index length field. 
+	// Uncompressed file length can't exceed 1MB (1,048,576 bytes), so only 3 bytes maximum (bits = 24) of the 4 byte length field will be used.
 	insertChunkLength(iccp_file_vec, iccpFileSizeIndex, iccp_file_vec.size(), 24);
 
-	// Get file extension from user data file. This will be stored inside the iCCP profile, so that we can add it back to the data file when it's extracted.
+	// Get file extension from user data file. This will be stored in the iCCP file, so that we can add it back to the data file when extracted.
 	std::string file_extension;
-  
+	
 	if (dot < 0 || dataFileNameLength - dot == 1) {
-		file_extension = ".txt";  // No extension found, defaults to .txt 
+		file_extension = ".txt";
 	} else {
 		file_extension = dataFileNameLength - dot < 5 ? DATA_FILE.substr(dot, (dataFileNameLength - dot)) : DATA_FILE.substr(dot, 5);
 	}
-  
-	// Insert the character length value of the data file's extension into the iCCP profile, so that we know how many characters to read when retrieving extension.
+	
+	// Also insert the character length value of the data file's extension into the iCCP file, 
+	// so that we know how many characters to read when retrieving the extension.
 	insertChunkLength(iccp_file_vec, iccpFileExtensionLengthIndex, file_extension.length(), 8);
 	
-	// Make space for the above inserted data, by removing equivalent length of characters from iCCP profile.
+	// Make space for this data by removing equivalent length of characters from iCCP file.
 	iccp_file_vec.erase(iccp_file_vec.begin() + iccpFileExtensionIndex, iccp_file_vec.begin() + file_extension.length() + iccpFileExtensionIndex);
 
 	// Insert the file extension.
 	iccp_file_vec.insert(iccp_file_vec.begin() + iccpFileExtensionIndex, file_extension.begin(), file_extension.end());
 	
-	const std::string TMP_NAME = "PDV_PROFILE_TMP";
+	// Write out to file the uncompressed iCCP profile with user data file.
+	writeFile(iccp_file_vec, TMP_UNCOMPRESSED_FILE);
 
-	// Write out to a temporary file the completed (uncompressed) iCCP profile with user data file.
-	writeFile(iccp_file_vec, TMP_NAME);
+	// We now use (for the time being) the external program "zlib-flate" to compress the iCCP file.
+	system(ZLIB_COMPRESS_CMD.c_str());
 
-	// We now use (for the time being) the external program "zlib-flate" to compress the iCCP profile.
-	// Make sure you have "zlib-flate" installed.
-	
-	std::cout << "Using zlib-flate to compress PDV_PROFILE_TMP\n";
-	
-	system("zlib-flate -compress < PDV_PROFILE_TMP > PDV_PROFILE_TMP.z");
-
-	std::cout << "\nzlib-flate created compressed output file: PDV_PROFILE_TMP.z\n";
-
-	// Now open the newly created (zlib compressed) iCCP profile.
-	std::ifstream readProfile("PDV_PROFILE_TMP.z", std::ios::binary);
+	std::ifstream readProfile(TMP_COMPRESSED_FILE, std::ios::binary);
 
 	if (!readProfile) {
 
 		// Open file failure, display relevant error message and exit program.
-		std::cerr << "Read Error: Unable to open PDV_PROFILE_TMP.z\n\n";
-		readProfile.close();
-		// Delete temporary files.
-		remove("PDV_PROFILE_TMP.z");
-		remove("PDV_PROFILE_TMP");
+		std::cerr << READ_ERR_MSG + TMP_COMPRESSED_FILE;
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -357,10 +299,10 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 		PROFILE_CHUNK_SIZE = PROFILE_SIZE + 17,
 		ICCP_CHUNK_INSERT_INDEX = 33;  // Index location of image file for where we will insert the iCCP chunk.
 	
-	// Reset read position of file.		
+	// Reset read position.
 	readProfile.seekg(0, readProfile.beg);
 
-	// Read compressed iCCP file into vector "iccp_chunk_vec", beginning at vector index location 21.
+	// Read compressed iCCP file into vector "iccp_chunk_vec", begining at index location 21.
 	iccp_chunk_vec.resize(PROFILE_SIZE + iccp_chunk_vec.size() / sizeof(unsigned char));
 	readProfile.read((char*)&iccp_chunk_vec[21], PROFILE_SIZE);
 
@@ -381,17 +323,16 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 	// Four bytes (bits = 32) will be used for the CRC value.
 	insertChunkLength(iccp_chunk_vec, iCCPInsertIndexCrc, ICCP_CHUNK_CRC, 32);
 
-	// Insert contents of vector "iccp_chunk_vec" into vector "image_file_vec", combining iCCP chunk with PNG image.
+	// Insert contents of vector "iccp_chunk_vec" into vector "image_file_vec", combining iCCP chunk (+data file) with PNG image.
 	image_file_vec.insert((image_file_vec.begin() + ICCP_CHUNK_INSERT_INDEX), iccp_chunk_vec.begin(), iccp_chunk_vec.end());
-	const std::string IMG_NAME = "pdv_embedded_image_file.png";
 
-	writeFile(image_file_vec, IMG_NAME);
+	writeFile(image_file_vec, EMBEDDED_FILE);
 
-	// Delete temporary files.
-	remove("PDV_PROFILE_TMP.z");
-	remove("PDV_PROFILE_TMP");
+	// Delete temp files.
+	remove(TMP_COMPRESSED_FILE.c_str());
+	remove(TMP_UNCOMPRESSED_FILE.c_str());
 
-	std::cout << "All done! You can now upload and share this data embedded PNG image on Reddit.\n\n";
+	std::cout << "\nAll done!\n\nCreated output file: '"+EMBEDDED_FILE+"'\nYou can now upload and share this PNG image on Reddit.\n\n";
 
 }
 
@@ -467,10 +408,7 @@ void writeFile(std::vector<unsigned char>&vec, const std::string& OUT_FILE) {
 	}
 
 	writeFile.write((char*)&vec[0], vec.size());
-
 	writeFile.close();
-
-	std::cout << "\nCreated output file: " + OUT_FILE + "\n\n";
 }
 
 void insertChunkLength(std::vector<unsigned char>& vec, ptrdiff_t lengthInsertIndex, const size_t& CHUNK_LENGTH, int bits) {
@@ -492,7 +430,7 @@ This program works on Linux and Windows.
 
 PDVRDT currently requires the external program 'zlib-flate'.
 
-If not already installed, you can install zlib-flate for Linux with 'apt install qpdf'.
+If not already installed, you can install it for Linux with 'apt install qpdf'.
 For Windows you can download the installer from Sourceforge. (https://sourceforge.net/projects/qpdf/).
  
 1,048,444 bytes is the (zlib) uncompressed limit for your arbitrary data.
