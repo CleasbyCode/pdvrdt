@@ -11,7 +11,7 @@ You can then upload and share your data embedded image file on **Reddit**.
 [**Video Demo (YouTube)**](https://www.youtube.com/watch_popup?v=72ySDs7QuIM)  
 [**Image Demo (Reddit) - Image embedded with PDF document**](https://www.reddit.com/user/CleasbyCode/comments/10s2ahv/demo_image_for_pdvrdt_image_contains_pdf_document/) 
 
-***Note: PDVRDT date inserted images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
+***Note: PDVRDT data inserted images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
 
 This program works on Linux and Windows.
 
