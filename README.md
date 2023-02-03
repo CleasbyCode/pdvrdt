@@ -17,7 +17,7 @@ This program works on Linux and Windows.
 
 PDVRDT currently requires the external program '***zlib-flate***'.
 
-If not already installed, you can install **zlib-flate** for **Linux** with '***apt install qpdf***'.  
+You can install **zlib-flate** for **Linux** with '***apt install qpdf***'.  
 
 For **Windows**, you can download the installer from [***Sourceforge***](https://sourceforge.net/projects/qpdf/).  
 Once installed, add the path to your environment variables system path (e.g. **C:\Program Files\qpdf 11.2.0\bin**).
