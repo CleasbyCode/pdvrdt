@@ -8,9 +8,10 @@ You can then upload and share your data embedded image file on **Reddit**.
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/image_demo.png)  
 {***Image demo: Rar archive (containing 7 jpg images) embedded within this PNG image***} 
 
-[**PDVRDT for Reddit Video Demo**](https://www.youtube.com/watch_popup?v=72ySDs7QuIM)  
+[**Video Demo (YouTube)**](https://www.youtube.com/watch_popup?v=72ySDs7QuIM)  
+[**Image Demo (Reddit) - Image embedded with PDF document**](https://www.reddit.com/user/CleasbyCode/comments/10s2ahv/demo_image_for_pdvrdt_image_contains_pdf_document/) 
 
-***Note: PDVRDT data embedded images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
+***Note: PDVRDT date inserted images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
 
 This program works on Linux and Windows.
 
