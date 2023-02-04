@@ -205,7 +205,7 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 	// The first 132 bytes of this vector contain the barebones (uncompressed) iCCP profile. 
 	std::vector<unsigned char>
 		iccp_file_vec{
-			0x00, 0x00, 0x00, 0x00, 0x20, 0x50, 0x44, 0x56, 0x52, 0x44, 0x54, 0x20,
+			0x00, 0x00, 0x00, 0x84, 0x20, 0x50, 0x44, 0x56, 0x52, 0x44, 0x54, 0x20,
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x61, 0x63, 0x73, 0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -247,16 +247,11 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 
 	ptrdiff_t 
 		dot = DATA_FILE.find_last_of('.'),
-		iccpFileSizeIndex = 1,			// Start index location within the iCCP file of its uncompressed file size (first 4 bytes, only 3 bytes used).
 		iccpChunkLengthIndex = 1,		// Start index location within the PNG iCCP chunk, of its 4 byte chunk length field (only 3 bytes used).
 		iccpFileExtensionLengthIndex = 12,	// Index location within the iCCP file, storing the length value of the embedded file's extension (1 byte).
 		iccpFileExtensionIndex = 13,		// Start index location within the iCCP file, storing the file extension for the embedded file (max 5 bytes).
 		dataFileNameLength = DATA_FILE.length(); // Character length of user data file's name.
-
-	// Call function to insert new file length value into "iccp_file_vec" vector's index length field. 
-	// Uncompressed file length can't exceed 1MB (1,048,576 bytes), so only 3 bytes maximum (bits = 24) of the 4 byte length field will be used.
-	insertChunkLength(iccp_file_vec, iccpFileSizeIndex, iccp_file_vec.size(), 24);
-
+	
 	// Get file extension from user data file. This will be stored in the iCCP file, so that we can add it back to the data file when extracted.
 	std::string file_extension;
 	
