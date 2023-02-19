@@ -262,22 +262,19 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 void eraseChunks(std::vector<unsigned char>& image_file_vec) {
 
 	const std::string
-		IDAT_ID = "IDAT",
-		CHUNKS_TO_REMOVE[14]{ "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
+		CHUNK[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
 
-	ptrdiff_t firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), IDAT_ID.begin(), IDAT_ID.end()) - image_file_vec.begin() - 4;
-	int chunk = sizeof(CHUNKS_TO_REMOVE) / sizeof(std::string);
-
-	while (chunk--) {
-		const ptrdiff_t CHUNK_INDEX=search(image_file_vec.begin(), image_file_vec.end(), CHUNKS_TO_REMOVE[chunk].begin(), CHUNKS_TO_REMOVE[chunk].end())-image_file_vec.begin()-4;
-    
-		if (firstIdatIndex > CHUNK_INDEX) {
-			int chunkLength = ( image_file_vec[CHUNK_INDEX + 1] << 16) | image_file_vec[CHUNK_INDEX + 2] << 8 | image_file_vec[CHUNK_INDEX + 3];
-			image_file_vec.erase(image_file_vec.begin() + CHUNK_INDEX, image_file_vec.begin() + CHUNK_INDEX + (chunkLength + 12));
-			firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), IDAT_ID.begin(), IDAT_ID.end()) - image_file_vec.begin() - 4;
-			chunk++;
+	int chunkIndex = sizeof(CHUNK) / sizeof(std::string);
+	
+	while (chunkIndex--) {
+		ptrdiff_t
+			firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[0].begin(), CHUNK[0].end()) - image_file_vec.begin() - 4,
+			chunkFoundIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[chunkIndex].begin(), CHUNK[chunkIndex].end()) - image_file_vec.begin() - 4;
+		if (firstIdatIndex > chunkFoundIndex) {
+			int chunkSize = (image_file_vec[chunkFoundIndex + 1] << 16) | image_file_vec[chunkFoundIndex + 2] << 8 | image_file_vec[chunkFoundIndex + 3];
+			ImageVec.erase(image_file_vec.begin() + chunkFoundIndex, image_file_vec.begin() + chunkFoundIndex + (chunkSize + 12));
+			chunkIndex++;
 		}
-    
 	}
 }
 
