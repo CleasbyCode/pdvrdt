@@ -334,22 +334,21 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 void eraseChunks(std::vector<unsigned char>& image_file_vec) {
 
 	const std::string
-		IDAT_ID = "IDAT",
-		CHUNKS_TO_REMOVE[14]{ "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
+		CHUNK[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
 
-	// Get first IDAT chunk index location. Don't remove chunks after this point.
-	ptrdiff_t firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), IDAT_ID.begin(), IDAT_ID.end()) - image_file_vec.begin() - 4;
-	int chunk = sizeof(CHUNKS_TO_REMOVE) / sizeof(std::string);
-
-	while (chunk--) {
-		const ptrdiff_t CHUNK_INDEX = search(image_file_vec.begin(), image_file_vec.end(), CHUNKS_TO_REMOVE[chunk].begin(), CHUNKS_TO_REMOVE[chunk].end()) - image_file_vec.begin() - 4;
-		if (firstIdatIndex > CHUNK_INDEX) {
-			int chunkLength = ( image_file_vec[CHUNK_INDEX + 1] << 16) | image_file_vec[CHUNK_INDEX + 2] << 8 | image_file_vec[CHUNK_INDEX + 3];
-			image_file_vec.erase(image_file_vec.begin() + CHUNK_INDEX, image_file_vec.begin() + CHUNK_INDEX + (chunkLength + 12));
-			// Update first IDAT index location after removing found chunk
-			firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), IDAT_ID.begin(), IDAT_ID.end()) - image_file_vec.begin() - 4;
-			// Increment chunk count so that we search again for the same chunk name in case of multiple occurrences.
-			chunk++;
+	int chunkIndex = sizeof(CHUNK) / sizeof(std::string);
+	
+	while (chunkIndex--) {
+		ptrdiff_t
+			// Get first IDAT chunk index location. Don't remove chunks after this point.
+			firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[0].begin(), CHUNK[0].end()) - image_file_vec.begin() - 4,
+			// From last to first, search and get index location of each chunk to remove.
+			chunkFoundIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[chunkIndex].begin(), CHUNK[chunkIndex].end()) - image_file_vec.begin() - 4;
+			// If found chunk is located before first IDAT, remove chunk it.
+		if (firstIdatIndex > chunkFoundIndex) {
+			int chunkSize = (image_file_vec[chunkFoundIndex + 1] << 16) | image_file_vec[chunkFoundIndex + 2] << 8 | image_file_vec[chunkFoundIndex + 3];
+			ImageVec.erase(image_file_vec.begin() + chunkFoundIndex, image_file_vec.begin() + chunkFoundIndex + (chunkSize + 12));
+			chunkIndex++; // Increment chunkIndex so that we search again for the same chunk, in case of multiple occurrences.
 		}
 	}
 }
