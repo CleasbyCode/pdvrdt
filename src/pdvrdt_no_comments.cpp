@@ -261,14 +261,11 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 
 void eraseChunks(std::vector<unsigned char>& image_file_vec) {
 
-	const std::string
-		CHUNK[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
-
-	int chunkIndex = sizeof(CHUNK) / sizeof(std::string);
+	const std::string CHUNK[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
 	
-	while (chunkIndex--) {
+	for (int chunkIndex = 14; chunkIndex > 0; chunkIndex--) {
 		ptrdiff_t
-			firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[0].begin(), CHUNK[0].end()) - image_file_vec.begin() - 4,
+			firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[0].begin(), CHUNK[0].end()) - image_file_vec.begin(),
 			chunkFoundIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[chunkIndex].begin(), CHUNK[chunkIndex].end()) - image_file_vec.begin() - 4;
 		if (firstIdatIndex > chunkFoundIndex) {
 			int chunkSize = (image_file_vec[chunkFoundIndex + 1] << 16) | image_file_vec[chunkFoundIndex + 2] << 8 | image_file_vec[chunkFoundIndex + 3];
