@@ -333,15 +333,12 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 
 void eraseChunks(std::vector<unsigned char>& image_file_vec) {
 
-	const std::string
-		CHUNK[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
-
-	int chunkIndex = sizeof(CHUNK) / sizeof(std::string);
+	const std::string CHUNK[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
 	
-	while (chunkIndex--) {
+	for (int chunkIndex = 14; chunkIndex > 0; chunkIndex--) {
 		ptrdiff_t
 			// Get first IDAT chunk index location. Don't remove chunks after this point.
-			firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[0].begin(), CHUNK[0].end()) - image_file_vec.begin() - 4,
+			firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[0].begin(), CHUNK[0].end()) - image_file_vec.begin(),
 			// From last to first, search and get index location of each chunk to remove.
 			chunkFoundIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[chunkIndex].begin(), CHUNK[chunkIndex].end()) - image_file_vec.begin() - 4;
 			// If found chunk is located before first IDAT, remove chunk it.
