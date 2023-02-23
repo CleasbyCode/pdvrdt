@@ -13,7 +13,7 @@ void processEmbeddedImage(char* []);
 void readFilesIntoVectors(std::ifstream&, std::ifstream&, const std::string&, const std::string&, const ptrdiff_t&, const ptrdiff_t&);
 void eraseChunks(std::vector<unsigned char>&);
 void writeFile(std::vector<unsigned char>&, const std::string&);
-void insertChunkLength(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
+void insertValue(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
 void displayInfo();
 
 const std::string
@@ -210,7 +210,7 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 		file_extension = dataFileNameLength - dot < 5 ? DATA_FILE.substr(dot, (dataFileNameLength - dot)) : DATA_FILE.substr(dot, 5);
 	}
 
-	insertChunkLength(iccp_file_vec, iccpFileExtensionLengthIndex, file_extension.length(), 8);
+	insertValue(iccp_file_vec, iccpFileExtensionLengthIndex, file_extension.length(), 8);
 
 	iccp_file_vec.erase(iccp_file_vec.begin() + iccpFileExtensionIndex, iccp_file_vec.begin() + file_extension.length() + iccpFileExtensionIndex);
 	iccp_file_vec.insert(iccp_file_vec.begin() + iccpFileExtensionIndex, file_extension.begin(), file_extension.end());
@@ -240,14 +240,14 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 
 	readProfile.close();
   
-	insertChunkLength(iccp_chunk_vec, iccpChunkLengthIndex, PROFILE_SIZE + 13, 24);
+	insertValue(iccp_chunk_vec, iccpChunkLengthIndex, PROFILE_SIZE + 13, 24);
 	
 	const int ICCP_CHUNK_START_INDEX = 4;
 	const uint32_t ICCP_CHUNK_CRC = crc(&iccp_chunk_vec[ICCP_CHUNK_START_INDEX], PROFILE_CHUNK_SIZE);
 
 	ptrdiff_t iCCPInsertIndexCrc = ICCP_CHUNK_START_INDEX + (PROFILE_CHUNK_SIZE); 
 
-	insertChunkLength(iccp_chunk_vec, iCCPInsertIndexCrc, ICCP_CHUNK_CRC, 32);
+	insertValue(iccp_chunk_vec, iCCPInsertIndexCrc, ICCP_CHUNK_CRC, 32);
 	image_file_vec.insert((image_file_vec.begin() + ICCP_CHUNK_INSERT_INDEX), iccp_chunk_vec.begin(), iccp_chunk_vec.end());
 
 	writeFile(image_file_vec, EMBEDDED_FILE);
@@ -327,9 +327,9 @@ void writeFile(std::vector<unsigned char>&vec, const std::string& OUT_FILE) {
 	writeFile.close();
 }
 
-void insertChunkLength(std::vector<unsigned char>& vec, ptrdiff_t lengthInsertIndex, const size_t& CHUNK_LENGTH, int bits) {
+void insertValue(std::vector<unsigned char>& vec, ptrdiff_t valueInsertIndex, const size_t& VALUE, int bits) {
 
-		while (bits) vec[lengthInsertIndex++] = (CHUNK_LENGTH >> (bits -= 8)) & 0xff;
+		while (bits) vec[valueInsertIndex++] = (VALUE >> (bits -= 8)) & 0xff;
 }
 
 void displayInfo() {
