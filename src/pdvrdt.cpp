@@ -6,10 +6,9 @@
 #include <string>
 #include <vector>
 
-// The following two functions to compute CRC (slightly modified) was taken from: https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
+// The following functions to compute CRC-32 (slightly modified) was taken from: https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
 
 	unsigned long updateCrc(const unsigned long&, unsigned char*, const size_t&);
-
 	unsigned long crc(unsigned char*, const size_t&);
 
 //  End of CRC functions.
@@ -29,8 +28,8 @@ void eraseChunks(std::vector<unsigned char>&);
 // Write vector contents out to file.
 void writeFile(std::vector<unsigned char>&, const std::string&);
 
-// Inserts updated chunk length or CRC values into relevant vector index locations.
-void insertChunkLength(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
+// Insert updated values, such as chunk lengths or chunk crc, into relevant vector index locations.
+void insertValue(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
 
 // Display program infomation.
 void displayInfo();
@@ -263,7 +262,7 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 	
 	// Also insert the character length value of the data file's extension into the iCCP file, 
 	// so that we know how many characters to read when retrieving the extension.
-	insertChunkLength(iccp_file_vec, iccpFileExtensionLengthIndex, file_extension.length(), 8);
+	insertValue(iccp_file_vec, iccpFileExtensionLengthIndex, file_extension.length(), 8);
 	
 	// Make space for this data by removing equivalent length of characters from iCCP file.
 	iccp_file_vec.erase(iccp_file_vec.begin() + iccpFileExtensionIndex, iccp_file_vec.begin() + file_extension.length() + iccpFileExtensionIndex);
@@ -305,7 +304,7 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 
 	// Call function to insert new chunk length value into "iccp_chunk_vec" vector's index length field. 
 	// Due to the size limit of this chunk, only 3 bytes maximum (bits = 24) of the 4 byte length field will be used.
-	insertChunkLength(iccp_chunk_vec, iccpChunkLengthIndex, PROFILE_SIZE + 13, 24);
+	insertValue(iccp_chunk_vec, iccpChunkLengthIndex, PROFILE_SIZE + 13, 24);
 	
 	const int ICCP_CHUNK_START_INDEX = 4;
 
@@ -316,7 +315,7 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 
 	// Call function to insert iCCP chunk CRC value into "iccp_chunk_vec" vector's CRC index field. 
 	// Four bytes (bits = 32) will be used for the CRC value.
-	insertChunkLength(iccp_chunk_vec, iCCPInsertIndexCrc, ICCP_CHUNK_CRC, 32);
+	insertValue(iccp_chunk_vec, iCCPInsertIndexCrc, ICCP_CHUNK_CRC, 32);
 
 	// Insert contents of vector "iccp_chunk_vec" into vector "image_file_vec", combining iCCP chunk (+data file) with PNG image.
 	image_file_vec.insert((image_file_vec.begin() + ICCP_CHUNK_INSERT_INDEX), iccp_chunk_vec.begin(), iccp_chunk_vec.end());
@@ -402,9 +401,9 @@ void writeFile(std::vector<unsigned char>&vec, const std::string& OUT_FILE) {
 	writeFile.close();
 }
 
-void insertChunkLength(std::vector<unsigned char>& vec, ptrdiff_t lengthInsertIndex, const size_t& CHUNK_LENGTH, int bits) {
+void insertValue(std::vector<unsigned char>& vec, ptrdiff_t valueInsertIndex, const size_t& VALUE, int bits) {
 
-		while (bits) vec[lengthInsertIndex++] = (CHUNK_LENGTH >> (bits -= 8)) & 0xff;
+		while (bits) vec[valueInsertIndex++] = (VALUE >> (bits -= 8)) & 0xff;
 }
 
 void displayInfo() {
