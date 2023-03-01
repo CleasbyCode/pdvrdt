@@ -48,7 +48,7 @@ $ ./pdvrdt boat.png document.pdf
 
 All done!  
   
-Created output file: 'pdvrdt_image_file.png'
+Created output file: 'pdvrdt_image.png'
 You can now upload and share this PNG image on Reddit.
 
 ```
