@@ -20,7 +20,7 @@ const std::string
 	ICCP_ID = "iCCPICC\x20Profile",
 	PDV_ID = "\x20PDVRDT\x20",
 	PNG_ID = "\x89PNG",
-	EMBEDDED_FILE = "pdvrdt_image_file.png",
+	EMBEDDED_FILE = "pdvrdt_image.png",
 	READ_ERR_MSG = "\nRead Error: Unable to open/read file: ",
 	TMP_COMPRESSED_FILE = "PDVRDT_PROFILE_TMP.z",
 	TMP_UNCOMPRESSED_FILE = "PDVRDT_PROFILE_TMP",
