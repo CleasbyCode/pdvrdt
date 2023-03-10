@@ -1,17 +1,10 @@
 //	PNG Data Vehicle for Reddit, (PDVRDT v1.0). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 
-#include <fstream>
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
-
-// The following functions to compute CRC-32 (slightly modified) was taken from: https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
-
-	unsigned long updateCrc(const unsigned long&, unsigned char*, const size_t&);
-	unsigned long crc(unsigned char*, const size_t&);
-
-//  End of CRC functions.
 
 // Open user image & data file and check file size requirements. Display error & exit program if any file fails to open or exceeds file size limits.
 void processFiles(char* []);
@@ -29,16 +22,21 @@ void eraseChunks(std::vector<unsigned char>&);
 void writeFile(std::vector<unsigned char>&, const std::string&);
 
 // Insert updated values, such as chunk lengths or chunk crc, into relevant vector index locations.
-void insertValue(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
+void insertChunkLength(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
 
-// Display program infomation.
+// Display program infomation
 void displayInfo();
+
+// Code to compute CRC32 (for IDAT & PLTE chunks within this program) was taken from: https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
+unsigned long crcUpdate(const unsigned long&, unsigned char*, const size_t&);
+unsigned long crc(unsigned char*, const size_t&);
 
 const std::string
 	ICCP_ID = "iCCPICC\x20Profile",
 	PDV_ID = "\x20PDVRDT\x20",
+	PLTE_ID = "PLTE",
 	PNG_ID = "\x89PNG",
-	EMBEDDED_FILE = "pdvrdt_image.png",
+	EMBEDDED_FILE = "pdvrdt_image_file.png",
 	READ_ERR_MSG = "\nRead Error: Unable to open/read file: ",
 	TMP_COMPRESSED_FILE = "PDVRDT_PROFILE_TMP.z",
 	TMP_UNCOMPRESSED_FILE = "PDVRDT_PROFILE_TMP",
@@ -127,8 +125,24 @@ void processEmbeddedImage(char* argv[]) {
 	// Read pdvrdt data embedded PNG image into vector "image_file_vec".
 	std::vector<unsigned char> image_file_vec((std::istreambuf_iterator<char>(readImg)), std::istreambuf_iterator<char>());
 
-	// Check for iCCP profile chunk.
-	const std::string ICCP_CHECK{ image_file_vec.begin() + 37, image_file_vec.begin() + 37 + ICCP_ID.length() };	// Attemp to get iCCP id from vector.
+	// When reddit encodes the uploaded png image, it will write the PLTE chunk (if PNG-8) before the ICCP chunk. We need to check for this.
+	int 
+		plteLength = 0,		// If no PLTE chunk, then this value remains 0.
+		chunkIndex = 37;	// If PNG-8, chunk index location of PLTE chunk, else iCCP chunk location. 
+
+	const std::string PLTE_CHECK{ image_file_vec.begin() + chunkIndex, image_file_vec.begin() + chunkIndex + PLTE_ID.length() };
+
+	if (PLTE_CHECK == PLTE_ID) {
+		// Get length of the PLTE chunk
+		int
+			plteLengthIndex = 33,
+			plteChunkLength = (image_file_vec[plteLengthIndex + 1] << 16) | image_file_vec[plteLengthIndex + 2] << 8 | image_file_vec[plteLengthIndex + 3];
+
+		plteLength += plteChunkLength + 12;
+	}
+
+	// Attemp to get iCCP id from vector.
+	const std::string ICCP_CHECK{ image_file_vec.begin() + chunkIndex + plteLength, image_file_vec.begin() + chunkIndex+ plteLength + ICCP_ID.length() };
 
 	if (ICCP_CHECK != ICCP_ID) {
 
@@ -138,10 +152,11 @@ void processEmbeddedImage(char* argv[]) {
 	}
 
 	int
-	iccpLengthIndex = 33, // Start of index location of 4 byte iCCP chunk length field.
-	iccpChunkLength = (image_file_vec[iccpLengthIndex + 1] << 16) | image_file_vec[iccpLengthIndex + 2] << 8 | image_file_vec[iccpLengthIndex + 3], // Get iCCP chunk length.
-	zlibChunkIndex = 54, // Start of index location of zlib compressed file within iCCP chunk (78,9C...)
-	zlibChunkSize = iccpChunkLength - 13; 
+		iccpLengthIndex = 33 + plteLength, // Start of index location of 4 byte iCCP chunk length field.
+		// Get iCCP chunk length.
+		iccpChunkLength = (image_file_vec[iccpLengthIndex + 1] << 16) | image_file_vec[iccpLengthIndex + 2] << 8 | image_file_vec[iccpLengthIndex + 3], 
+		zlibChunkIndex = 54 + plteLength, // Start of index location of zlib compressed file within iCCP chunk (78,9C...)
+		zlibChunkSize = iccpChunkLength - 13; 
 
 	// From vector index 0, erase 53 bytes so that start of vector is now the beginning of the zlib compressed data.
 	image_file_vec.erase(image_file_vec.begin(), image_file_vec.begin() + zlibChunkIndex);
@@ -149,10 +164,9 @@ void processEmbeddedImage(char* argv[]) {
 	// Erase all bytes of "image_file_vec" after zlib compressed file. Vector should now just contain the zlib compressed data.
 	image_file_vec.erase(image_file_vec.begin() + zlibChunkSize, image_file_vec.end());
 	
-	// Write vector contents of compressed iCCP profile out to file.
 	writeFile(image_file_vec, TMP_COMPRESSED_FILE);
 
-	// We now use (for the time being) the external program "zlib-flate" to uncompress the iCCP profile.
+	// We now use (for the time being) the external program "zlib-flate" to uncompress the iCCP chuck.
 	system(ZLIB_UNCOMPRESS_CMD.c_str());
 
 	std::ifstream readTmp(TMP_UNCOMPRESSED_FILE, std::ios::binary);
@@ -183,11 +197,11 @@ void processEmbeddedImage(char* argv[]) {
 
 	readTmp.close();
 
-	// Delete temporary files.
+	// Delete temp files.
 	remove(TMP_COMPRESSED_FILE.c_str());
 	remove(TMP_UNCOMPRESSED_FILE.c_str());
 
-	// Write embedded arbitrary data out to file.
+	// Write embedded data out to file.
 	writeFile(tmp_file_vec, EXTRACTED_FILE);
 
 	std::cout << "\nAll done!\n\nCreated output file: '" + EXTRACTED_FILE + "'\n\n";
@@ -201,7 +215,7 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 	readFile.seekg(0, readFile.beg);
 
 	// User data file is inserted and stored at the end of this uncompressed iCCP profile.
-	// The first 132 bytes of this vector contain the barebones (uncompressed) iCCP profile. 
+	// The first 132 bytes of this vector contains the barebones (uncompressed) iCCP profile.
 	std::vector<unsigned char>
 		iccp_file_vec{
 			0x00, 0x00, 0x00, 0x84, 0x20, 0x50, 0x44, 0x56, 0x52, 0x44, 0x54, 0x20,
@@ -250,19 +264,18 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 		iccpFileExtensionLengthIndex = 12,	// Index location within the iCCP file, storing the length value of the embedded file's extension (1 byte).
 		iccpFileExtensionIndex = 13,		// Start index location within the iCCP file, storing the file extension for the embedded file (max 5 bytes).
 		dataFileNameLength = DATA_FILE.length(); // Character length of user data file's name.
-	
+
 	// Get file extension from user data file. This will be stored in the iCCP file, so that we can add it back to the data file when extracted.
 	std::string file_extension;
-	
 	if (dot < 0 || dataFileNameLength - dot == 1) {
 		file_extension = ".txt";
 	} else {
 		file_extension = dataFileNameLength - dot < 5 ? DATA_FILE.substr(dot, (dataFileNameLength - dot)) : DATA_FILE.substr(dot, 5);
 	}
 	
-	// Also insert the character length value of the data file's extension into the iCCP file, 
+	// Also insert the character length value of the data file's extension into the iCCP file,
 	// so that we know how many characters to read when retrieving the extension.
-	insertValue(iccp_file_vec, iccpFileExtensionLengthIndex, file_extension.length(), 8);
+	insertChunkLength(iccp_file_vec, iccpFileExtensionLengthIndex, file_extension.length(), 8);
 	
 	// Make space for this data by removing equivalent length of characters from iCCP file.
 	iccp_file_vec.erase(iccp_file_vec.begin() + iccpFileExtensionIndex, iccp_file_vec.begin() + file_extension.length() + iccpFileExtensionIndex);
@@ -304,7 +317,7 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 
 	// Call function to insert new chunk length value into "iccp_chunk_vec" vector's index length field. 
 	// Due to the size limit of this chunk, only 3 bytes maximum (bits = 24) of the 4 byte length field will be used.
-	insertValue(iccp_chunk_vec, iccpChunkLengthIndex, PROFILE_SIZE + 13, 24);
+	insertChunkLength(iccp_chunk_vec, iccpChunkLengthIndex, PROFILE_SIZE + 13, 24);
 	
 	const int ICCP_CHUNK_START_INDEX = 4;
 
@@ -315,7 +328,7 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 
 	// Call function to insert iCCP chunk CRC value into "iccp_chunk_vec" vector's CRC index field. 
 	// Four bytes (bits = 32) will be used for the CRC value.
-	insertValue(iccp_chunk_vec, iCCPInsertIndexCrc, ICCP_CHUNK_CRC, 32);
+	insertChunkLength(iccp_chunk_vec, iCCPInsertIndexCrc, ICCP_CHUNK_CRC, 32);
 
 	// Insert contents of vector "iccp_chunk_vec" into vector "image_file_vec", combining iCCP chunk (+data file) with PNG image.
 	image_file_vec.insert((image_file_vec.begin() + ICCP_CHUNK_INSERT_INDEX), iccp_chunk_vec.begin(), iccp_chunk_vec.end());
@@ -333,14 +346,14 @@ void readFilesIntoVectors(std::ifstream& readImg, std::ifstream& readFile, const
 void eraseChunks(std::vector<unsigned char>& image_file_vec) {
 
 	const std::string CHUNK[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
-	
+
 	for (int chunkIndex = 14; chunkIndex > 0; chunkIndex--) {
 		ptrdiff_t
 			// Get first IDAT chunk index location. Don't remove chunks after this point.
 			firstIdatIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[0].begin(), CHUNK[0].end()) - image_file_vec.begin(),
 			// From last to first, search and get index location of each chunk to remove.
 			chunkFoundIndex = search(image_file_vec.begin(), image_file_vec.end(), CHUNK[chunkIndex].begin(), CHUNK[chunkIndex].end()) - image_file_vec.begin() - 4;
-			// If found chunk is located before first IDAT, remove chunk it.
+		// If found chunk is located before first IDAT, remove chunk it.
 		if (firstIdatIndex > chunkFoundIndex) {
 			int chunkSize = (image_file_vec[chunkFoundIndex + 1] << 16) | image_file_vec[chunkFoundIndex + 2] << 8 | image_file_vec[chunkFoundIndex + 3];
 			image_file_vec.erase(image_file_vec.begin() + chunkFoundIndex, image_file_vec.begin() + chunkFoundIndex + (chunkSize + 12));
@@ -401,7 +414,7 @@ void writeFile(std::vector<unsigned char>&vec, const std::string& OUT_FILE) {
 	writeFile.close();
 }
 
-void insertValue(std::vector<unsigned char>& vec, ptrdiff_t valueInsertIndex, const size_t& VALUE, int bits) {
+void insertChunkLength(std::vector<unsigned char>& vec, ptrdiff_t valueInsertIndex, const size_t& VALUE, int bits) {
 
 		while (bits) vec[valueInsertIndex++] = (VALUE >> (bits -= 8)) & 0xff;
 }
