@@ -343,7 +343,7 @@ void eraseChunks(std::vector<unsigned char>& image_file_vec) {
 			// If found chunk is located before first IDAT, remove chunk it.
 		if (firstIdatIndex > chunkFoundIndex) {
 			int chunkSize = (image_file_vec[chunkFoundIndex + 1] << 16) | image_file_vec[chunkFoundIndex + 2] << 8 | image_file_vec[chunkFoundIndex + 3];
-			ImageVec.erase(image_file_vec.begin() + chunkFoundIndex, image_file_vec.begin() + chunkFoundIndex + (chunkSize + 12));
+			image_file_vec.erase(image_file_vec.begin() + chunkFoundIndex, image_file_vec.begin() + chunkFoundIndex + (chunkSize + 12));
 			chunkIndex++; // Increment chunkIndex so that we search again for the same chunk, in case of multiple occurrences.
 		}
 	}
