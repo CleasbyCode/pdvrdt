@@ -26,7 +26,7 @@ Once installed, add the path to your environment variables system path (e.g. **C
 132 bytes is used for the barebones iCCP profile. (132 + 1048444 = 1,048,576 [1MB]).
 
 To maximise the amount of data you can embed in your image file, I recommend first compressing your 
-data file(s) to zip, rar, etc.  Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
+data file(s) to zip, rar, formats.  Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
 
 Your file will be compressed again in zlib format when embedded into the image file (iCCP profile chunk).
 
