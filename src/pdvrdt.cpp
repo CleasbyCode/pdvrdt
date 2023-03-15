@@ -27,7 +27,7 @@ void insertChunkLength(std::vector<unsigned char>&, ptrdiff_t, const size_t&, in
 // Display program infomation
 void displayInfo();
 
-// Code to compute CRC32 (for IDAT & PLTE chunks within this program) was taken from: https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
+// Code to compute CRC32 (for iCCP chunk within this program) was taken from: https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
 unsigned long crcUpdate(const unsigned long&, unsigned char*, const size_t&);
 unsigned long crc(unsigned char*, const size_t&);
 
