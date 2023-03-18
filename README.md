@@ -8,7 +8,7 @@ Post & share your file-embedded image on **reddit**.
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/image_demo.png)  
 {***Image demo: Rar archive (containing 7 jpg images) embedded within this PNG image***} 
 
-[**Video Demo (YouTube)**](https://www.youtube.com/watch_popup?v=3vGNwpv3smo)  
+[**Video Demo (YouTube) - Using pdvrdt, embed PDF doc into image and post it to reddit, then download image and extract PDF**](https://www.youtube.com/watch_popup?v=3vGNwpv3smo)  
 [**Image Demo (reddit) - Image contains PDF document**](https://i.redd.it/rx8cr47bfxma1.png) 
 
 ***Note: pdvrdt file-embedded images will not work with Twitter.  For Twitter, please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
