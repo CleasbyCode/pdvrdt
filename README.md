@@ -1,9 +1,9 @@
 # pdvrdt
 
-PNG Data Vehicle for **Reddit**, (PDVRDT v1.0).
+PNG Data Vehicle for **Reddit**, (pdvrdt v1.0).
 
 Insert / extract arbitrary data of up to ~1MB within a PNG image.  
-You can post & share your file-embedded image on **Reddit**. 
+Post & share your file-embedded image on **reddit**. 
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/image_demo.png)  
 {***Image demo: Rar archive (containing 7 jpg images) embedded within this PNG image***} 
@@ -11,11 +11,11 @@ You can post & share your file-embedded image on **Reddit**.
 [**Video Demo (YouTube)**](https://www.youtube.com/watch_popup?v=3vGNwpv3smo)  
 [**Image Demo (Reddit) - Image contains PDF document**](https://i.redd.it/rx8cr47bfxma1.png) 
 
-***Note: PDVRDT data inserted images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
+***Note: pdvrdt file-embedded images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
 
-This program works on Linux and Windows.
+This program can be used on Linux and Windows.
 
-PDVRDT currently requires the external program '***zlib-flate***'.
+pdvrdt currently requires the external program '***zlib-flate***'.
 
 You can install **zlib-flate** for **Linux** with '***apt install qpdf***'.  
 
