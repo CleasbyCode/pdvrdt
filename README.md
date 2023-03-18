@@ -9,9 +9,9 @@ Post & share your file-embedded image on **reddit**.
 {***Image demo: Rar archive (containing 7 jpg images) embedded within this PNG image***} 
 
 [**Video Demo (YouTube)**](https://www.youtube.com/watch_popup?v=3vGNwpv3smo)  
-[**Image Demo (Reddit) - Image contains PDF document**](https://i.redd.it/rx8cr47bfxma1.png) 
+[**Image Demo (reddit) - Image contains PDF document**](https://i.redd.it/rx8cr47bfxma1.png) 
 
-***Note: pdvrdt file-embedded images will not work with Twitter.  For Twitter, please use [PDVZIP](https://github.com/CleasbyCode/pdvzip)***
+***Note: pdvrdt file-embedded images will not work with Twitter.  For Twitter, please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
 
 This program can be used on Linux and Windows.
 
