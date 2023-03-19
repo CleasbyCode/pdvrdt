@@ -55,7 +55,7 @@ Created output file: 'pdvrdt_image.png'
 You can now upload and share this PNG image on reddit.
 
 ```
-## Usage (Linux - Extacting data file from PNG image)
+## Usage (Linux - Extracting data file from PNG image)
 
 ```c
 $ ./pdvrdt
