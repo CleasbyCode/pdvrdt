@@ -18,7 +18,7 @@ This program can be used on Linux and Windows.
 
 pdvrdt currently requires the external program '***zlib-flate***'.
 
-You can install **zlib-flate** for **Linux** with '***apt install qpdf***'.  
+You can install **zlib-flate** for **Linux** with '***sudo apt install qpdf***'.  
 
 For **Windows**, you can download the installer from [***Sourceforge***](https://sourceforge.net/projects/qpdf/).  
 Once installed, add the path to your environment variables system path (e.g. **C:\Program Files\qpdf 11.2.0\bin**).
@@ -38,6 +38,8 @@ Compile and run the program under Windows or **Linux**.
 ```c
 $ g++ pdvrdt.cpp -o pdvrdt
 $
+$ sudo apt install qpdf
+$ 
 $ ./pdvrdt
 
 Usage:-
@@ -50,7 +52,7 @@ $ ./pdvrdt boat.png document.pdf
 All done!  
   
 Created output file: 'pdvrdt_image.png'
-You can now upload and share this PNG image on Reddit.
+You can now upload and share this PNG image on reddit.
 
 ```
 ## Usage (Linux - Extacting data file from PNG image)
