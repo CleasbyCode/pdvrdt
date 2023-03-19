@@ -8,7 +8,7 @@ Post & share your file-embedded image on **reddit**.
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/image_demo.png)  
 {***Image demo: Rar archive (containing 7 jpg images) embedded within this image***} 
 
-[**Video Demo_1 (YouTube) - Embed PDF into image & post it to reddit. Download image & extract PDF.**](https://youtu.be/3vGNwpv3smo)
+[**Video Demo_1 (YouTube) - Embed PDF into image & post it to reddit. Download image & extract PDF.**](https://youtu.be/3vGNwpv3smo)  
 [**Video Demo_2 (YouTube) - Embed ZIP file into image & post it to reddit. Download image & extract ZIP file.**](https://youtu.be/h5TArTK3XxU)
 [**Image Demo (reddit) - The image containing PDF document.**](https://i.redd.it/rx8cr47bfxma1.png) 
 
