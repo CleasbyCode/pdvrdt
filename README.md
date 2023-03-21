@@ -52,7 +52,7 @@ $ ./pdvrdt boat.png document.pdf
 All done!  
   
 Created output file: 'pdvrdt_image.png'
-You can now upload and share this PNG image on reddit.
+You can now post this file-embedded PNG image to reddit.
 
 ```
 ## Usage (Linux - Extracting data file from PNG image)
@@ -69,7 +69,7 @@ $ ./pdvrdt pdvrdt_image_file.png
 
 All done!
 
-Created output file: 'pdvrdt_extracted_file.pdf'
+Created output file: 'pdvrdt_document.pdf'
 
 ```
 
