@@ -65,7 +65,7 @@ Usage:-
 	Extract: pdvrdt  <png_image>
 	Help:	 pdvrdt  --info
         
-$ ./pdvrdt pdvrdt_image_file.png
+$ ./pdvrdt pdvrdt_image.png
 
 All done!
 
