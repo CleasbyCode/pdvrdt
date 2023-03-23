@@ -1,6 +1,6 @@
 # pdvrdt
 
-PNG Data Vehicle for **Reddit**, (pdvrdt v1.0).
+PNG Data Vehicle for **Reddit**, (pdvrdt v1.1).
 
 Insert & extract arbitrary data of up to ~1MB within a PNG image.  
 Post & share your file-embedded image on **reddit**. 
