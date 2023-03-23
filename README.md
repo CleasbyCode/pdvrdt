@@ -12,7 +12,7 @@ Post & share your file-embedded image on **reddit**.
 [**Video Demo_2 (YouTube) - Embed ZIP file into image & post it to reddit. Download image & extract ZIP file.**](https://youtu.be/h5TArTK3XxU)  
 [**Image Demo (reddit) - Image containing PDF document.**](https://i.redd.it/klocwjkhjhpa1.png) 
 
-***Note: pdvrdt file-embedded images will not work with Twitter.  For Twitter, please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
+***Note: pdvrdt file-embedded images do not work with Twitter.  For Twitter, please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
 
 This program can be used on Linux and Windows.
 
