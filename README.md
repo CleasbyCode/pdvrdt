@@ -6,7 +6,7 @@ Insert & extract arbitrary data of up to ~1MB within a PNG image.
 Post & share your file-embedded image on **reddit**. 
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/image_demo.png)  
-{***Image demo: ZIP archive (containing 4 pretty jpg images) embedded within this image***} 
+{***Image demo: ZIP archive (containing 4 pretty jpg images) embedded within this PNG***} 
 
 [**Video Demo_1 (YouTube) - Embed PDF into image & post it to reddit. Download image & extract PDF.**](https://youtu.be/3vGNwpv3smo)  
 [**Video Demo_2 (YouTube) - Embed ZIP file into image & post it to reddit. Download image & extract ZIP file.**](https://youtu.be/h5TArTK3XxU)  
