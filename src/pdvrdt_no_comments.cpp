@@ -405,7 +405,7 @@ void insertChunkLength(std::vector<unsigned char>& vec, ptrdiff_t valueInsertInd
 void displayInfo() {
 
 	std::cout << R"(
-PNG Data Vehicle for Reddit, (PDVRDT v1.0). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
+PNG Data Vehicle for Reddit, (PDVRDT v1.1). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
 PDVRDT enables you to embed & extract arbitrary data of upto ~1MB within a PNG image.
 You can then upload and share your data embedded image file on Reddit. 
