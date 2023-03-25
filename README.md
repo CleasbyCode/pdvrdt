@@ -10,7 +10,7 @@ Post & share your file-embedded image on **reddit**.
 
 [**Video_1 (YouTube) - Embed ai prompt text into image & post to reddit. Download image & extract prompt.**](https://youtu.be/RS1n2sAITDE)  
 [**Video_2 (YouTube) - Embed ZIP file into image & post to reddit. Download image & extract ZIP.**](https://youtu.be/h5TArTK3XxU)  
-[**Image Demo (reddit) - Image containing prompt text.**](https://www.reddit.com/user/CleasbyCode/comments/11zvaku/demo/) 
+[**Image Demo (reddit) - Image containing prompt text.**](https://i.redd.it/b5b26dj1ttpa1.png) 
 
 ***Note: pdvrdt file-embedded images do not work with Twitter.  For Twitter, please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
 
