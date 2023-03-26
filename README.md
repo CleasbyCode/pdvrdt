@@ -29,7 +29,7 @@ Once installed, add the path to your environment variables system path (e.g. **C
 To maximise the amount of data you can embed in your image file, I recommend first compressing your 
 data file(s) to zip, rar, formats.  Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
 
-Your file will be compressed again in zlib format when embedded into the image file (iCCP profile chunk).
+Your file will be encrypted, compressed (zlib) and embedded into the image file (iCCP profile chunk).
 
 Compile and run the program under Windows or **Linux**.
 
