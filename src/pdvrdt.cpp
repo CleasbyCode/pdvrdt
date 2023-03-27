@@ -156,19 +156,19 @@ void processEmbeddedImage(char* argv[]) {
 		profileChunkSizeIndex = 33 + plteChunkSize, // Start index location of 4 byte iCCP Profile chunk length field.
 		// Get iCCP Profile chunk length.
 		profileChunkSize = (ImageVec[profileChunkSizeIndex + 1] << 16) | ImageVec[profileChunkSizeIndex + 2] << 8 | ImageVec[profileChunkSizeIndex + 3],
-		deflateDataIndex = 54 + plteChunkSize, // Start of index location of zlib compressed data within iCCP Profile chunk (78,9C...)
+		deflateDataIndex = 54 + plteChunkSize, // Start of index location of zlib deflated/compressed data within iCCP Profile chunk (78,9C...)
 		deflateChunkSize = profileChunkSize - 13;
 
-	// From "ImageVec" vector index 0, erase bytes so that start of vector is now the beginning of the zlib compressed data.
+	// From "ImageVec" vector index 0, erase bytes so that start of vector is now the beginning of the zlib deflated/compressed data.
 	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + deflateDataIndex);
 
-	// Erase all bytes of "ImageVec" after end of zlib compressed file. Vector should now just contain the zlib compressed data.
+	// Erase all bytes of "ImageVec" after end of zlib deflated file. Vector should now just contain the zlib deflated/compressed data.
 	ImageVec.erase(ImageVec.begin() + deflateChunkSize, ImageVec.end());
 
-	// Write the compressed zlib content out to temporary file.
+	// Write the deflated/compressed zlib content out to temporary file.
 	writeFile(ImageVec,  DEFLATE_FILE);
 
-	// We now use (for the time being) the external program "zlib-flate" to uncompress the iCCP Profile chuck.
+	// We now use (for the time being) the external program "zlib-flate" to inflate/uncompress the iCCP Profile chuck.
 	system(ZLIB_INFLATE_CMD.c_str());
 
 	std::ifstream readProfile(INFLATE_FILE, std::ios::binary);
@@ -179,7 +179,7 @@ void processEmbeddedImage(char* argv[]) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	// Read-in and store uncompressed iCCP Profile in vector "TmpProfileVec".
+	// Read-in and store inflated/uncompressed iCCP Profile in vector "TmpProfileVec".
 	std::vector<unsigned char> TmpProfileVec((std::istreambuf_iterator<char>(readProfile)), std::istreambuf_iterator<char>());
 
 	const std::string
@@ -238,8 +238,8 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	readImage.seekg(0, readImage.beg),
 	readFile.seekg(0, readFile.beg);
 
-	// User data file is inserted and stored at the end of this uncompressed iCCP Profile.
-	// The first 132 bytes of this vector contains the barebones (uncompressed) iCCP Profile.
+	// User data file is inserted and stored at the end of this inflated/uncompressed iCCP Profile.
+	// The first 132 bytes of this vector contains the barebones (inflated) iCCP Profile.
 	// Without this basic profile, some image display programs will show error messages when loading the image.
 	std::vector<unsigned char>
 		ProfileDataVec{
@@ -255,7 +255,7 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 	},
-		// The zlib compressed iCCP Profile (+ user data file) will be inserted in the "ProfileChunkVec" vector, within the PNG iCCP Profile chunk.
+		// The zlib deflated/compressed iCCP Profile (+ user file) will be inserted in the "ProfileChunkVec" vector, within the PNG iCCP Profile chunk.
 		ProfileChunkVec
 	{
 			0x00, 0x00, 0x00, 0x00, 0x69, 0x43, 0x43, 0x50, 0x49, 0x43, 0x43, 0x20,
@@ -289,6 +289,7 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	
 	ptrdiff_t
 		profileChunkSizeIndex = 1,	// Start index of the PNG iCCP Profile chunk's 4 byte length field (only 3 bytes used).
+		profileInflateSizeIndex = 1,	// Start index location inside iCCP profile of its (inflated) size field (again, only 3 bytes out of the four, used).
 		profileNameLengthIndex = 12,	// Index location inside the barebones iCCP Profile to store the length value of the embedded data's filename (1 byte).
 		profileNameIndex = 13,		// Start index inside the iCCP Profile to store the filename for the embedded data file.
 		noSlashNameLength = noSlashName.length(); // Character length of filename for the embedded data file.
@@ -312,23 +313,30 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 		ihdrCrcIndex = ihdrCrcIndex > 32 ? 29 : ihdrCrcIndex;		// Reset position of IHDR crc once we are on the fourth, last byte.
 	}
 
-	// Insert the encrypted filename into the barebones iCCP Profile.
+	// Insert the encrypted filename into the basic iCCP Profile.
 	ProfileDataVec.insert(ProfileDataVec.begin() + profileNameIndex, encryptedName.begin(), encryptedName.end());
 
 	char byte;
 	
-	// Read in user data file (uncompressed), appending it to the "ProfileDataVec" vector.
+	// Read in user data file (inflated/uncompressed), appending it to the "ProfileDataVec" vector.
 	// xor encrypt each byte of the user file against each character of the encrypted filename.
 	for (int charPos = 0, insertIndex = 132; DATA_SIZE + 132 > insertIndex ;) {
 		byte = readFile.get();
 		ProfileDataVec.insert((ProfileDataVec.begin() + insertIndex++), byte ^ encryptedName[charPos++]);
 		charPos = charPos > encryptedName.length() ? 0 : charPos; // Reset character position of filename once we get to the last character.
 	}
+	
+	// Get the size of the complete inflated/uncompressed profile (basic profile + user data file).
+	ptrdiff_t profileInflateSize = ProfileDataVec.size();
 
-	// Write out to file the uncompressed iCCP Profile, now including the encrypted data file.
+	// Write the inflated/uncompressed size value inside the profile within its size field.
+	// While it does not seem to matter if the internal profile size field is correctly updated, we do it regardless.
+	insertValue(ProfileDataVec, profileInflateSizeIndex, profileInflateSize, 24);
+
+	// Write out to file the inflated/uncompressed iCCP Profile, now including the encrypted data file.
 	writeFile(ProfileDataVec, INFLATE_FILE);
 
-	// We now use (for the time being) the external program "zlib-flate" to compress the iCCP Profile.
+	// We now use (for the time being) the external program "zlib-flate" to deflate/compress the iCCP Profile.
 	system(ZLIB_DEFLATE_CMD.c_str());
 
 	std::ifstream readProfile(DEFLATE_FILE, std::ios::binary);
@@ -340,26 +348,26 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 		std::exit(EXIT_FAILURE);
 	}
 
-	// Get size of compressed iCCP Profile.
+	// Get size of deflated/compressed iCCP Profile (+ now also containing the user data file).
 	readProfile.seekg(0, readProfile.end);
 
 	const ptrdiff_t
-		PROFILE_SIZE = readProfile.tellg(),
+		PROFILE_DEFLATE_SIZE = readProfile.tellg(),
 		PROFILE_CHUNK_SIZE = PROFILE_SIZE + 17,
 		PROFILE_CHUNK_INSERT_INDEX = 33;  // Index location of image file for where we will insert the iCCP Profile chunk.
 
 	// Reset read position.
 	readProfile.seekg(0, readProfile.beg);
 
-	// Read compressed iCCP Profile into vector "ProfileChunkVec", begining at index location 21.
-	ProfileChunkVec.resize(PROFILE_SIZE + ProfileChunkVec.size() / sizeof(unsigned char));
-	readProfile.read((char*)&ProfileChunkVec[21], PROFILE_SIZE);
+	// Read deflated/compressed iCCP Profile into vector "ProfileChunkVec", begining at index location 21.
+	ProfileChunkVec.resize(PROFILE_DEFLATE_SIZE + ProfileChunkVec.size() / sizeof(unsigned char));
+	readProfile.read((char*)&ProfileChunkVec[21], PROFILE_DEFLATE_SIZE);
 
 	readProfile.close();
 
 	// Call function to insert new chunk length value into "ProfileChunkVec" vector's index length field. 
 	// Due to the size limit of this chunk, only 3 bytes maximum (bits = 24) of the 4 byte length field will be used.
-	insertValue(ProfileChunkVec, profileChunkSizeIndex, PROFILE_SIZE + 13, 24);
+	insertValue(ProfileChunkVec, profileChunkSizeIndex, PROFILE_DEFLATE_SIZE + 13, 24);
 
 	const int PROFILE_CHUNK_START_INDEX = 4;
 
@@ -372,10 +380,10 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	// Four bytes (bits = 32) will be used for the CRC value.
 	insertValue(ProfileChunkVec, profileCrcInsertIndex, PROFILE_CHUNK_CRC, 32);
 
-	// Insert contents of vector "ProfileChunkVec" into vector "ImageVec", combining iCCP Profile chunk ( + data file) with PNG image.
+	// Insert contents of vector "ProfileChunkVec" into vector "ImageVec", combining iCCP Profile chunk (+ user data file) with PNG image.
 	ImageVec.insert((ImageVec.begin() + PROFILE_CHUNK_INSERT_INDEX), ProfileChunkVec.begin(), ProfileChunkVec.end());
 
-	// Write out to file PNG image with embedded (compressed and encrypted) data file.
+	// Write out to file PNG image with embedded (deflated/compressed and encrypted) data file.
 	writeFile(ImageVec, EMBEDDED_FILE);
 
 	// Delete temp files.
