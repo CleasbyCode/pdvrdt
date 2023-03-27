@@ -262,8 +262,8 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 			0x50, 0x72, 0x6F, 0x66, 0x69, 0x6C, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00 },
 
-			// Read-in user PNG image file and store in vector "ImageVec".
-			ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
+		// Read-in user PNG image file and store in vector "ImageVec".
+		ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
 
 	// Make sure image has valid PNG header.
 	const std::string
