@@ -5,8 +5,8 @@ PNG Data Vehicle for **Reddit**, (pdvrdt v1.1).
 Insert & extract arbitrary data of up to ~1MB within a PNG image.  
 Post & share your file-embedded image on **reddit**. 
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/image_demo.png)  
-{***Image demo (github): ZIP archive (containing 4 jpg images) embedded within this PNG***} 
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/demo.png)  
+{***Image demo (github): ZIP archive (contains the source code for this repo) embedded within this PNG***} 
 
 [**Video_1 (YouTube) - Embed ai prompt text into image & post to reddit. Download image & extract prompt.**](https://youtu.be/RS1n2sAITDE)  
 [**Video_2 (YouTube) - Embed ZIP file into image & post to reddit. Download image & extract ZIP.**](https://youtu.be/h5TArTK3XxU)  
