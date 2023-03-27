@@ -21,8 +21,8 @@ void eraseChunks(std::vector<unsigned char>&);
 // Write vector contents out to file.
 void writeFile(std::vector<unsigned char>&, const std::string&);
 
-// Insert updated values, such as chunk lengths or chunk crc, into relevant vector index locations.
-void insertChunkLength(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
+// Insert updated values, such as chunk size or chunk crc, into relevant vector index locations.
+void insertValue(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
 
 // Display program infomation
 void displayInfo();
@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 		displayInfo();
 	}
 	else if (argc < 2 || argc > 3) {
-		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\tExtract: pdvrdt  <png_image>\n\tHelp:\t pdvrdt  --info\n\n";
+		std::cerr << "\nUsage:-\n\tInSert:  pdvrdt  <png_image>  <your_file>\n\tExtract: pdvrdt  <png_image>\n\tHelp:\t pdvrdt  --info\n\n";
 	}
 	else if (argc == 3) {
 		processFiles(argv);
@@ -81,7 +81,7 @@ void processFiles(char* argv[]) {
 
 	// Open file success, now check file size requirements.
 	const int
-		MAX_PNG_SIZE_BYTES = 19922944,		// Reddit PNG size limit set at 19MB.
+		MAX_PNG_SIZE_BYTES = 5242880,		// Reddit PNG size limit 5MB.
 		MAX_DATAFILE_SIZE_BYTES = 1048444;	// 1MB (1,048,576 bytes maximum zlib uncompressed iCCP Profile size),
 							// minus 132 bytes for the required barebones profile, gives us 1,048,444 bytes (uncompressed) for data file.
 	// Get size of files.
@@ -97,7 +97,7 @@ void processFiles(char* argv[]) {
 
 		// File size check failure, display relevant error message and exit program.
 		const std::string
-			SIZE_ERR_PNG = "\nImage Size Error: PNG image must not exceed reddit's file size limit of 19MB.\n\n",
+			SIZE_ERR_PNG = "\nImage Size Error: PNG image (+including embedded file size) must not exceed 5MB.\n\n",
 			SIZE_ERR_DATA = "\nFile Size Error: Your data file must not exceed 1,048,444 bytes.\n\n",
 
 			ERR_MSG = IMAGE_SIZE + MAX_DATAFILE_SIZE_BYTES > MAX_PNG_SIZE_BYTES ? SIZE_ERR_PNG : SIZE_ERR_DATA;
@@ -127,22 +127,20 @@ void processEmbeddedImage(char* argv[]) {
 
 	// When reddit encodes the uploaded PNG image, it will write the PLTE chunk (if PNG-8) before the iCCP Profile chunk. We need to check for this.
 	int
-		plteLength = 0,		// If no PLTE chunk, then this value remains 0.
+		plteChunkSize = 0,	// If no PLTE chunk, then this value remains 0.
+		plteChunkSizeIndex = 33,
 		chunkIndex = 37;	// If PNG-8, chunk index location of PLTE chunk, else iCCP Profile chunk index location. 
 
 	const std::string PLTE_CHECK{ ImageVec.begin() + chunkIndex, ImageVec.begin() + chunkIndex + PLTE_SIG.length() };
 
 	if (PLTE_CHECK == PLTE_SIG) {
 		// Get length of the PLTE chunk
-		int
-			plteLengthIndex = 33,
-			plteChunkLength = (ImageVec[plteLengthIndex + 1] << 16) | ImageVec[plteLengthIndex + 2] << 8 | ImageVec[plteLengthIndex + 3];
-
-		plteLength += plteChunkLength + 12;
+		plteChunkSize = 12 + (ImageVec[plteChunkSizeIndex + 1] << 16) | ImageVec[plteChunkSizeIndex + 2] << 8 | ImageVec[plteChunkSizeIndex + 3];
 	}
 
-	// Get iCCP Profile chunk signature from "ImageVec" vector.
-	const std::string PROFILE_CHECK{ ImageVec.begin() + chunkIndex + plteLength, ImageVec.begin() + chunkIndex + plteLength + PROFILE_SIG.length() };
+	// Get iCCP Profile chunk signature from vector.
+	const std::string
+		PROFILE_CHECK{ ImageVec.begin() + chunkIndex + plteChunkSize, ImageVec.begin() + chunkIndex + plteChunkSize + PROFILE_SIG.length() };
 
 	// Before we erase most of the "ImageVec" vector, save these four bytes, which are required to decrypt the embedded filename.
 	unsigned char IHDR_CRC[4]{ ImageVec[29], ImageVec[30], ImageVec[31], ImageVec[32] };
@@ -155,11 +153,11 @@ void processEmbeddedImage(char* argv[]) {
 	}
 
 	int
-		profileLengthIndex = 33 + plteLength, // Start of index location of 4 byte iCCP Profile chunk length field.
+		profileChunkSizeIndex = 33 + plteChunkSize, // Start index location of 4 byte iCCP Profile chunk length field.
 		// Get iCCP Profile chunk length.
-		profileChunkLength = (ImageVec[profileLengthIndex + 1] << 16) | ImageVec[profileLengthIndex + 2] << 8 | ImageVec[profileLengthIndex + 3],
-		deflateDataIndex = 54 + plteLength, // Start of index location of zlib compressed file within iCCP Profile chunk (78,9C...)
-		deflateChunkSize = profileChunkLength - 13;
+		profileChunkSize = (ImageVec[profileChunkSizeIndex + 1] << 16) | ImageVec[profileChunkSizeIndex + 2] << 8 | ImageVec[profileChunkSizeIndex + 3],
+		deflateDataIndex = 54 + plteChunkSize, // Start of index location of zlib compressed data within iCCP Profile chunk (78,9C...)
+		deflateChunkSize = profileChunkSize - 13;
 
 	// From "ImageVec" vector index 0, erase bytes so that start of vector is now the beginning of the zlib compressed data.
 	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + deflateDataIndex);
@@ -185,10 +183,11 @@ void processEmbeddedImage(char* argv[]) {
 	std::vector<unsigned char> TmpProfileVec((std::istreambuf_iterator<char>(readProfile)), std::istreambuf_iterator<char>());
 
 	const std::string
-		PDV_CHECK{ TmpProfileVec.begin() + 4, TmpProfileVec.begin() + 4 + PDV_SIG.length() },	// Get PDVRDT signature from vector "TmpProfileVec".
+		PDV_CHECK{ TmpProfileVec.begin() + 4, TmpProfileVec.begin() + 4 + PDV_SIG.length() },		// Get PDVRDT signature from vector "TmpProfileVec".
 		ENCRYPTED_NAME = { TmpProfileVec.begin() + 13, TmpProfileVec.begin() + 13 + TmpProfileVec[12] }; // Get encrypted embedded filename from vector "TmpProfileVec".
 
 	int encryptedNameLength = TmpProfileVec[12];
+
 	if (PDV_CHECK != PDV_SIG) {
 
 		// File requirements check failure, display relevant error message and exit program.
@@ -209,22 +208,18 @@ void processEmbeddedImage(char* argv[]) {
 
 	std::string decryptedName;
 
-	int 
-		j = 0, 
-		ihdrCrcIndex = 0;
-
 	bool nameDecrypted = false;
 
-	// Decrypt (basic xor) the embedded filename & decrypt the embedded data file.
-	for (int i = 0; TmpProfileVec.size() > i; i++) {
+	// Decrypt the embedded filename & the embedded data file.
+	for (int i = 0, charPos = 0, ihdrCrcIndex = 0 ; TmpProfileVec.size() > i; i++) {
 		if (!nameDecrypted) {
-			decryptedName += ENCRYPTED_NAME[j] ^ IHDR_CRC[ihdrCrcIndex++];
-			if (ihdrCrcIndex > 3) ihdrCrcIndex = 0;
+			decryptedName += ENCRYPTED_NAME[charPos] ^ IHDR_CRC[ihdrCrcIndex++];
+			ihdrCrcIndex = ihdrCrcIndex > 3 ? 0 : ihdrCrcIndex;
 		}
-		NewProfileVec.insert(NewProfileVec.begin() + i, TmpProfileVec[i] ^ ENCRYPTED_NAME[j++]);
-		if (j >= encryptedNameLength) {
+		NewProfileVec.insert(NewProfileVec.begin() + i, TmpProfileVec[i] ^ ENCRYPTED_NAME[charPos++]);
+		if (charPos >= encryptedNameLength) {
 			nameDecrypted = true;
-			if (j > encryptedNameLength) j = 0;
+			charPos = charPos > encryptedNameLength ? 0 : charPos;
 		}
 	}
 	
@@ -286,15 +281,14 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 
 	const int MAX_LENGTH_FILENAME = 23;
 
-	// We don't want  "./" or ".\" characters at the start of the filename (user's data file), that we will store in the iCCP Profile. 
+	// We don't want  "./" or ".\" characters at the start of the filename (data file), that we will store in the iCCP Profile. 
 	std::size_t firstSlashPos = DATA_FILE.find_first_of("\\/");
-	
 	std::string 
 		noSlashName = DATA_FILE.substr(firstSlashPos + 1, DATA_FILE.length()),
 		encryptedName;
 	
 	ptrdiff_t
-		profileChunkLengthIndex = 1,	// Start index of the PNG iCCP Profile chunk's 4 byte length field (only 3 bytes used).
+		profileChunkSizeIndex = 1,	// Start index of the PNG iCCP Profile chunk's 4 byte length field (only 3 bytes used).
 		profileNameLengthIndex = 12,	// Index location inside the barebones iCCP Profile to store the length value of the embedded data's filename (1 byte).
 		profileNameIndex = 13,		// Start index inside the iCCP Profile to store the filename for the embedded data file.
 		noSlashNameLength = noSlashName.length(); // Character length of filename for the embedded data file.
@@ -308,35 +302,27 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 
 	// Insert the character length value of the filename (data file) into the iCCP Profile,
 	// so that we know how many characters to read when later retrieving the filename.
-	insertChunkLength(ProfileDataVec, profileNameLengthIndex, noSlashNameLength, 8);
+	insertValue(ProfileDataVec, profileNameLengthIndex, noSlashNameLength, 8);
 
 	// Make space for this data by removing equivalent length of characters from iCCP Profile.
 	ProfileDataVec.erase(ProfileDataVec.begin() + profileNameIndex, ProfileDataVec.begin() + noSlashNameLength + profileNameIndex);
 
-	// Encrypt (xor) filename of user's data file.
-	int 
-		ihdrCrcIndex = 29, // Index start position of IHDR 4-byte crc value.
-		i = 0;
-	
-	while (noSlashNameLength--) {
+	for (int i = 0, ihdrCrcIndex = 29; noSlashNameLength != 0; noSlashNameLength--) {
 		encryptedName += noSlashName[i++] ^ ImageVec[ihdrCrcIndex++];	// xor each character of the filename against each byte of the 4-byte IHDR crc value.
-		if (ihdrCrcIndex > 32) ihdrCrcIndex = 29;			// Reset position of IHDR once we get to the fourth byte.
+		ihdrCrcIndex = ihdrCrcIndex > 32 ? 29 : ihdrCrcIndex;		// Reset position of IHDR crc once we are on the fourth, last byte.
 	}
 
 	// Insert the encrypted filename into the barebones iCCP Profile.
 	ProfileDataVec.insert(ProfileDataVec.begin() + profileNameIndex, encryptedName.begin(), encryptedName.end());
 
 	char byte;
-	int 
-		j = 0, 
-		insertIndex = 132; // Insert index location within "ProfileDataVec" vector for uncompressed (xor encrypted) user data file.
-
+	
 	// Read in user data file (uncompressed), appending it to the "ProfileDataVec" vector.
 	// xor encrypt each byte of the user file against each character of the encrypted filename.
-	while (DATA_SIZE + 132 > insertIndex) {
+	for (int charPos = 0, insertIndex = 132; DATA_SIZE + 132 > insertIndex ;) {
 		byte = readFile.get();
-		ProfileDataVec.insert((ProfileDataVec.begin() + insertIndex++), byte ^ encryptedName[j++]);
-		if (j > encryptedName.length()) j = 0; // Reset position of filename once we get to the last character.
+		ProfileDataVec.insert((ProfileDataVec.begin() + insertIndex++), byte ^ encryptedName[charPos++]);
+		charPos = charPos > encryptedName.length() ? 0 : charPos; // Reset character position of filename once we get to the last character.
 	}
 
 	// Write out to file the uncompressed iCCP Profile, now including the encrypted data file.
@@ -373,7 +359,7 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 
 	// Call function to insert new chunk length value into "ProfileChunkVec" vector's index length field. 
 	// Due to the size limit of this chunk, only 3 bytes maximum (bits = 24) of the 4 byte length field will be used.
-	insertChunkLength(ProfileChunkVec, profileChunkLengthIndex, PROFILE_SIZE + 13, 24);
+	insertValue(ProfileChunkVec, profileChunkSizeIndex, PROFILE_SIZE + 13, 24);
 
 	const int PROFILE_CHUNK_START_INDEX = 4;
 
@@ -384,7 +370,7 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 
 	// Call function to insert iCCP Profile chunk CRC value into "ProfileChunkVec" vector's CRC index field. 
 	// Four bytes (bits = 32) will be used for the CRC value.
-	insertChunkLength(ProfileChunkVec, profileCrcInsertIndex, PROFILE_CHUNK_CRC, 32);
+	insertValue(ProfileChunkVec, profileCrcInsertIndex, PROFILE_CHUNK_CRC, 32);
 
 	// Insert contents of vector "ProfileChunkVec" into vector "ImageVec", combining iCCP Profile chunk ( + data file) with PNG image.
 	ImageVec.insert((ImageVec.begin() + PROFILE_CHUNK_INSERT_INDEX), ProfileChunkVec.begin(), ProfileChunkVec.end());
@@ -471,7 +457,7 @@ void writeFile(std::vector<unsigned char>& vec, const std::string& OUT_FILE) {
 	writeFile.close();
 }
 
-void insertChunkLength(std::vector<unsigned char>& vec, ptrdiff_t valueInsertIndex, const size_t& VALUE, int bits) {
+void insertValue(std::vector<unsigned char>& vec, ptrdiff_t valueInsertIndex, const size_t& VALUE, int bits) {
 
 	while (bits) vec[valueInsertIndex++] = (VALUE >> (bits -= 8)) & 0xff;
 }
