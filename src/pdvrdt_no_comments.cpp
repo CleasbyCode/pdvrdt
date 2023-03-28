@@ -12,6 +12,7 @@ void readFilesIntoVectors(std::ifstream&, std::ifstream&, const std::string&, co
 void eraseChunks(std::vector<unsigned char>&);
 void writeFile(std::vector<unsigned char>&, const std::string&);
 void insertValue(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
+void deleteTemp(std::ifstream&);
 void displayInfo();
 
 unsigned long crcUpdate(const unsigned long&, unsigned char*, const size_t&);
@@ -19,7 +20,7 @@ unsigned long crc(unsigned char*, const size_t&);
 
 const std::string
 	PROFILE_SIG = "iCCPICC\x20Profile",
-	PDV_SIG = "\x20PDVRDT\x20",
+	PDV_SIG = "PDVRDT",
 	PLTE_SIG = "PLTE",
 	PNG_SIG = "\x89PNG",
 	EMBEDDED_FILE = "pdvrdt_image.png",
@@ -30,12 +31,11 @@ const std::string
 	ZLIB_DEFLATE_CMD = "zlib-flate -compress < " + INFLATE_FILE + " > " + DEFLATE_FILE;
 
 int main(int argc, char** argv) {
-
 	if (argc == 2 && std::string(argv[1]) == "--info") {
 		displayInfo();
 	}
 	else if (argc < 2 || argc > 3) {
-		std::cerr << "\nUsage:-\n\tInSert:  pdvrdt  <png_image>  <your_file>\n\tExtract: pdvrdt  <png_image>\n\tHelp:\t pdvrdt  --info\n\n";
+		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\tExtract: pdvrdt  <png_image>\n\tHelp:\t pdvrdt  --info\n\n";
 	}
 	else if (argc == 3) {
 		processFiles(argv);
@@ -58,10 +58,11 @@ void processFiles(char* argv[]) {
 
 	if (!readImage || !readFile) {
 		const std::string ERR_MSG = !readImage ? READ_ERR_MSG + "'" + IMAGE_FILE + "'\n\n" : READ_ERR_MSG + "'" + DATA_FILE + "'\n\n";
+
 		std::cerr << ERR_MSG;
 		std::exit(EXIT_FAILURE);
 	}
-
+	
 	const int
 		MAX_PNG_SIZE_BYTES = 5242880,		
 		MAX_DATAFILE_SIZE_BYTES = 1048444;	
@@ -78,7 +79,9 @@ void processFiles(char* argv[]) {
 		const std::string
 			SIZE_ERR_PNG = "\nImage Size Error: PNG image (+including embedded file size) must not exceed 5MB.\n\n",
 			SIZE_ERR_DATA = "\nFile Size Error: Your data file must not exceed 1,048,444 bytes.\n\n",
+
 			ERR_MSG = IMAGE_SIZE + MAX_DATAFILE_SIZE_BYTES > MAX_PNG_SIZE_BYTES ? SIZE_ERR_PNG : SIZE_ERR_DATA;
+
 		std::cerr << ERR_MSG;
 		std::exit(EXIT_FAILURE);
 	}
@@ -96,9 +99,9 @@ void processEmbeddedImage(char* argv[]) {
 		std::cerr << READ_ERR_MSG + IMAGE_FILE + "'\n\n";
 		std::exit(EXIT_FAILURE);
 	}
-	
+
 	std::vector<unsigned char> ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
-	
+
 	int
 		plteChunkSize = 0,	
 		plteChunkSizeIndex = 33,
@@ -106,29 +109,36 @@ void processEmbeddedImage(char* argv[]) {
 
 	const std::string PLTE_CHECK{ ImageVec.begin() + chunkIndex, ImageVec.begin() + chunkIndex + PLTE_SIG.length() };
 
-	if (PLTE_CHECK == PLTE_SIG) {
+	if (PLTE_CHECK == PLTE_SIG) {		
 		plteChunkSize = 12 + (ImageVec[plteChunkSizeIndex + 1] << 16) | ImageVec[plteChunkSizeIndex + 2] << 8 | ImageVec[plteChunkSizeIndex + 3];
 	}
-	
+
 	const std::string
 		PROFILE_CHECK{ ImageVec.begin() + chunkIndex + plteChunkSize, ImageVec.begin() + chunkIndex + plteChunkSize + PROFILE_SIG.length() };
-	
-	unsigned char IHDR_CRC[4]{ ImageVec[29], ImageVec[30], ImageVec[31], ImageVec[32] };
 
 	if (PROFILE_CHECK != PROFILE_SIG) {
 		std::cerr << "\nPNG Error: Image file does not appear to contain a valid iCCP profile.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
+	
+	std::vector<unsigned char> IhdrVec{};
 
+	int 
+		ihdrIndex = 8,
+		ihdrLength = 25;
+
+	IhdrVec.insert(IhdrVec.begin(), ImageVec.begin() + ihdrIndex, ImageVec.begin() + ihdrIndex + ihdrLength);
+	
 	int
 		profileChunkSizeIndex = 33 + plteChunkSize, 
 		profileChunkSize = (ImageVec[profileChunkSizeIndex + 1] << 16) | ImageVec[profileChunkSizeIndex + 2] << 8 | ImageVec[profileChunkSizeIndex + 3],
 		deflateDataIndex = 54 + plteChunkSize, 
 		deflateChunkSize = profileChunkSize - 13;
+
 	
 	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + deflateDataIndex);
 	ImageVec.erase(ImageVec.begin() + deflateChunkSize, ImageVec.end());
-	
+
 	writeFile(ImageVec,  DEFLATE_FILE);
 	
 	system(ZLIB_INFLATE_CMD.c_str());
@@ -137,41 +147,66 @@ void processEmbeddedImage(char* argv[]) {
 
 	if (!readProfile) {
 		std::cerr << READ_ERR_MSG + INFLATE_FILE + "\n\n";
+		deleteTemp(readProfile);
 		std::exit(EXIT_FAILURE);
 	}
-
+	
 	std::vector<unsigned char> TmpProfileVec((std::istreambuf_iterator<char>(readProfile)), std::istreambuf_iterator<char>());
 
 	const std::string
-		PDV_CHECK{ TmpProfileVec.begin() + 4, TmpProfileVec.begin() + 4 + PDV_SIG.length() },		
-		ENCRYPTED_NAME = { TmpProfileVec.begin() + 13, TmpProfileVec.begin() + 13 + TmpProfileVec[12] }; 
+		PDV_CHECK{ TmpProfileVec.begin() + 5, TmpProfileVec.begin() + 5 + PDV_SIG.length() },				
+		ENCRYPTED_NAME = { TmpProfileVec.begin() + 13, TmpProfileVec.begin() + 13 + TmpProfileVec[12] };	
 
 	int encryptedNameLength = TmpProfileVec[12];
 
 	if (PDV_CHECK != PDV_SIG) {
 		std::cerr << "\nProfile Error: iCCP profile does not seem to be a PDVRDT modified profile.\n\n";
+		deleteTemp(readProfile);
 		std::exit(EXIT_FAILURE);
 	}
 	
+	bool updateIhdrCrc = true;
+
+	if (IhdrVec[16] != TmpProfileVec[4] && IhdrVec[20] != TmpProfileVec[11]) {
+		IhdrVec[16] = TmpProfileVec[4];
+		IhdrVec[20] = TmpProfileVec[11];
+	}
+	else if (IhdrVec[16] != TmpProfileVec[4]) {
+		IhdrVec[16] = TmpProfileVec[4];
+	}
+	else if (IhdrVec[20] != TmpProfileVec[11]) {
+		IhdrVec[20] = TmpProfileVec[11];
+	}
+	else updateIhdrCrc = false;
+
+	if (updateIhdrCrc) {
+		const int
+			IHDR_CHUNK_START_INDEX = 4,
+			IHDR_CHUNK_SIZE = 17;
+		
+		const uint32_t IHDR_CHUNK_CRC = crc(&IhdrVec[IHDR_CHUNK_START_INDEX], IHDR_CHUNK_SIZE);
+
+		int ihdrCrcInsertIndex = 21;
+
+		insertValue(IhdrVec, ihdrCrcInsertIndex, IHDR_CHUNK_CRC, 32);
+	}
+	
 	TmpProfileVec.erase(TmpProfileVec.begin(), TmpProfileVec.begin() + 132);
-
-	readProfile.close();
-
-	remove(DEFLATE_FILE.c_str());
-	remove(INFLATE_FILE.c_str());
-
-	std::vector<unsigned char> NewProfileVec;
+	
+	deleteTemp(readProfile);
+	
+	std::vector<unsigned char> ExtractedFileVec;
 
 	std::string decryptedName;
 
 	bool nameDecrypted = false;
 	
-	for (int i = 0, charPos = 0, ihdrCrcIndex = 0 ; TmpProfileVec.size() > i; i++) {
+	for (int i = 0, charPos = 0, ihdrCrcIndex = 21 ; TmpProfileVec.size() > i; i++) {
 		if (!nameDecrypted) {
-			decryptedName += ENCRYPTED_NAME[charPos] ^ IHDR_CRC[ihdrCrcIndex++];
-			ihdrCrcIndex = ihdrCrcIndex > 3 ? 0 : ihdrCrcIndex;
+			decryptedName += ENCRYPTED_NAME[charPos] ^ IhdrVec[ihdrCrcIndex++];
+			ihdrCrcIndex = ihdrCrcIndex > 24 ? 21 : ihdrCrcIndex;
 		}
-		NewProfileVec.insert(NewProfileVec.begin() + i, TmpProfileVec[i] ^ ENCRYPTED_NAME[charPos++]);
+		ExtractedFileVec.insert(ExtractedFileVec.begin() + i, TmpProfileVec[i] ^ ENCRYPTED_NAME[charPos++]);
 		if (charPos >= encryptedNameLength) {
 			nameDecrypted = true;
 			charPos = charPos > encryptedNameLength ? 0 : charPos;
@@ -180,7 +215,7 @@ void processEmbeddedImage(char* argv[]) {
 	
 	decryptedName = "pdvrdt_" + decryptedName;
 	
-	writeFile(NewProfileVec, decryptedName);
+	writeFile(ExtractedFileVec, decryptedName);
 
 	std::cout << "\nAll done!\n\nCreated output file: '" + decryptedName + "'\n\n";
 }
@@ -211,9 +246,8 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 			0x00 },
 	
 		ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
-
-	const std::string
-		PNG_CHECK{ ImageVec.begin(), ImageVec.begin() + PNG_SIG.length() };	
+	
+	const std::string PNG_CHECK{ ImageVec.begin(), ImageVec.begin() + PNG_SIG.length() };
 
 	if (PNG_CHECK != PNG_SIG) {
 		std::cerr << "\nImage Error: File does not appear to be a valid PNG image.\n";
@@ -225,15 +259,16 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	const int MAX_LENGTH_FILENAME = 23;
 	
 	std::size_t firstSlashPos = DATA_FILE.find_first_of("\\/");
+	
 	std::string 
 		noSlashName = DATA_FILE.substr(firstSlashPos + 1, DATA_FILE.length()),
 		encryptedName;
 	
 	ptrdiff_t
-		profileChunkSizeIndex = 1,	
+		profileChunkSizeIndex = 1,		
 		profileInflateSizeIndex = 1,	
 		profileNameLengthIndex = 12,	
-		profileNameIndex = 13,		
+		profileNameIndex = 13,			
 		noSlashNameLength = noSlashName.length(); 
 	
 	if (noSlashNameLength > MAX_LENGTH_FILENAME) {
@@ -242,15 +277,18 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 		std::exit(EXIT_FAILURE);
 	}
 	
+	ProfileDataVec[4] = ImageVec[24];
+	ProfileDataVec[11] = ImageVec[28];
+	
 	insertValue(ProfileDataVec, profileNameLengthIndex, noSlashNameLength, 8);
 
 	ProfileDataVec.erase(ProfileDataVec.begin() + profileNameIndex, ProfileDataVec.begin() + noSlashNameLength + profileNameIndex);
-
+	
 	for (int i = 0, ihdrCrcIndex = 29; noSlashNameLength != 0; noSlashNameLength--) {
 		encryptedName += noSlashName[i++] ^ ImageVec[ihdrCrcIndex++];	
 		ihdrCrcIndex = ihdrCrcIndex > 32 ? 29 : ihdrCrcIndex;		
 	}
-
+	
 	ProfileDataVec.insert(ProfileDataVec.begin() + profileNameIndex, encryptedName.begin(), encryptedName.end());
 
 	char byte;
@@ -258,9 +296,9 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	for (int charPos = 0, insertIndex = 132; DATA_SIZE + 132 > insertIndex ;) {
 		byte = readFile.get();
 		ProfileDataVec.insert((ProfileDataVec.begin() + insertIndex++), byte ^ encryptedName[charPos++]);
-		charPos = charPos > encryptedName.length() ? 0 : charPos;
+		charPos = charPos > encryptedName.length() ? 0 : charPos; 
 	}
-	
+
 	ptrdiff_t profileInflateSize = ProfileDataVec.size();
 	
 	insertValue(ProfileDataVec, profileInflateSizeIndex, profileInflateSize, 24);
@@ -273,40 +311,47 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 
 	if (!readProfile) {
 		std::cerr << READ_ERR_MSG + DEFLATE_FILE;
+		deleteTemp(readProfile);
 		std::exit(EXIT_FAILURE);
 	}
-
+	
 	readProfile.seekg(0, readProfile.end);
 
 	const ptrdiff_t
 		PROFILE_DEFLATE_SIZE = readProfile.tellg(),
 		PROFILE_CHUNK_SIZE = PROFILE_DEFLATE_SIZE + 17,
-		PROFILE_CHUNK_INSERT_INDEX = 33; 
+		PROFILE_CHUNK_INSERT_INDEX = 33;  
 	
 	readProfile.seekg(0, readProfile.beg);
-	
+
 	ProfileChunkVec.resize(PROFILE_DEFLATE_SIZE + ProfileChunkVec.size() / sizeof(unsigned char));
 	readProfile.read((char*)&ProfileChunkVec[21], PROFILE_DEFLATE_SIZE);
 
-	readProfile.close();
-	
 	insertValue(ProfileChunkVec, profileChunkSizeIndex, PROFILE_DEFLATE_SIZE + 13, 24);
 
 	const int PROFILE_CHUNK_START_INDEX = 4;
 
 	const uint32_t PROFILE_CHUNK_CRC = crc(&ProfileChunkVec[PROFILE_CHUNK_START_INDEX], PROFILE_CHUNK_SIZE);
 
-	ptrdiff_t profileCrcInsertIndex = PROFILE_CHUNK_START_INDEX + (PROFILE_CHUNK_SIZE);
-
+	ptrdiff_t profileCrcInsertIndex = PROFILE_CHUNK_START_INDEX + (PROFILE_CHUNK_SIZE); 
+	
 	insertValue(ProfileChunkVec, profileCrcInsertIndex, PROFILE_CHUNK_CRC, 32);
+
 	ImageVec.insert((ImageVec.begin() + PROFILE_CHUNK_INSERT_INDEX), ProfileChunkVec.begin(), ProfileChunkVec.end());
 
 	writeFile(ImageVec, EMBEDDED_FILE);
-	
-	remove(DEFLATE_FILE.c_str());
-	remove(INFLATE_FILE.c_str());
+
+	deleteTemp(readProfile);
 
 	std::cout << "\nAll done!\n\nCreated output file: '" + EMBEDDED_FILE + "'\nYou can now post this file-embedded PNG image to reddit.\n\n";
+}
+
+void deleteTemp(std::ifstream& readProfile) {
+	
+	readProfile.close();
+
+	remove(DEFLATE_FILE.c_str());
+	remove(INFLATE_FILE.c_str());
 }
 
 void eraseChunks(std::vector<unsigned char>& ImageVec) {
@@ -320,7 +365,7 @@ void eraseChunks(std::vector<unsigned char>& ImageVec) {
 		if (firstIdatIndex > chunkFoundIndex) {
 			int chunkSize = (ImageVec[chunkFoundIndex + 1] << 16) | ImageVec[chunkFoundIndex + 2] << 8 | ImageVec[chunkFoundIndex + 3];
 			ImageVec.erase(ImageVec.begin() + chunkFoundIndex, ImageVec.begin() + chunkFoundIndex + (chunkSize + 12));
-			chunkIndex++; 
+			chunkIndex++;
 		}
 	}
 }
@@ -403,9 +448,9 @@ For Windows you can download the installer from Sourceforge. (https://sourceforg
 132 bytes is used for the barebones iCCP profile. (132 + 1048444 = 1,048,576 / 1MB).
 
 To maximise the amount of data you can embed in your image file, I recommend compressing your 
-data file(s) to zip, rar, etc. Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
+data file(s) to zip/rar formats, etc. Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
 
-Your file will be compressed again in zlib format when embedded into the image file (iCCP profile chunk).
+Your file will be encrypted and compressed again (deflate/zlib) when embedded into the image file (iCCP Profile chunk).
 
 )";
 }
