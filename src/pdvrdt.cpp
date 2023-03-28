@@ -353,7 +353,7 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 
 	const ptrdiff_t
 		PROFILE_DEFLATE_SIZE = readProfile.tellg(),
-		PROFILE_CHUNK_SIZE = PROFILE_SIZE + 17,
+		PROFILE_CHUNK_SIZE = PROFILE_DEFLATE_SIZE + 17,
 		PROFILE_CHUNK_INSERT_INDEX = 33;  // Index location of image file for where we will insert the iCCP Profile chunk.
 
 	// Reset read position.
