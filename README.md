@@ -23,13 +23,13 @@ You can install **zlib-flate** for **Linux** with '***sudo apt install qpdf***'.
 For **Windows**, you can download the installer from [***Sourceforge***](https://sourceforge.net/projects/qpdf/).  
 Once installed, add the path to your environment variables system path (e.g. **C:\Program Files\qpdf 11.2.0\bin**).
  
-1,048,444 bytes is the (zlib) uncompressed limit for your arbitrary data.  
+1,048,444 bytes is the inflated/uncompressed (zlib) limit for your arbitrary data.  
 132 bytes is used for the barebones iCCP profile. (132 + 1048444 = 1,048,576 [1MB]).
 
 To maximise the amount of data you can embed in your image file, I recommend first compressing your 
-data file(s) to zip, rar, formats.  Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
+data file(s) to zip/rar formats, etc.  Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
 
-Your file will be encrypted, compressed (zlib) and embedded into the image file (iCCP profile chunk).
+Your file will be encrypted, deflated/compressed (zlib) and embedded into the image file (iCCP profile chunk).
 
 Compile and run the program under Windows or **Linux**.
 
@@ -51,8 +51,8 @@ $ ./pdvrdt boat.png document.pdf
 
 All done!  
   
-Created output file: 'pdvrdt_image.png'
-You can now post this file-embedded PNG image to reddit.
+Created output file: "pdvrdt_image.png"
+You can now post your file-embedded PNG image to reddit.
 
 ```
 ## Usage (Linux - Extracting data file from PNG image)
@@ -69,7 +69,7 @@ $ ./pdvrdt pdvrdt_image.png
 
 All done!
 
-Created output file: 'pdvrdt_document.pdf'
+Created output file: "pdvrdt_document.pdf"
 
 ```
 
