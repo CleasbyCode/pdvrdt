@@ -52,7 +52,7 @@ Usage:-
 $ ./pdvrdt boat.png document.pdf
   
 Created output file: "pdvrdt_image.png"
-You can now post your file-embedded PNG image to reddit.
+You can now post your file-embedded PNG image on reddit.
 
 All done! 
 
