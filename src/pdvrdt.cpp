@@ -49,17 +49,36 @@ const std::string
 int main(int argc, char** argv) {
 
 	if (argc == 2 && std::string(argv[1]) == "--info") {
+		argc = 0;
 		displayInfo();
 	}
-	else if (argc < 2 || argc > 3) {
-		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\tExtract: pdvrdt  <png_image>\n\tHelp:\t pdvrdt  --info\n\n";
+	else if (argc < 2 || argc > 6) {
+		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\t" << 
+				"Extract: pdvrdt  <image_1>  <image_2> ... <image_5>\n\tHelp:\t pdvrdt  --info\n\n";
+		argc = 0;
 	}
 	else if (argc == 3) {
-		processFiles(argv);
+		std::string
+			secondFile = argv[2],
+			response;
+		if (secondFile.substr(secondFile.length() - 3, secondFile.length()) == "png") {
+			std::cout << "\nClarification required.\n\nPlease type YES if you intend to embed the file: \""
+					<< secondFile.substr(2,secondFile.length()) << "\",\notherwise just press enter to continue with extraction: ";
+			std::getline(std::cin, response);
+			if (response == "YES") {
+				processFiles(argv);
+			}
+			else processEmbeddedImage(argv);
+		}
+		else processFiles(argv);
 	}
 	else {
-		processEmbeddedImage(argv);
+		while (argc !=1 ) {
+			processEmbeddedImage(argv++);
+			argc--;
+		}
 	}
+	if (argc !=0) std::cout << "All Done!\n\n";
 	return 0;
 }
 
@@ -271,7 +290,9 @@ void processEmbeddedImage(char* argv[]) {
 	// Write extracted/decrypted data out to file.
 	writeFile(ExtractedFileVec, decryptedName);
 
-	std::cout << "\nAll done!\n\nCreated output file: '" + decryptedName + "'\n\n";
+	std::cout << "\nCreated output file: \"" + decryptedName + "\"\n\n";
+
+	readImage.close();
 }
 
 void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, const std::string& IMAGE_FILE, const std::string& DATA_FILE, const ptrdiff_t& IMAGE_SIZE, const ptrdiff_t& DATA_SIZE) {
@@ -437,7 +458,7 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	// Delete temp files.
 	deleteTemp(readProfile);
 
-	std::cout << "\nAll done!\n\nCreated output file: '" + EMBEDDED_FILE + "'\nYou can now post this file-embedded PNG image to reddit.\n\n";
+	std::cout << "\nCreated output file: \"" + EMBEDDED_FILE + "\"\nYou can now post this file-embedded PNG image on reddit.\n\n";
 
 }
 
