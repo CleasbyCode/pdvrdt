@@ -67,12 +67,15 @@ int main(int argc, char** argv) {
 		
 		if (secondFile.length() > 2 && secondFile.substr(secondFile.length() - 3, secondFile.length()) == "png") {
 			std::cout << "\nClarification required.\n\nPlease type YES if you intend to embed the file: \""
-					<< secondFile.substr(2,secondFile.length()) << "\",\notherwise just press enter to continue with extraction: ";
+					<< secondFile << "\",\notherwise just press enter to continue with extraction: ";
 			std::getline(std::cin, response);
 			if (response == "YES") {
 				processFiles(argv);
 			}
-			else processEmbeddedImage(argv);
+			else {
+				processEmbeddedImage(argv++);
+				processEmbeddedImage(argv);
+			}
 		}
 		else processFiles(argv);
 	}
@@ -99,7 +102,7 @@ void processFiles(char* argv[]) {
 	if (!readImage || !readFile) {
 
 		// Open file failure, display relevant error message and exit program.
-		const std::string ERR_MSG = !readImage ? READ_ERR_MSG + "'" + IMAGE_FILE + "'\n\n" : READ_ERR_MSG + "'" + DATA_FILE + "'\n\n";
+		const std::string ERR_MSG = !readImage ? READ_ERR_MSG + "\"" + IMAGE_FILE + "\"\n\n" : READ_ERR_MSG + "\"" + DATA_FILE + "\"\n\n";
 
 		std::cerr << ERR_MSG;
 		std::exit(EXIT_FAILURE);
@@ -144,7 +147,7 @@ void processEmbeddedImage(char* argv[]) {
 	std::ifstream readImage(IMAGE_FILE, std::ios::binary);
 
 	if (!readImage) {
-		std::cerr << READ_ERR_MSG + IMAGE_FILE + "'\n\n";
+		std::cerr << READ_ERR_MSG + "\"" +IMAGE_FILE + "\"\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -171,7 +174,7 @@ void processEmbeddedImage(char* argv[]) {
 	if (PROFILE_CHECK != PROFILE_SIG) {
 
 		// File requirements check failure, display relevant error message and exit program.
-		std::cerr << "\nPNG Error: Image file does not appear to contain a valid iCCP profile.\n\n";
+		std::cerr << "\nPNG Error: Image file \"" << IMAGE_FILE << "\" does not appear to contain a valid iCCP profile.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 	
