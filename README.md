@@ -8,7 +8,7 @@ Post & share your file-embedded image on **reddit**.
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/source.png)  
 {***Image demo (github): ZIP archive embedded within this PNG (contains the source code for this repo)***} 
 
-[**Video_1 (YouTube) - Embed A.I. prompt text into image & post to reddit. Download image & extract prompt.**](https://youtu.be/RS1n2sAITDE)  
+[**Video_1 (YouTube) - Embed A.I. Prompt / Post to reddit. Download Image & Extract Prompt.**](https://youtu.be/RS1n2sAITDE)  
 [**Video_2 (YouTube) - Download & Extract Multipart RAR File.**](https://youtu.be/SHElh8VJ3ZQ)  
 [**Image Demo (reddit) - Image containing prompt text.**](https://i.redd.it/b5b26dj1ttpa1.png) 
 
