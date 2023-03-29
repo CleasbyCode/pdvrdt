@@ -29,7 +29,7 @@ Once installed, add the path to your environment variables system path (e.g. **C
 To maximise the amount of data you can embed in your image file, I recommend first compressing your 
 data file(s) to zip/rar formats, etc.  Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
 
-Your file will be encrypted, deflated/compressed (zlib) and embedded into the image file (iCCP profile chunk).
+Your file will be encrypted, deflated/compressed (zlib) and embedded into the image file (iCCP Profile chunk).
 
 Compile and run the program under Windows or **Linux**.
 
@@ -44,15 +44,15 @@ $ ./pdvrdt
 
 Usage:-
 	Insert:  pdvrdt  <png_image>  <your_file>
-	Extract: pdvrdt  <png_image>
+	Extract: pdvrdt  <image1>  <image2> ... <image5>
 	Help:	 pdvrdt  --info
 
 $ ./pdvrdt boat.png document.pdf
-
-All done!  
   
 Created output file: "pdvrdt_image.png"
 You can now post your file-embedded PNG image to reddit.
+
+All done! 
 
 ```
 ## Usage (Linux - Extracting data file from PNG image)
@@ -62,14 +62,14 @@ $ ./pdvrdt
 
 Usage:-
 	Insert:  pdvrdt  <png_image>  <your_file>
-	Extract: pdvrdt  <png_image>
+	Extract: pdvrdt  <image1>  <image2> ... <image5>
 	Help:	 pdvrdt  --info
         
 $ ./pdvrdt pdvrdt_image.png
 
-All done!
+Created output file: "pdvrdt_document.pdf"  
 
-Created output file: "pdvrdt_document.pdf"
+All done!
 
 ```
 
