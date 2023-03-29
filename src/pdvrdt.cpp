@@ -54,14 +54,18 @@ int main(int argc, char** argv) {
 	}
 	else if (argc < 2 || argc > 6) {
 		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\t" << 
-				"Extract: pdvrdt  <image_1>  <image_2> ... <image_5>\n\tHelp:\t pdvrdt  --info\n\n";
+				"Extract: pdvrdt  <image1>  <image2> ... <image5>\n\tHelp:\t pdvrdt  --info\n\n";
 		argc = 0;
 	}
 	else if (argc == 3) {
 		std::string
 			secondFile = argv[2],
 			response;
-		if (secondFile.substr(secondFile.length() - 3, secondFile.length()) == "png") {
+		
+		std::transform(secondFile.begin(), secondFile.end(), secondFile.begin(),
+			[](unsigned char c) { return std::tolower(c); });
+		
+		if (secondFile.length() > 2 && secondFile.substr(secondFile.length() - 3, secondFile.length()) == "png") {
 			std::cout << "\nClarification required.\n\nPlease type YES if you intend to embed the file: \""
 					<< secondFile.substr(2,secondFile.length()) << "\",\notherwise just press enter to continue with extraction: ";
 			std::getline(std::cin, response);
