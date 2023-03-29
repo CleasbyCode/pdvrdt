@@ -31,6 +31,8 @@ data file(s) to zip/rar formats, etc.  Make sure the zip/rar compressed file doe
 
 Your file will be encrypted, deflated/compressed (zlib) and embedded into the image file (iCCP Profile chunk).
 
+You can extract embedded content from up to five images at a time.
+
 Compile and run the program under Windows or **Linux**.
 
 ## Usage (Linux - Inserting data file into PNG image)
