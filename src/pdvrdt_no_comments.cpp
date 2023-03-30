@@ -1,10 +1,11 @@
-//	PNG Data Vehicle for Reddit, (PDVRDT v1.1). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle for Reddit, (PDVRDT v1.2). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <zlib.h>
 
 void processFiles(char* []);
 void processEmbeddedImage(char* []);
@@ -12,23 +13,13 @@ void readFilesIntoVectors(std::ifstream&, std::ifstream&, const std::string&, co
 void eraseChunks(std::vector<unsigned char>&);
 void writeFile(std::vector<unsigned char>&, const std::string&);
 void insertValue(std::vector<unsigned char>&, ptrdiff_t, const size_t&, int);
-void deleteTemp(std::ifstream&);
+void inflateDeflate(std::vector<unsigned char>&, bool);
 void displayInfo();
 
 unsigned long crcUpdate(const unsigned long&, unsigned char*, const size_t&);
 unsigned long crc(unsigned char*, const size_t&);
 
-const std::string
-	PROFILE_SIG = "iCCPICC\x20Profile",
-	PDV_SIG = "PDVRDT",
-	PLTE_SIG = "PLTE",
-	PNG_SIG = "\x89PNG",
-	EMBEDDED_FILE = "pdvrdt_image.png",
-	READ_ERR_MSG = "\nRead Error: Unable to open/read file: ",
-	DEFLATE_FILE = "DEFLATE_PROFILE_TMP",
-	INFLATE_FILE = "INFLATE_PROFILE_TMP",
-	ZLIB_INFLATE_CMD = "zlib-flate -uncompress < " + DEFLATE_FILE + " > " + INFLATE_FILE,
-	ZLIB_DEFLATE_CMD = "zlib-flate -compress < " + INFLATE_FILE + " > " + DEFLATE_FILE;
+const std::string READ_ERR_MSG = "\nRead Error: Unable to open/read file: ";
 
 int main(int argc, char** argv) {
 
@@ -37,21 +28,21 @@ int main(int argc, char** argv) {
 		displayInfo();
 	}
 	else if (argc < 2 || argc > 6) {
-		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\t" << 
-				"Extract: pdvrdt  <image1>  <image2> ... <image5>\n\tHelp:\t pdvrdt  --info\n\n";
+		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <image>  <file>\n\tExtract: pdvrdt  <image1> ... <image5>\n\tHelp:\t pdvrdt  --info\n\n";
 		argc = 0;
 	}
 	else if (argc == 3) {
+		
 		std::string
 			secondFile = argv[2],
 			response;
 		
 		std::transform(secondFile.begin(), secondFile.end(), secondFile.begin(),
 			[](unsigned char c) { return std::tolower(c); });
-		
+
 		if (secondFile.length() > 2 && secondFile.substr(secondFile.length() - 3, secondFile.length()) == "png") {
 			std::cout << "\nClarification required.\n\nPlease type YES if you intend to embed the file: \""
-					<< secondFile << "\",\notherwise just press enter to continue with extraction: ";
+						<< secondFile << "\"\notherwise just press enter to continue with extraction: ";
 			std::getline(std::cin, response);
 			if (response == "YES") {
 				processFiles(argv);
@@ -67,7 +58,7 @@ int main(int argc, char** argv) {
 		while (argc !=1 ) {
 			processEmbeddedImage(argv++);
 			argc--;
-		}
+			}
 	}
 	if (argc !=0) std::cout << "All Done!\n\n";
 	return 0;
@@ -84,16 +75,17 @@ void processFiles(char* argv[]) {
 		readFile(DATA_FILE, std::ios::binary);
 
 	if (!readImage || !readFile) {
+		
 		const std::string ERR_MSG = !readImage ? READ_ERR_MSG + "\"" + IMAGE_FILE + "\"\n\n" : READ_ERR_MSG + "\"" + DATA_FILE + "\"\n\n";
 
 		std::cerr << ERR_MSG;
 		std::exit(EXIT_FAILURE);
 	}
-	
+
 	const int
 		MAX_PNG_SIZE_BYTES = 5242880,		
 		MAX_DATAFILE_SIZE_BYTES = 1048444;	
-						
+							
 	readImage.seekg(0, readImage.end),
 	readFile.seekg(0, readFile.end);
 
@@ -103,7 +95,7 @@ void processFiles(char* argv[]) {
 
 	if ((IMAGE_SIZE + MAX_DATAFILE_SIZE_BYTES) > MAX_PNG_SIZE_BYTES
 		|| DATA_SIZE > MAX_DATAFILE_SIZE_BYTES) {
-
+		
 		const std::string
 			SIZE_ERR_PNG = "\nImage Size Error: PNG image (+including embedded file size) must not exceed 5MB.\n\n",
 			SIZE_ERR_DATA = "\nFile Size Error: Your data file must not exceed 1,048,444 bytes.\n\n",
@@ -127,24 +119,29 @@ void processEmbeddedImage(char* argv[]) {
 		std::cerr << READ_ERR_MSG + "\"" +IMAGE_FILE + "\"\n\n";
 		std::exit(EXIT_FAILURE);
 	}
-
+	
 	std::vector<unsigned char> ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
 	
 	int
 		plteChunkSize = 0,	
 		plteChunkSizeIndex = 33,
-		chunkIndex = 37;
+		chunkIndex = 37;	
 
-	const std::string PLTE_CHECK{ ImageVec.begin() + chunkIndex, ImageVec.begin() + chunkIndex + PLTE_SIG.length() };
+	const std::string 
+		PLTE_SIG = "PLTE",
+		PLTE_CHECK{ ImageVec.begin() + chunkIndex, ImageVec.begin() + chunkIndex + PLTE_SIG.length() };
 
 	if (PLTE_CHECK == PLTE_SIG) {
+		
 		plteChunkSize = 12 + (ImageVec[plteChunkSizeIndex + 1] << 16) | ImageVec[plteChunkSizeIndex + 2] << 8 | ImageVec[plteChunkSizeIndex + 3];
 	}
-	
+
 	const std::string
+		PROFILE_SIG = "iCCPICC\x20Profile",
 		PROFILE_CHECK{ ImageVec.begin() + chunkIndex + plteChunkSize, ImageVec.begin() + chunkIndex + plteChunkSize + PROFILE_SIG.length() };
 
 	if (PROFILE_CHECK != PROFILE_SIG) {
+		
 		std::cerr << "\nPNG Error: Image file \"" << IMAGE_FILE << "\" does not appear to contain a valid iCCP profile.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
@@ -154,7 +151,7 @@ void processEmbeddedImage(char* argv[]) {
 	int 
 		ihdrIndex = 8,
 		ihdrLength = 25;
-
+	
 	IhdrVec.insert(IhdrVec.begin(), ImageVec.begin() + ihdrIndex, ImageVec.begin() + ihdrIndex + ihdrLength);
 	
 	int
@@ -166,44 +163,33 @@ void processEmbeddedImage(char* argv[]) {
 	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + deflateDataIndex);
 	ImageVec.erase(ImageVec.begin() + deflateChunkSize, ImageVec.end());
 	
-	writeFile(ImageVec,  DEFLATE_FILE);
-
-	system(ZLIB_INFLATE_CMD.c_str());
-
-	std::ifstream readProfile(INFLATE_FILE, std::ios::binary);
-
-	if (!readProfile) {
-		std::cerr << READ_ERR_MSG + INFLATE_FILE + "\n\n";
-		deleteTemp(readProfile);
-		std::exit(EXIT_FAILURE);
-	}
-
-	std::vector<unsigned char> TmpProfileVec((std::istreambuf_iterator<char>(readProfile)), std::istreambuf_iterator<char>());
-
-	const std::string
-		PDV_CHECK{ TmpProfileVec.begin() + 5, TmpProfileVec.begin() + 5 + PDV_SIG.length() },			
-		ENCRYPTED_NAME = { TmpProfileVec.begin() + 13, TmpProfileVec.begin() + 13 + TmpProfileVec[12] };
-
-	int encryptedNameLength = TmpProfileVec[12];
+	bool inflateData = true;
 	
+	inflateDeflate(ImageVec, inflateData);
+	
+	const std::string
+		PDV_SIG = "PDVRDT",
+		PDV_CHECK{ ImageVec.begin() + 5, ImageVec.begin() + 5 + PDV_SIG.length() },		
+		ENCRYPTED_NAME = { ImageVec.begin() + 13, ImageVec.begin() + 13 + ImageVec[12] };	
+
+	int encryptedNameLength = ImageVec[12];
+
 	if (PDV_CHECK != PDV_SIG) {
-		
 		std::cerr << "\nProfile Error: iCCP profile does not seem to be a PDVRDT modified profile.\n\n";
-		deleteTemp(readProfile);
 		std::exit(EXIT_FAILURE);
 	}
 
 	bool updateIhdrCrc = true;
 
-	if (IhdrVec[16] != TmpProfileVec[4] && IhdrVec[20] != TmpProfileVec[11]) {
-		IhdrVec[16] = TmpProfileVec[4];
-		IhdrVec[20] = TmpProfileVec[11];
+	if (IhdrVec[16] != ImageVec[4] && IhdrVec[20] != ImageVec[11]) {
+		IhdrVec[16] = ImageVec[4];
+		IhdrVec[20] = ImageVec[11];
 	}
-	else if (IhdrVec[16] != TmpProfileVec[4]) {
-		IhdrVec[16] = TmpProfileVec[4];
+	else if (IhdrVec[16] != ImageVec[4]) {
+		IhdrVec[16] = ImageVec[4];
 	}
-	else if (IhdrVec[20] != TmpProfileVec[11]) {
-		IhdrVec[20] = TmpProfileVec[11];
+	else if (IhdrVec[20] != ImageVec[11]) {
+		IhdrVec[20] = ImageVec[11];
 	}
 	else updateIhdrCrc = false; 
 
@@ -218,10 +204,8 @@ void processEmbeddedImage(char* argv[]) {
 
 		insertValue(IhdrVec, ihdrCrcInsertIndex, IHDR_CHUNK_CRC, 32);
 	}
-
-	TmpProfileVec.erase(TmpProfileVec.begin(), TmpProfileVec.begin() + 132);
 	
-	deleteTemp(readProfile);
+	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + 132);
 
 	std::vector<unsigned char> ExtractedFileVec;
 
@@ -229,12 +213,12 @@ void processEmbeddedImage(char* argv[]) {
 
 	bool nameDecrypted = false;
 	
-	for (int i = 0, charPos = 0, ihdrCrcIndex = 21 ; TmpProfileVec.size() > i; i++) {
+	for (int i = 0, charPos = 0, ihdrCrcIndex = 21 ; ImageVec.size() > i; i++) {
 		if (!nameDecrypted) {
 			decryptedName += ENCRYPTED_NAME[charPos] ^ IhdrVec[ihdrCrcIndex++];
 			ihdrCrcIndex = ihdrCrcIndex > 24 ? 21 : ihdrCrcIndex;
 		}
-		ExtractedFileVec.insert(ExtractedFileVec.begin() + i, TmpProfileVec[i] ^ ENCRYPTED_NAME[charPos++]);
+		ExtractedFileVec.insert(ExtractedFileVec.begin() + i, ImageVec[i] ^ ENCRYPTED_NAME[charPos++]);
 		if (charPos >= encryptedNameLength) {
 			nameDecrypted = true;
 			charPos = charPos > encryptedNameLength ? 0 : charPos;
@@ -242,7 +226,7 @@ void processEmbeddedImage(char* argv[]) {
 	}
 	
 	decryptedName = "pdvrdt_" + decryptedName;
-	
+
 	writeFile(ExtractedFileVec, decryptedName);
 
 	std::cout << "\nCreated output file: \"" + decryptedName + "\"\n\n";
@@ -257,7 +241,6 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	
 	std::vector<unsigned char>
 		ProfileDataVec{
-		
 			0x00, 0x00, 0x00, 0x84, 0x20, 0x50, 0x44, 0x56, 0x52, 0x44, 0x54, 0x20,
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -278,8 +261,11 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	
 		ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
 
-	const std::string PNG_CHECK{ ImageVec.begin(), ImageVec.begin() + PNG_SIG.length() };	
-
+	const std::string 
+		EMBEDDED_IMAGE_FILE = "pdvrdt_image.png",
+		PNG_SIG = "\x89PNG",
+		PNG_CHECK{ ImageVec.begin(), ImageVec.begin() + PNG_SIG.length() };
+	
 	if (PNG_CHECK != PNG_SIG) {
 		std::cerr << "\nImage Error: File does not appear to be a valid PNG image.\n";
 		std::exit(EXIT_FAILURE);
@@ -309,7 +295,7 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	
 	ProfileDataVec[4] = ImageVec[24];	
 	ProfileDataVec[11] = ImageVec[28];	
-	
+
 	insertValue(ProfileDataVec, profileNameLengthIndex, noSlashNameLength, 8);
 	
 	ProfileDataVec.erase(ProfileDataVec.begin() + profileNameIndex, ProfileDataVec.begin() + noSlashNameLength + profileNameIndex);
@@ -328,35 +314,22 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 		ProfileDataVec.insert((ProfileDataVec.begin() + insertIndex++), byte ^ encryptedName[charPos++]);
 		charPos = charPos > encryptedName.length() ? 0 : charPos; 
 	}
-
+	
 	ptrdiff_t profileInflateSize = ProfileDataVec.size();
 	
 	insertValue(ProfileDataVec, profileInflateSizeIndex, profileInflateSize, 24);
-	
-	writeFile(ProfileDataVec, INFLATE_FILE);
-	
-	system(ZLIB_DEFLATE_CMD.c_str());
 
-	std::ifstream readProfile(DEFLATE_FILE, std::ios::binary);
-
-	if (!readProfile) {
-		
-		std::cerr << READ_ERR_MSG + DEFLATE_FILE;
-		deleteTemp(readProfile);
-		std::exit(EXIT_FAILURE);
-	}
+	bool inflateData = false;
 	
-	readProfile.seekg(0, readProfile.end);
+	inflateDeflate(ProfileDataVec, inflateData);
 
 	const ptrdiff_t
-		PROFILE_DEFLATE_SIZE = readProfile.tellg(),
+		PROFILE_DEFLATE_SIZE = ProfileDataVec.size(),
 		PROFILE_CHUNK_SIZE = PROFILE_DEFLATE_SIZE + 17,
-		PROFILE_CHUNK_INSERT_INDEX = 33; 
+		PROFILE_DATA_INSERT_INDEX = 21,   
+		PROFILE_CHUNK_INSERT_INDEX = 33;  
 	
-	readProfile.seekg(0, readProfile.beg);
-	
-	ProfileChunkVec.resize(PROFILE_DEFLATE_SIZE + ProfileChunkVec.size() / sizeof(unsigned char));
-	readProfile.read((char*)&ProfileChunkVec[21], PROFILE_DEFLATE_SIZE);
+	ProfileChunkVec.insert((ProfileChunkVec.begin() + PROFILE_DATA_INSERT_INDEX), ProfileDataVec.begin(), ProfileDataVec.end()); 
 
 	insertValue(ProfileChunkVec, profileChunkSizeIndex, PROFILE_DEFLATE_SIZE + 13, 24);
 
@@ -365,25 +338,68 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	const uint32_t PROFILE_CHUNK_CRC = crc(&ProfileChunkVec[PROFILE_CHUNK_START_INDEX], PROFILE_CHUNK_SIZE);
 
 	ptrdiff_t profileCrcInsertIndex = PROFILE_CHUNK_START_INDEX + (PROFILE_CHUNK_SIZE); 
-	
+
 	insertValue(ProfileChunkVec, profileCrcInsertIndex, PROFILE_CHUNK_CRC, 32);
-	
+
 	ImageVec.insert((ImageVec.begin() + PROFILE_CHUNK_INSERT_INDEX), ProfileChunkVec.begin(), ProfileChunkVec.end());
-
-	writeFile(ImageVec, EMBEDDED_FILE);
 	
-	deleteTemp(readProfile);
+	writeFile(ImageVec, EMBEDDED_IMAGE_FILE);
 
-	std::cout << "\nCreated output file: \"" + EMBEDDED_FILE + "\"\nYou can now post this file-embedded PNG image on reddit.\n\n";
-
+	std::cout << "\nCreated output file: \"" + EMBEDDED_IMAGE_FILE + "\"\nYou can now post this file-embedded PNG image on reddit.\n\n";
 }
 
-void deleteTemp(std::ifstream& readProfile) {
-	
-	readProfile.close();
+void inflateDeflate(std::vector<unsigned char>& Vec, bool inflateData) {
 
-	remove(DEFLATE_FILE.c_str());
-	remove(INFLATE_FILE.c_str());
+	std::vector <unsigned char> Buffer;
+
+	const size_t BUFSIZE = 128 * 1024;
+	unsigned char temp_buffer[BUFSIZE];
+
+	z_stream strm;
+	strm.zalloc = 0;
+	strm.zfree = 0;
+	strm.next_in = Vec.data();
+	strm.avail_in = Vec.size();
+	strm.next_out = temp_buffer;
+	strm.avail_out = BUFSIZE;
+
+	if (inflateData) {
+		inflateInit(&strm);
+	}
+	else {
+		deflateInit(&strm, 6); 
+	}
+
+	while (strm.avail_in)
+	{
+		if (inflateData) {
+			inflate(&strm, Z_NO_FLUSH);
+		}
+		else {
+			deflate(&strm, Z_NO_FLUSH);
+		}
+
+		if (!strm.avail_out)
+		{
+			Buffer.insert(Buffer.end(), temp_buffer, temp_buffer + BUFSIZE);
+			strm.next_out = temp_buffer;
+			strm.avail_out = BUFSIZE;
+		}
+		else
+			break;
+	}
+	if (inflateData) {
+		inflate(&strm, Z_FINISH);
+		Buffer.insert(Buffer.end(), temp_buffer, temp_buffer + BUFSIZE - strm.avail_out);
+		inflateEnd(&strm);
+	} 
+	else {
+		deflate(&strm, Z_FINISH);
+		Buffer.insert(Buffer.end(), temp_buffer, temp_buffer + BUFSIZE - strm.avail_out);
+		deflateEnd(&strm);
+	}
+
+	Vec.swap(Buffer);
 }
 
 void eraseChunks(std::vector<unsigned char>& ImageVec) {
@@ -397,7 +413,7 @@ void eraseChunks(std::vector<unsigned char>& ImageVec) {
 		if (firstIdatIndex > chunkFoundIndex) {
 			int chunkSize = (ImageVec[chunkFoundIndex + 1] << 16) | ImageVec[chunkFoundIndex + 2] << 8 | ImageVec[chunkFoundIndex + 3];
 			ImageVec.erase(ImageVec.begin() + chunkFoundIndex, ImageVec.begin() + chunkFoundIndex + (chunkSize + 12));
-			chunkIndex++;
+			chunkIndex++; 
 		}
 	}
 }
@@ -462,7 +478,7 @@ void insertValue(std::vector<unsigned char>& vec, ptrdiff_t valueInsertIndex, co
 void displayInfo() {
 
 	std::cout << R"(
-PNG Data Vehicle for Reddit, (PDVRDT v1.1). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
+PNG Data Vehicle for Reddit, (PDVRDT v1.2). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
 PDVRDT enables you to embed & extract arbitrary data of upto ~1MB within a PNG image.
 You can then upload and share your data embedded image file on Reddit. 
@@ -470,11 +486,6 @@ You can then upload and share your data embedded image file on Reddit.
 PDVRDT data embedded images will not work with Twitter. For Twitter, please use PDVZIP.
 
 This program works on Linux and Windows.
-
-PDVRDT currently requires the external program 'zlib-flate'.
-
-If not already installed, you can install it for Linux with 'apt install qpdf'.
-For Windows you can download the installer from Sourceforge. (https://sourceforge.net/projects/qpdf/).
  
 1,048,444 bytes is the (zlib) uncompressed limit for your arbitrary data.
 132 bytes is used for the barebones iCCP profile. (132 + 1048444 = 1,048,576 / 1MB).
@@ -482,7 +493,7 @@ For Windows you can download the installer from Sourceforge. (https://sourceforg
 To maximise the amount of data you can embed in your image file, I recommend compressing your 
 data file(s) to zip/rar formats, etc. Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
 
-Your file will be encrypted and compressed again (deflate/zlib) when embedded into the image file (iCCP Profile chunk).
+Your file will be encrypted and compressed (deflate/zlib) when embedded into the image file (iCCP Profile chunk).
 
 You can extract embedded content from up to five images at a time.
 
