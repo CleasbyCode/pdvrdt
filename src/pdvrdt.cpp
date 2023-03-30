@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 		displayInfo();
 	}
 	else if (argc < 2 || argc > 6) {
-		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <image>  <file>\n\tExtract: pdvrdt  <image1> ... <image5>\n\tHelp:\t pdvrdt  --info\n\n";
+		std::cerr << "\nUsage:-\n\tInsert:  pdvrdt  <png_image>  <your_file>\n\tExtract: pdvrdt  <png_image> ... ... ... ...\n\tHelp:\t pdvrdt  --info\n\n";
 		argc = 0;
 	}
 	else if (argc == 3) {
