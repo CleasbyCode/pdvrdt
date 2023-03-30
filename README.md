@@ -9,7 +9,7 @@ Post & share your file-embedded image on **reddit**.
 {***Image demo (github): ZIP archive embedded within this PNG (contains the source code for this repo)***} 
 
 [**Video_1 (YouTube) - Embed A.I. Prompt / Post to reddit. Download Image & Extract Prompt.**](https://youtu.be/RS1n2sAITDE)  
-[**Video_2 (YouTube) - Download & Extract Multipart RAR File.**](https://youtu.be/SHElh8VJ3ZQ)  
+[**Video_2 (YouTube) - Download & Extract Multipart RAR File (MP3).**](https://youtu.be/SHElh8VJ3ZQ)  
 [**Image Demo (reddit) - Image containing PDF document.**](https://i.redd.it/kxfi6h0rjrqa1.png) 
 
 ***Note: pdvrdt file-embedded images do not work with Twitter.  For Twitter, please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
