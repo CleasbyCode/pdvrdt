@@ -28,7 +28,7 @@ You can extract embedded content from up to five images at a time.
 
 Compile and run the program under Windows or **Linux**.
 
-## Usage (Linux - Inserting data file into PNG image)
+## Usage (Linux - Inserting file into PNG image)
 
 ```c
 $ g++ pdvrdt.cpp -lz -o pdvrdt
@@ -48,7 +48,7 @@ You can now post your file-embedded PNG image on reddit.
 All done! 
 
 ```
-## Usage (Linux - Extracting data file from PNG image)
+## Usage (Linux - Extracting file from PNG image)
 
 ```c
 $ ./pdvrdt
