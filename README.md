@@ -22,7 +22,7 @@ This program can be used on Linux and Windows.
 To maximise the amount of data you can embed in your image file, I recommend first compressing your 
 data file(s) to zip/rar formats, etc.  Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
 
-Your file will be encrypted, deflated/compressed (zlib) and embedded into the image file (iCCP Profile chunk).
+Your file will be encrypted, deflate/compressed (zlib) and embedded into the image file (iCCP Profile chunk).
 
 You can extract embedded content from up to five images at a time.
 
