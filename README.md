@@ -1,6 +1,6 @@
 # pdvrdt
 
-PNG Data Vehicle for **Reddit**, (pdvrdt v1.1).
+PNG Data Vehicle for **Reddit**, (pdvrdt v1.2).
 
 Embed & extract arbitrary data of up to ~1MB within a PNG image.  
 Post & share your file-embedded image on **reddit**. 
@@ -15,13 +15,6 @@ Post & share your file-embedded image on **reddit**.
 ***Note: pdvrdt file-embedded images do not work with Twitter.  For Twitter, please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
 
 This program can be used on Linux and Windows.
-
-pdvrdt currently requires the external program '***zlib-flate***'.
-
-You can install **zlib-flate** for **Linux** with '***sudo apt install qpdf***'.  
-
-For **Windows**, you can download the installer from [***Sourceforge***](https://sourceforge.net/projects/qpdf/).  
-Once installed, add the path to your environment variables system path (e.g. **C:\Program Files\qpdf 11.2.0\bin**).
  
 1,048,444 bytes is the inflated/uncompressed (zlib) limit for your arbitrary data.  
 132 bytes is used for the barebones iCCP profile. (132 + 1048444 = 1,048,576 [1MB]).
@@ -38,9 +31,7 @@ Compile and run the program under Windows or **Linux**.
 ## Usage (Linux - Inserting data file into PNG image)
 
 ```c
-$ g++ pdvrdt.cpp -o pdvrdt
-$
-$ sudo apt install qpdf
+$ g++ pdvrdt.cpp -lz -o pdvrdt
 $ 
 $ ./pdvrdt
 
@@ -63,8 +54,8 @@ All done!
 $ ./pdvrdt
 
 Usage:-
-	Insert:  pdvrdt  <png_image>  <your_file>
-	Extract: pdvrdt  <image1>  <image2> ... <image5>
+	Insert:  pdvrdt  <image>  <file>
+	Extract: pdvrdt  <image1> ... <image5>
 	Help:	 pdvrdt  --info
         
 $ ./pdvrdt pdvrdt_image.png
