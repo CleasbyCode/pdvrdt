@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
 		std::string
 			secondFile = argv[2],
 			response;
-
+		
 		std::transform(secondFile.begin(), secondFile.end(), secondFile.begin(),
 			[](unsigned char c) { return std::tolower(c); });
 
@@ -133,8 +133,6 @@ void processFiles(char* argv[]) {
 // Inflate, decrypt and extract embedded data file from PNG image.
 void processEmbeddedImage(char* argv[]) {
 
-	bool inflateData = true;
-
 	const std::string IMAGE_FILE = argv[1];
 
 	std::ifstream readImage(IMAGE_FILE, std::ios::binary);
@@ -195,7 +193,9 @@ void processEmbeddedImage(char* argv[]) {
 
 	// Erase all bytes of "ImageVec" after end of deflate/compressed data. Vector should now just contain the zlib deflate/compressed data.
 	ImageVec.erase(ImageVec.begin() + deflateChunkSize, ImageVec.end());
-
+	
+	bool inflateData = true;
+	
 	// Call function to inflate/uncompress profile chunk, which includes user's data file. 
 	inflateDeflate(ImageVec, inflateData);
 	
@@ -279,7 +279,6 @@ void processEmbeddedImage(char* argv[]) {
 	std::cout << "\nCreated output file: \"" + decryptedName + "\"\n\n";
 
 	readImage.close();
-
 }
 
 void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, const std::string& IMAGE_FILE, const std::string& DATA_FILE, const ptrdiff_t& IMAGE_SIZE, const ptrdiff_t& DATA_SIZE) {
@@ -449,7 +448,7 @@ void inflateDeflate(std::vector<unsigned char>& Vec, bool inflateData) {
 		inflateInit(&strm);
 	}
 	else {
-		deflateInit(&strm, 6); // Compression level 6 (78,9c...)
+		deflateInit(&strm, 6); // Compression level 6 (78, 9c...)
 	}
 
 	while (strm.avail_in)
