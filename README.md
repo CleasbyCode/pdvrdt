@@ -36,8 +36,8 @@ $
 $ ./pdvrdt
 
 Usage:-
-	Insert:  pdvrdt  <image>  <file>
-	Extract: pdvrdt  <image1> ... <image5>
+	Insert:  pdvrdt  <png_image>  <your_file>
+	Extract: pdvrdt  <png_image> ... ... ... ... 
 	Help:	 pdvrdt  --info
 
 $ ./pdvrdt boat.png document.pdf
@@ -54,8 +54,8 @@ All done!
 $ ./pdvrdt
 
 Usage:-
-	Insert:  pdvrdt  <image>  <file>
-	Extract: pdvrdt  <image1> ... <image5>
+	Insert:  pdvrdt  <png_image>  <your_file>
+	Extract: pdvrdt  <png_image> ... ... ... ...
 	Help:	 pdvrdt  --info
         
 $ ./pdvrdt pdvrdt_image.png
