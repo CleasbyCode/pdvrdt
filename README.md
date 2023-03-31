@@ -3,7 +3,7 @@
 PNG Data Vehicle for **Reddit**, (pdvrdt v1.2).
 
 Embed & extract arbitrary data of up to ~1MB within a PNG image.  
-Post & share your file-embedded image on **reddit**. 
+Post & share your "file-embedded" image on **[reddit](https://www.reddit.com/)**. 
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/source.png)  
 {***Image demo (github): ZIP archive embedded within this PNG (contains the source code for this repo)***} 
