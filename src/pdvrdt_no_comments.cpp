@@ -52,7 +52,12 @@ int main(int argc, char** argv) {
 				processEmbeddedImage(argv);
 			}
 		}
-		else processFiles(argv);
+		else {
+			while (argc !=2){
+			processFiles(argv++);
+			argc--;
+			}
+		}
 	}
 	else {
 		while (argc !=1 ) {
@@ -75,7 +80,7 @@ void processFiles(char* argv[]) {
 		readFile(DATA_FILE, std::ios::binary);
 
 	if (!readImage || !readFile) {
-		
+
 		const std::string ERR_MSG = !readImage ? READ_ERR_MSG + "\"" + IMAGE_FILE + "\"\n\n" : READ_ERR_MSG + "\"" + DATA_FILE + "\"\n\n";
 
 		std::cerr << ERR_MSG;
@@ -95,7 +100,7 @@ void processFiles(char* argv[]) {
 
 	if ((IMAGE_SIZE + MAX_DATAFILE_SIZE_BYTES) > MAX_PNG_SIZE_BYTES
 		|| DATA_SIZE > MAX_DATAFILE_SIZE_BYTES) {
-		
+
 		const std::string
 			SIZE_ERR_PNG = "\nImage Size Error: PNG image (+including embedded file size) must not exceed 5MB.\n\n",
 			SIZE_ERR_DATA = "\nFile Size Error: Your data file must not exceed 1,048,444 bytes.\n\n",
@@ -119,9 +124,9 @@ void processEmbeddedImage(char* argv[]) {
 		std::cerr << READ_ERR_MSG + "\"" +IMAGE_FILE + "\"\n\n";
 		std::exit(EXIT_FAILURE);
 	}
-	
+
 	std::vector<unsigned char> ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
-	
+
 	int
 		plteChunkSize = 0,	
 		plteChunkSizeIndex = 33,
@@ -132,16 +137,14 @@ void processEmbeddedImage(char* argv[]) {
 		PLTE_CHECK{ ImageVec.begin() + chunkIndex, ImageVec.begin() + chunkIndex + PLTE_SIG.length() };
 
 	if (PLTE_CHECK == PLTE_SIG) {
-		
 		plteChunkSize = 12 + (ImageVec[plteChunkSizeIndex + 1] << 16) | ImageVec[plteChunkSizeIndex + 2] << 8 | ImageVec[plteChunkSizeIndex + 3];
 	}
-
+	
 	const std::string
 		PROFILE_SIG = "iCCPICC\x20Profile",
 		PROFILE_CHECK{ ImageVec.begin() + chunkIndex + plteChunkSize, ImageVec.begin() + chunkIndex + plteChunkSize + PROFILE_SIG.length() };
 
 	if (PROFILE_CHECK != PROFILE_SIG) {
-		
 		std::cerr << "\nPNG Error: Image file \"" << IMAGE_FILE << "\" does not appear to contain a valid iCCP profile.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
@@ -164,7 +167,7 @@ void processEmbeddedImage(char* argv[]) {
 	ImageVec.erase(ImageVec.begin() + deflateChunkSize, ImageVec.end());
 	
 	bool inflateData = true;
-	
+
 	inflateDeflate(ImageVec, inflateData);
 	
 	const std::string
@@ -204,7 +207,7 @@ void processEmbeddedImage(char* argv[]) {
 
 		insertValue(IhdrVec, ihdrCrcInsertIndex, IHDR_CHUNK_CRC, 32);
 	}
-	
+
 	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + 132);
 
 	std::vector<unsigned char> ExtractedFileVec;
@@ -212,7 +215,7 @@ void processEmbeddedImage(char* argv[]) {
 	std::string decryptedName;
 
 	bool nameDecrypted = false;
-	
+
 	for (int i = 0, charPos = 0, ihdrCrcIndex = 21 ; ImageVec.size() > i; i++) {
 		if (!nameDecrypted) {
 			decryptedName += ENCRYPTED_NAME[charPos] ^ IhdrVec[ihdrCrcIndex++];
@@ -225,7 +228,9 @@ void processEmbeddedImage(char* argv[]) {
 		}
 	}
 	
-	decryptedName = "pdvrdt_" + decryptedName;
+	if (decryptedName.substr(0,7) != "pdvrdt_") {
+		decryptedName = "pdvrdt_" + decryptedName;
+	}
 
 	writeFile(ExtractedFileVec, decryptedName);
 
@@ -258,19 +263,22 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 			0x00, 0x00, 0x00, 0x00, 0x69, 0x43, 0x43, 0x50, 0x49, 0x43, 0x43, 0x20,
 			0x50, 0x72, 0x6F, 0x66, 0x69, 0x6C, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00 },
-	
+
 		ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
 
+	srand((unsigned)time(NULL));
+
 	const std::string 
-		EMBEDDED_IMAGE_FILE = "pdvrdt_image.png",
+		TXT_NUM = std::to_string(rand()),
+		EMBEDDED_IMAGE_FILE = "pdvrdt_image_"+TXT_NUM.substr(0,6)+".png",
 		PNG_SIG = "\x89PNG",
-		PNG_CHECK{ ImageVec.begin(), ImageVec.begin() + PNG_SIG.length() };
-	
+		PNG_CHECK{ ImageVec.begin(), ImageVec.begin() + PNG_SIG.length() };	
+											
 	if (PNG_CHECK != PNG_SIG) {
 		std::cerr << "\nImage Error: File does not appear to be a valid PNG image.\n";
 		std::exit(EXIT_FAILURE);
 	}
-	
+
 	eraseChunks(ImageVec);
 
 	const int MAX_LENGTH_FILENAME = 23;
@@ -295,16 +303,16 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	
 	ProfileDataVec[4] = ImageVec[24];	
 	ProfileDataVec[11] = ImageVec[28];	
-
-	insertValue(ProfileDataVec, profileNameLengthIndex, noSlashNameLength, 8);
 	
+	insertValue(ProfileDataVec, profileNameLengthIndex, noSlashNameLength, 8);
+
 	ProfileDataVec.erase(ProfileDataVec.begin() + profileNameIndex, ProfileDataVec.begin() + noSlashNameLength + profileNameIndex);
 
 	for (int i = 0, ihdrCrcIndex = 29; noSlashNameLength != 0; noSlashNameLength--) {
 		encryptedName += noSlashName[i++] ^ ImageVec[ihdrCrcIndex++];	
 		ihdrCrcIndex = ihdrCrcIndex > 32 ? 29 : ihdrCrcIndex;		
 	}
-	
+
 	ProfileDataVec.insert(ProfileDataVec.begin() + profileNameIndex, encryptedName.begin(), encryptedName.end());
 
 	char byte;
@@ -320,7 +328,7 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 	insertValue(ProfileDataVec, profileInflateSizeIndex, profileInflateSize, 24);
 
 	bool inflateData = false;
-	
+
 	inflateDeflate(ProfileDataVec, inflateData);
 
 	const ptrdiff_t
@@ -330,19 +338,19 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 		PROFILE_CHUNK_INSERT_INDEX = 33;  
 	
 	ProfileChunkVec.insert((ProfileChunkVec.begin() + PROFILE_DATA_INSERT_INDEX), ProfileDataVec.begin(), ProfileDataVec.end()); 
-
+	
 	insertValue(ProfileChunkVec, profileChunkSizeIndex, PROFILE_DEFLATE_SIZE + 13, 24);
 
 	const int PROFILE_CHUNK_START_INDEX = 4;
-	
-	const uint32_t PROFILE_CHUNK_CRC = crc(&ProfileChunkVec[PROFILE_CHUNK_START_INDEX], PROFILE_CHUNK_SIZE);
 
+	const uint32_t PROFILE_CHUNK_CRC = crc(&ProfileChunkVec[PROFILE_CHUNK_START_INDEX], PROFILE_CHUNK_SIZE);
+	
 	ptrdiff_t profileCrcInsertIndex = PROFILE_CHUNK_START_INDEX + (PROFILE_CHUNK_SIZE); 
 
 	insertValue(ProfileChunkVec, profileCrcInsertIndex, PROFILE_CHUNK_CRC, 32);
 
 	ImageVec.insert((ImageVec.begin() + PROFILE_CHUNK_INSERT_INDEX), ProfileChunkVec.begin(), ProfileChunkVec.end());
-	
+
 	writeFile(ImageVec, EMBEDDED_IMAGE_FILE);
 
 	std::cout << "\nCreated output file: \"" + EMBEDDED_IMAGE_FILE + "\"\nYou can now post this file-embedded PNG image on reddit.\n\n";
@@ -352,7 +360,15 @@ void inflateDeflate(std::vector<unsigned char>& Vec, bool inflateData) {
 
 	std::vector <unsigned char> Buffer;
 
-	const size_t BUFSIZE = 128 * 1024;
+	size_t BUFSIZE;
+	
+	if (!inflateData) {
+		BUFSIZE = 1032 * 1024;  
+	}
+	else {
+		BUFSIZE = 256 * 1024;  
+	}
+	
 	unsigned char temp_buffer[BUFSIZE];
 
 	z_stream strm;
@@ -398,7 +414,7 @@ void inflateDeflate(std::vector<unsigned char>& Vec, bool inflateData) {
 		Buffer.insert(Buffer.end(), temp_buffer, temp_buffer + BUFSIZE - strm.avail_out);
 		deflateEnd(&strm);
 	}
-
+	
 	Vec.swap(Buffer);
 }
 
