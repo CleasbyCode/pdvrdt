@@ -68,7 +68,12 @@ int main(int argc, char** argv) {
 				processEmbeddedImage(argv);
 			}
 		}
-		else processFiles(argv);
+		else {
+			while (argc !=2){
+			processFiles(argv++);
+			argc--;
+			}
+		}
 	}
 	else {
 		while (argc !=1 ) {
@@ -250,7 +255,7 @@ void processEmbeddedImage(char* argv[]) {
 
 	// Erase first 132 bytes from "ImageVec", which removes the barebones iCCP Profile data. Only the embedded data file remains.
 	ImageVec.erase(ImageVec.begin(), ImageVec.begin() + 132);
-
+	
 	// Store the decrypted embedded file in this vector.
 	std::vector<unsigned char> ExtractedFileVec;
 
@@ -271,8 +276,10 @@ void processEmbeddedImage(char* argv[]) {
 		}
 	}
 	
-	decryptedName = "pdvrdt_" + decryptedName;
-
+	if (decryptedName.substr(0,7) != "pdvrdt_") {
+		decryptedName = "pdvrdt_" + decryptedName;
+	}
+	
 	// Write extracted data out to file.
 	writeFile(ExtractedFileVec, decryptedName);
 
@@ -314,11 +321,14 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 		// Read-in user PNG image file and store in vector "ImageVec".
 		ImageVec((std::istreambuf_iterator<char>(readImage)), std::istreambuf_iterator<char>());
 
+	srand((unsigned)time(NULL));
+
 	const std::string 
-		EMBEDDED_IMAGE_FILE = "pdvrdt_image.png",
+		TXT_NUM = std::to_string(rand()),
+		EMBEDDED_IMAGE_FILE = "pdvrdt_image_"+TXT_NUM.substr(0,6)+".png",
 		PNG_SIG = "\x89PNG",
 		PNG_CHECK{ ImageVec.begin(), ImageVec.begin() + PNG_SIG.length() };	// Get image header from vector. 
-
+											
 	// Make sure image has valid PNG header.
 	if (PNG_CHECK != PNG_SIG) {
 		// File requirements check failure, display relevant error message and exit program.
@@ -385,7 +395,7 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 
 	// Get the size of the complete inflate/uncompressed profile (basic profile + user's data file).
 	ptrdiff_t profileInflateSize = ProfileDataVec.size();
-
+	
 	// Write the inflate/uncompressed size value inside the profile within its size field (first 4-bytes of profile).
 	// While it does not seem to cause any issues whether or not the internal profile size field is correctly updated, we do it regardless.
 	insertValue(ProfileDataVec, profileInflateSizeIndex, profileInflateSize, 24);
@@ -433,7 +443,15 @@ void inflateDeflate(std::vector<unsigned char>& Vec, bool inflateData) {
 
 	std::vector <unsigned char> Buffer;
 
-	const size_t BUFSIZE = 128 * 1024;
+	size_t BUFSIZE;
+	
+	if (!inflateData) {
+		BUFSIZE = 1032 * 1024;  // Required for deflate. This BUFSIZE covers us to our max file size of 1MB. A lower BUFSIZE results in lost data.
+	}
+	else {
+		BUFSIZE = 256 * 1024;  // Fine for inflate.
+	}
+	
 	unsigned char temp_buffer[BUFSIZE];
 
 	z_stream strm;
@@ -479,7 +497,7 @@ void inflateDeflate(std::vector<unsigned char>& Vec, bool inflateData) {
 		Buffer.insert(Buffer.end(), temp_buffer, temp_buffer + BUFSIZE - strm.avail_out);
 		deflateEnd(&strm);
 	}
-
+	
 	Vec.swap(Buffer);
 }
 
