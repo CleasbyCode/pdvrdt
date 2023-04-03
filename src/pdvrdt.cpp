@@ -284,8 +284,6 @@ void processEmbeddedImage(char* argv[]) {
 	writeFile(ExtractedFileVec, decryptedName);
 
 	std::cout << "\nCreated output file: \"" + decryptedName + "\"\n\n";
-
-	readImage.close();
 }
 
 void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, const std::string& IMAGE_FILE, const std::string& DATA_FILE, const ptrdiff_t& IMAGE_SIZE, const ptrdiff_t& DATA_SIZE) {
