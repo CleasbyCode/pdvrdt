@@ -24,43 +24,42 @@ data file(s) to zip/rar formats, etc.  Make sure the zip/rar compressed file doe
 
 Your file will be encrypted, deflate/compressed (zlib) and embedded into the image file (iCCP Profile chunk).
 
-You can extract embedded content from up to five images at a time.
+You can insert & extract up to five files at a time.
 
 Compile and run the program under Windows or **Linux**.
 
-## Usage (Linux - Inserting file into PNG image)
+This program has been split into two parts.
+
+1. pdvin - used to insert your file into PNG image.
+2. pdvex - used to extract your file from the PNG image.
+
+## Usage (Linux - Compile source / Insert file into PNG image / Extract file from image)
 
 ```c
-$ g++ pdvrdt.cpp -lz -o pdvrdt
-$ 
-$ ./pdvrdt
+$ g++ pdvin.cpp -lz -o pdvin
+$ g++ pdvex.cpp -lz -o pdvex 
+$
+$ ./pdvin 
 
-Usage:-
-	Insert:  pdvrdt  <png_image>  <your_file>
-	Extract: pdvrdt  <png_image> ... ... ... ... 
-	Help:	 pdvrdt  --info
+Usage:	pdvin  <png_image>  <file_1 ... file_5>  
+	pdvin  pdvrdt  --info
 
-$ ./pdvrdt boat.png document.pdf
+$ ./pdvin car.png document.pdf
   
-Created output file: "pdvrdt_image.png"
-You can now post your file-embedded PNG image on reddit.
+Created output file: "pdv_img_1.png"  
 
-All done! 
+All done!  
 
-```
-## Usage (Linux - Extracting file from PNG image)
+You can now post your file-embedded PNG image(s) on reddit.  
 
-```c
-$ ./pdvrdt
+$ ./pdvex
 
-Usage:-
-	Insert:  pdvrdt  <png_image>  <your_file>
-	Extract: pdvrdt  <png_image> ... ... ... ...
-	Help:	 pdvrdt  --info
+Usage:	pdvex  <image_1 ... image_5>
+	pdvex  --info
         
-$ ./pdvrdt pdvrdt_image.png
+$ ./pdvex pdv_img_1.png
 
-Created output file: "pdvrdt_document.pdf"  
+Created output file: "pdv_document.pdf"  
 
 All done!
 
