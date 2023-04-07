@@ -50,8 +50,7 @@ Created output file: "pdv_img_1.png"
 
 All done!  
 
-You can now post your file-embedded PNG images  
-PNG (s) on reddit.  
+You can now post your file-embedded PNG images on reddit.  
 
 $ ./pdvex
 
