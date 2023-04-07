@@ -44,7 +44,7 @@ $ ./pdvin
 Usage:	pdvin  <png_image>  <file_1 ... file_5>  
 	pdvin  --info
 
-$ ./pdvin car.png document.pdf
+$ ./pdvin car.png  document.pdf
   
 Created output file: "pdv_img_1.png"  
 
@@ -60,6 +60,28 @@ Usage:	pdvex  <image_1 ... image_5>
 $ ./pdvex pdv_img_1.png
 
 Created output file: "pdv_document.pdf"  
+
+All done!  
+
+$ ./pdvin czar_music.png  czar.part1.rar czar.part2.rar czar.part3.rar  
+
+Created output file: "pdv_img_1.png"
+
+Created output file: "pdv_img_2.png"
+
+Created output file: "pdv_img_3.png"
+
+All done!
+
+You can now post your file-embedded PNG image(s) on reddit.  
+
+$ ./pdvex pdv_img_1.png pdv_img_2.png pdv_img_3.png  
+
+Created output file: "pdv_czar.part1.rar"
+
+Created output file: "pdv_czar.part2.rar"
+
+Created output file: "pdv_czar.part3.rar"  
 
 All done!
 
