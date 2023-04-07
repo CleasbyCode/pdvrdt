@@ -16,13 +16,13 @@ Post & share your "*file-embedded*" image on **[reddit](https://www.reddit.com/)
 
 This program can be used on Linux and Windows.
  
-1,048,444 bytes is the inflated/uncompressed (zlib) limit for your arbitrary data.  
-132 bytes is used for the barebones iCCP profile. (132 + 1048444 = 1,048,576 [1MB]).
+1,048,444 bytes is the inflated (uncompressed) limit for your data file.  
+132 bytes is used for the basic iCCP profile. (132 + 1048444 = 1,048,576 [1MB]).
 
 To maximise the amount of data you can embed in your image file, I recommend first compressing your 
 data file(s) to zip/rar formats, etc.  Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
 
-Your file will be encrypted, deflate/compressed (zlib) and embedded into the image file (iCCP Profile chunk).
+Your file will be encrypted, deflate/compressed (zlib) and embedded into the image file.
 
 You can insert & extract up to five files at a time.
 
@@ -36,6 +36,7 @@ This program has been split into two parts.
 ## Usage (Linux - Insert file into PNG image / Extract file from image)
 
 ```c
+
 $ g++ pdvin.cpp -lz -o pdvin
 $ g++ pdvex.cpp -lz -o pdvex 
 $
