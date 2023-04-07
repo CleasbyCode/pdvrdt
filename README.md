@@ -33,7 +33,7 @@ This program has been split into two parts.
 1. pdvin - used to insert your file into PNG image.
 2. pdvex - used to extract your file from the PNG image.
 
-## Usage (Linux - Insert file(s) into PNG image / Extract file(s) from image(s))
+## Usage (Linux) - Insert file(s) into PNG image / Extract file(s) from image(s)
 
 ```c
 $ g++ pdvin.cpp -lz -o pdvin
