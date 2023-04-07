@@ -42,7 +42,7 @@ $
 $ ./pdvin 
 
 Usage:	pdvin  <png_image>  <file_1 ... file_5>  
-	pdvin  pdvrdt  --info
+	pdvin  --info
 
 $ ./pdvin car.png document.pdf
   
