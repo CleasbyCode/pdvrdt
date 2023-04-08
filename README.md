@@ -40,7 +40,7 @@ Usage:  pdvrdt -i <png-image>  <file(s)>
 	pdvrdt -x <png-image(s)>  
 	pdvrdt --info
 
-$ ./pdvrdt image.png  document.pdf
+$ ./pdvrdt -i image.png  document.pdf
   
 Created output file: "pdvimg1.png"  
 
