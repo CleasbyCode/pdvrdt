@@ -41,20 +41,20 @@ int main(int argc, char** argv) {
 		displayInfo();
 	}
 	else if (argc >= 4 && argc < 9 && std::string(argv[1]) == "-i") {
-		int sub = argc - 1;	
-		argc -= 2;
-		const std::string IMAGE_FILE = argv[2];
-		while (argc != 1) { 
-		processFiles(argv++, argc, sub, IMAGE_FILE);
-		argc--;
-		}
-		argc = 1;
+			int sub = argc - 1;	
+			argc -= 2;
+			const std::string IMAGE_FILE = argv[2];
+			while (argc != 1) { 
+				processFiles(argv++, argc, sub, IMAGE_FILE);
+				argc--;
+			}
+			argc = 1;
 	}
 	else if (argc >= 3 && argc < 8 && std::string(argv[1]) == "-x") {
-		while (argc >=3 ) {
-		processEmbeddedImage(argv++);
-		argc--;
-		}
+			while (argc >=3 ) {
+				processEmbeddedImage(argv++);
+				argc--;
+			}
 	} 
 	else {
 		std::cerr << "\nUsage:\t\bpdvrdt -i <png-image>  <file(s)>\n\t\bpdvrdt -x <png-image(s)>\n\t\bpdvrdt --info\n\n";
@@ -62,7 +62,8 @@ int main(int argc, char** argv) {
 	}
 	if (argc !=0) {
 		if (argc == 2) {
-			std::cout << "\nComplete!\n\n";}
+			std::cout << "\nComplete!\n\n";
+		}
 		else {
 			std::cout << "\nComplete!\n\nYou can now post your file-embedded PNG image(s) on reddit.\n\n";
 		}
@@ -89,7 +90,7 @@ void processFiles(char* argv[], int argc, int sub, const std::string& IMAGE_FILE
 
 	// Open file success, now check file size requirements.
 	const int
-		MAX_PNG_SIZE_BYTES = 5242880,			    // Reddit PNG size limit 5MB.
+		MAX_PNG_SIZE_BYTES = 5242880,			// Reddit PNG size limit 5MB.
 		MAX_DATAFILE_SIZE_BYTES = 1048444;		// Data file size limit for reddit. 
 		// MAX_DATAFILE_SIZE_BYTES_IMGUR = 5242880	// Data file size limit for imgur.
 		
@@ -138,9 +139,9 @@ void processEmbeddedImage(char* argv[]) {
 	
 	// When reddit encodes the uploaded PNG image, if PNG-8, it will write the PLTE chunk before the iCCP Profile chunk. We need to check for this.
 	int
-		plteChunkSize = 0,	// If no PLTE chunk, then this value remains 0.
+		plteChunkSize = 0,		// If no PLTE chunk, then this value remains 0.
 		plteChunkSizeIndex = 33,
-		chunkIndex = 37;	  // If PNG-8, chunk index location of PLTE chunk, else chunk index of iCCP Profile. 
+		chunkIndex = 37;	  	// If PNG-8, chunk index location of PLTE chunk, else chunk index of iCCP Profile. 
 
 	const std::string 
 		PLTE_SIG = "PLTE",
@@ -182,7 +183,7 @@ void processEmbeddedImage(char* argv[]) {
 	
 	const std::string
 		PDV_SIG = "PDVRDT",
-		PDV_CHECK{ ImageVec.begin() + 5, ImageVec.begin() + 5 + PDV_SIG.length() },		    // Get PDVRDT signature from vector "ImageVec".
+		PDV_CHECK{ ImageVec.begin() + 5, ImageVec.begin() + 5 + PDV_SIG.length() },		// Get PDVRDT signature from vector "ImageVec".
 		ENCRYPTED_NAME = { ImageVec.begin() + 13, ImageVec.begin() + 13 + ImageVec[12] };	// Get encrypted embedded filename from vector "ImageVec".
 
 	// Make sure this is a pdvrdt file-embedded image.
@@ -211,7 +212,9 @@ void processEmbeddedImage(char* argv[]) {
 			keyPos = keyPos > keyStartPos + keyLength ? keyStartPos : keyPos;
 			decryptedName += ENCRYPTED_NAME[i] ^ ImageVec[keyPos];
 		}
+		
 		ExtractedFileVec.insert(ExtractedFileVec.begin() + i, ImageVec[i+132] ^ ImageVec[keyPos++]);
+		
 		if (i >= encryptedNameLength-1) {
 			nameDecrypted = true;
 			keyPos = keyPos > keyStartPos + keyLength ? keyStartPos : keyPos;
@@ -222,7 +225,7 @@ void processEmbeddedImage(char* argv[]) {
 		decryptedName = "pdv_" + decryptedName;
 	}
 	
-	// Write data in vector ExtractedFileVec out to file.
+	// Write data from vector ExtractedFileVec out to file.
 	std::ofstream writeFile(decryptedName, std::ios::binary);
 	
 	if (!writeFile) {
@@ -294,15 +297,15 @@ void readFilesIntoVectors(std::ifstream& readImage, std::ifstream& readFile, con
 		encryptedName;
 	
 	ptrdiff_t
-		profileChunkSizeIndex = 1,	  // Start index of the PNG iCCP Profile chunk's 4 byte length field (only 3 bytes used).
+		profileChunkSizeIndex = 1,	// Start index of the PNG iCCP Profile chunk's 4 byte length field (only 3 bytes used).
 		profileNameLengthIndex = 12,	// Index location inside the iCCP Profile to store the length value of the embedded data's filename (1 byte).
-		profileNameIndex = 13,		    // Start index inside the iCCP Profile to store the filename for the embedded data file.
+		profileNameIndex = 13,		// Start index inside the iCCP Profile to store the filename for the embedded data file.
 		noSlashNameLength = noSlashName.length(); // Character length of filename for the embedded data file.
 
 	// Make sure character length of filename (user's data file) does not exceed set maximum.
 	if (noSlashNameLength > MAX_LENGTH_FILENAME) {
 		std::cerr << "\nFile Error: Filename length of your data file (" + std::to_string(noSlashNameLength) + " characters) is too long.\n"
-				        "\nFor compatibility requirements, your filename must be under 24 characters.\nPlease try again with a shorter filename.\n\n";
+				"\nFor compatibility requirements, your filename must be under 24 characters.\nPlease try again with a shorter filename.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -468,7 +471,7 @@ void eraseChunks(std::vector<unsigned char>& ImageVec) {
 			firstIdatIndex = search(ImageVec.begin(), ImageVec.end(), CHUNK[0].begin(), CHUNK[0].end()) - ImageVec.begin(),
 			// From last to first, search and get index location of each chunk to remove.
 			chunkFoundIndex = search(ImageVec.begin(), ImageVec.end(), CHUNK[chunkIndex].begin(), CHUNK[chunkIndex].end()) - ImageVec.begin() - 4;
-		  // If found chunk is located before first IDAT, remove it.
+		  	// If found chunk is located before first IDAT, remove it.
 		if (firstIdatIndex > chunkFoundIndex) {
 			int chunkSize = (ImageVec[chunkFoundIndex + 1] << 16) | ImageVec[chunkFoundIndex + 2] << 8 | ImageVec[chunkFoundIndex + 3];
 			ImageVec.erase(ImageVec.begin() + chunkFoundIndex, ImageVec.begin() + chunkFoundIndex + (chunkSize + 12));
