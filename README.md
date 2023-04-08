@@ -23,7 +23,7 @@ data file(s) to zip/rar formats, etc.  Make sure the zip/rar compressed file doe
 
 Your file will be encrypted, deflate/compressed (zlib) and embedded into the image file.
 
-You can insert up to five files at a time (outputs one image per file).
+You can insert up to five files at a time (outputs one image per file).  
 You can extract files from up to five images at a time.
 
 Compile and run the program under Windows or **Linux**.
