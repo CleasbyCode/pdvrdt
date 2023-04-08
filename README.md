@@ -1,6 +1,6 @@
 # pdvrdt
 
-PNG Data Vehicle for **Reddit**, (pdvrdt v1.2).
+PNG Data Vehicle for **Reddit**, (pdvrdt v1.3).
 
 Embed & extract arbitrary data of up to ~1MB within a PNG image.  
 Post & share your "*file-embedded*" image on **[reddit](https://www.reddit.com/)**. 
@@ -10,7 +10,6 @@ Post & share your "*file-embedded*" image on **[reddit](https://www.reddit.com/)
 
 [**Video_1 (YouTube) - Embed A.I. Prompt / Post to reddit. Download Image & Extract Prompt.**](https://youtu.be/RS1n2sAITDE)  
 [**Video_2 (YouTube) - Download & Extract Multipart RAR File (MP3).**](https://youtu.be/SHElh8VJ3ZQ)  
-[**Image Demo (reddit) - Image containing PDF document.**](https://i.redd.it/kxfi6h0rjrqa1.png) 
 
 ***Note: pdvrdt file-embedded images do not work with Twitter.  For Twitter, please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
 
@@ -24,59 +23,56 @@ data file(s) to zip/rar formats, etc.  Make sure the zip/rar compressed file doe
 
 Your file will be encrypted, deflate/compressed (zlib) and embedded into the image file.
 
-You can insert & extract up to five files at a time.
+You can insert up to five files at a time (outputs one image per file).
+You can extract files from up to five images at a time.
 
 Compile and run the program under Windows or **Linux**.
-
-This program has been split into two parts.
-
-1. pdvin - used to insert your file into PNG image.
-2. pdvex - used to extract your file from the PNG image.
 
 ## Usage (Linux - Insert file into PNG image / Extract file from image)
 
 ```c
 
-$ g++ pdvin.cpp -lz -o pdvin
-$ g++ pdvex.cpp -lz -o pdvex 
+$ g++ pdvrdt.cpp -lz -o pdvin
 $
-$ ./pdvin 
+$ ./pdvrdt 
 
-Usage:	pdvin  <png_image>  <file_1 ... file_5>  
-	pdvin  --info
+Usage:  pdvrdt -i <png-image>  <file(s)>  
+	pdvrdt -x <png-image(s)>  
+	pdvrdt --info
 
-$ ./pdvin car.png  document.pdf
+$ ./pdvrdt image.png  document.pdf
   
-Created output file: "pdv_img_1.png"  
+Created output file: "pdvimg1.png"  
 
-All done!  
+Complete!  
 
 You can now post your file-embedded PNG image(s) on reddit.  
 
-$ ./pdvex
+$ ./pdvrdt
 
-Usage:	pdvex  <image_1 ... image_5>
-	pdvex  --info
+Usage:  pdvrdt -i <png-image>  <file(s)>  
+	pdvrdt -x <png-image(s)>  
+	pdvrdt --info
         
-$ ./pdvex pdv_img_1.png
+$ ./pdvrdt -x pdvimg1.png
 
 Created output file: "pdv_document.pdf"  
 
-All done!  
+Complete!  
 
-$ ./pdvin czar_music.png  czar.part1.rar czar.part2.rar czar.part3.rar  
+$ ./pdvrdt -i czar_music.png  czar.part1.rar czar.part2.rar czar.part3.rar  
 
-Created output file: "pdv_img_1.png"
+Created output file: "pdvimg1.png"
 
-Created output file: "pdv_img_2.png"
+Created output file: "pdvimg2.png"
 
-Created output file: "pdv_img_3.png"
+Created output file: "pdvimg3.png"
 
-All done!
+Complete!
 
 You can now post your file-embedded PNG image(s) on reddit.  
 
-$ ./pdvex pdv_img_1.png pdv_img_2.png pdv_img_3.png  
+$ ./pdvrdt -x pdvimg1.png pdvimg2.png pdvimg3.png  
 
 Created output file: "pdv_czar.part1.rar"
 
@@ -84,7 +80,7 @@ Created output file: "pdv_czar.part2.rar"
 
 Created output file: "pdv_czar.part3.rar"  
 
-All done!
+Complete!
 
 ```
 
