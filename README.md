@@ -32,7 +32,7 @@ Compile and run the program under Windows or **Linux**.
 
 ```c
 
-$ g++ pdvrdt.cpp -lz -o pdvin
+$ g++ pdvrdt.cpp -lz -o pdvrdt
 $
 $ ./pdvrdt 
 
