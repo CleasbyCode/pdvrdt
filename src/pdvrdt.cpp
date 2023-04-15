@@ -102,7 +102,7 @@ void processFiles(char* argv[], int argc, int sub, const std::string& IMAGE_FILE
 		IMAGE_SIZE = readImage.tellg(),
 		DATA_SIZE = readFile.tellg();
 
-	if ((IMAGE_SIZE + MAX_DATAFILE_SIZE_BYTES) > MAX_PNG_SIZE_BYTES
+	if ((IMAGE_SIZE + DATA_SIZE) > MAX_PNG_SIZE_BYTES
 		|| DATA_SIZE > MAX_DATAFILE_SIZE_BYTES) {
 
 		// File size check failure, display relevant error message and exit program.
