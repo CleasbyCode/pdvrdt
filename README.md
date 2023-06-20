@@ -86,7 +86,7 @@ Complete!
 
 Other editions of **pdv** you may find useful:-  
 
-* [jdvrdt - JPG Data Vehicle for Reddit](https://github.com/CleasbyCode/jdvrdt)
+* [jdvrif - JPG Data Vehicle for Reddit](https://github.com/CleasbyCode/jdvrif)
 * [pdvzip - PNG Data Vehicle for Twitter, ZIP Edition](https://github.com/CleasbyCode/pdvzip)  
 * [pdvps - PNG Data Vehicle for Twitter, PowerShell Edition](https://github.com/CleasbyCode/pdvps)   
 
