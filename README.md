@@ -8,10 +8,11 @@ Post & share your "*file-embedded*" image on **[reddit](https://www.reddit.com/)
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/source.png)  
 {***Image demo (github): ZIP archive embedded within this PNG (contains the source code for this repo)***} 
 
-[**Video_1 (YouTube) - Embed A.I. Prompt / Post to reddit. Download Image & Extract Prompt.**](https://youtu.be/RS1n2sAITDE)  
+[**Video_1 (YouTube) - Embed Image Prompt & Share Image on Reddit. Download Image & Extract Prompt.**](https://youtu.be/HqBbsCjenZQ)  
 [**Video_2 (YouTube) - Download & Extract Multipart RAR File (MP3).**](https://youtu.be/SHElh8VJ3ZQ)  
 
-***Note: pdvrdt file-embedded images do not work with Twitter.  For Twitter, please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
+***Note: pdvrdt "file-embedded" images do not work with Twitter, if your embedded file exceeds 10KB.  
+	 To embed larger files for Twitter (up to 5MB), please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
 
 This program can be used on Linux and Windows.
  
