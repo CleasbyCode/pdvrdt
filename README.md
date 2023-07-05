@@ -85,7 +85,7 @@ Complete!
 
 ```
 
-Other editions of **pdv** you may find useful:-  
+ My other programs you may find useful:-
 
 * [jdvrif - JPG Data Vehicle for Reddit, Imgur, Flickr & Other Compatible Social Media / Image Hosting Sites.](https://github.com/CleasbyCode/jdvrif)
 * [pdvzip - PNG Data Vehicle (ZIP Edition) for Compatible Social Media & Image Hosting Sites.](https://github.com/CleasbyCode/pdvzip)
