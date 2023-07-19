@@ -529,10 +529,11 @@ void displayInfo() {
 	std::cout << R"(
 PNG Data Vehicle for Reddit, (pdvrdt v1.3). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
-PDVRDT enables you to embed & extract arbitrary data of upto ~1MB within a PNG image.
-You can then upload and share your data embedded image file on Reddit. 
+This command line tool enables you to embed & extract arbitrary data of upto ~1MB within a PNG image.
+You can then upload and share your data embedded image file on *Reddit (Desktop only. Mobile app not supported).
 
-PDVRDT data embedded images will not work with Twitter. For Twitter, please use pdvzip.
+pdvrdt "file-embedded" images will not work with Twitter if your embedded file exceeds 10KB.
+To embed larger files for Twitter (up to 5MB), please use pdvzip.
 
 This program works on Linux and Windows.
  
