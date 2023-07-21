@@ -11,7 +11,7 @@ Post & share your "*file-embedded*" image on *Reddit (*Desktop / Desktop mode on
 [**Video_1 (YouTube) - Embed Image Prompt & Share Image on Reddit. Download Image & Extract Prompt.**](https://youtu.be/HqBbsCjenZQ)  
 [**Video_2 (YouTube) - Download & Extract Multipart RAR File (MP3).**](https://youtu.be/SHElh8VJ3ZQ)  
 
-***Note: pdvrdt "file-embedded" images do not work with Twitter, if your embedded file exceeds 10KB.  
+***Note: pdvrdt "file-embedded" images will also work with Twitter if your embedded file is 10KB or lower.
 	 To embed larger files for Twitter (up to 5MB), please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
 
 This program can be used on Linux and Windows.
