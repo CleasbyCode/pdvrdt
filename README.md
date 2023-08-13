@@ -3,7 +3,7 @@
 PNG Data Vehicle for Mastodon & Reddit, (pdvrdt v1.4).
 
 This command line tool enables you to embed & extract any file type of upto *16MB within a PNG image.  
-You can then post your data embedded image file on Mastodon (16MB max) or \*Reddit (1MB max), (\*Desktop only).
+You can then post your data embedded image file on Mastodon (16MB max) or \*Reddit (1MB max).
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/reddit.png)  
 {***Image has an embedded ZIP file containing the source code for this repo)***} 
