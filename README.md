@@ -13,8 +13,8 @@ You can then post your data embedded image file on ***Mastodon*** (***16MB*** ma
 
 If your data file is under ***10KB***, you can also share your "***file-embedded***" image on ***Twitter***.  
 
-To embed larger files for ***Twitter*** (***5MB***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).  (PNG Images).  
-To embed larger files for ***Reddit*** (***20MB***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).  (JPG Images).
+To embed larger files for ***Twitter*** (***5MB***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).  _(PNG Images).  
+To embed larger files for ***Reddit*** (***20MB***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).  _(JPG Images).
 
 You can also use ***jdvrif*** for ***Mastodon***.
 
