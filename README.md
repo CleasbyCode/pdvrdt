@@ -1,9 +1,9 @@
 # pdvrdt
 
-PNG Data Vehicle for Mastodon & Reddit, (pdvrdt v1.4).
+PNG Data Vehicle for ***Mastodon*** & ***Reddit***, (pdvrdt v1.4).
 
-This command line tool enables you to embed & extract any file type of upto *16MB within a PNG image.  
-You can then post your data embedded image file on Mastodon (16MB max) or \*Reddit (1MB max).
+This command line tool enables you to embed & extract any file type of upto ***\*16MB*** within a PNG image.  
+You can then post your data embedded image file on ***Mastodon*** (***16MB*** max) or ***\*Reddit*** (***1MB*** max).
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/reddit.png)  
 {***Image has an embedded ZIP file containing the source code for this repo)***} 
@@ -14,18 +14,26 @@ You can then post your data embedded image file on Mastodon (16MB max) or \*Redd
 ***Note: pdvrdt "file-embedded" images will also work with Twitter if your embedded file is 10KB or lower.
 	 To embed larger files for Twitter (up to 5MB), please use [pdvzip](https://github.com/CleasbyCode/pdvzip)***
 
-This program can be used on Linux and Windows.
- 
-1,048,444 bytes is the inflated (uncompressed) limit for your data file.  
-132 bytes is used for the basic iCCP profile. (132 + 1048444 = 1,048,576 [1MB]).
+If your data file is under ***10KB***, you can also share your "***file-embedded***" image on ***Twitter***.
+To embed larger files for ***Twitter*** (***5MB***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip)
+To embed larger files for ***Reddit*** (***20MB***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif). You can also use ***jdvrif*** for ***Mastodon***.
 
-To maximise the amount of data you can embed in your image file, I recommend first compressing your 
-data file(s) to zip/rar formats, etc.  Make sure the zip/rar compressed file does not exceed 1,048,444 bytes.
+This program works on Linux and Windows.
 
-Your file will be encrypted, deflate/compressed (zlib) and embedded into the image file.
+For ***Mastodon***, the ***16MB*** size limit is measured by the total size of your ***"file-embedded"*** PNG image file. 
+For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size of the ***iCC Profile***, where your data is stored.
 
-You can insert up to five files at a time (outputs one image per file).  
-You can extract files from up to five images at a time.
+***Reddit***: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.
+404 bytes is used for the basic ***iCC Profile***. (404 + 1048172 = 1,048,576 bytes [***1MB***]).
+
+***Twitter***: 9,836 bytes is the uncompressed (zlib inflate) limit for your data file.
+404 bytes is used for the basic ***iCC Profile*** (404 + 9836 = 10,240 bytes [***10KB***])
+
+To maximise the amount of data you can embed in your image file for ***Reddit*** or ***Twitter***, compress the data file to a ***ZIP*** or ***RAR*** file, etc. 
+Make sure the compressed ***ZIP*** or ***RAR*** file does not exceed 1,048,172 bytes for ***Reddit*** or 9,836 bytes for ***Twitter***. 
+
+You can insert up to ***six*** files at a time (outputs one image per file).
+You can also extract files from up to ***six*** images at a time.
 
 Compile and run the program under Windows or **Linux**.
 
