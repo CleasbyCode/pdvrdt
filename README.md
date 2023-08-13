@@ -1,6 +1,6 @@
 # pdvrdt
 
-PNG Data Vehicle for **Reddit**, (pdvrdt v1.3).
+PNG Data Vehicle for Mastodon & Reddit, (pdvrdt v1.4).
 
 Embed & extract files (up to ~1MB) via a PNG image.  
 Post & share your "*file-embedded*" image on *Reddit (*Desktop / Desktop mode only. Does not work with mobile app*).
