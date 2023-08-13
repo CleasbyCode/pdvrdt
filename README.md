@@ -5,7 +5,7 @@ PNG Data Vehicle for **Reddit**, (pdvrdt v1.3).
 Embed & extract files (up to ~1MB) via a PNG image.  
 Post & share your "*file-embedded*" image on *Reddit (*Desktop / Desktop mode only. Does not work with mobile app*).
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/source.png)  
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/reddit.png)  
 {***Image has an embedded ZIP file containing the source code for this repo)***} 
 
 [**Video_1 (YouTube) - Embed Image Prompt & Share Image on Reddit. Download Image & Extract Prompt.**](https://youtu.be/HqBbsCjenZQ)  
