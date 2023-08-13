@@ -1,11 +1,15 @@
 //	PNG Data Vehicle for Reddit, (PDVRDT v1.3). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+// 	Compile program (Linux):
+//	g++ pdvrdt.cpp -lz -s -o pdvrdt
+// 	Run program:
+//	./pdvrdt
 
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <C:\Users\Nick\source\zlib\zlib-1.2.13\zlib.h>
+#include <zlib.h>
 
 typedef unsigned char BYTE;
 typedef unsigned short SBYTE;
@@ -355,9 +359,12 @@ void encryptDecrypt(pdvStruct& pdv) {
 				nameKeyPos = nameKeyPos > NAME_LENGTH ? nameKeyStartPos : nameKeyPos;	 // Reset filename character position to the start if it's reached last character.
 			}
 			else {
-				xorKeyPos = xorKeyPos > XOR_KEY_LENGTH ? xorKeyStartPos : xorKeyPos;	// Reset XOR_KEY position to the start if it's reached last character.
-				outName += inName[indexPos] ^ XOR_KEY[xorKeyPos++];	// XOR each character of filename against characters of XOR_KEY string. Store output characters in "outName".
+				// Reset XOR_KEY position to the start if it's reached last character.
+				xorKeyPos = xorKeyPos > XOR_KEY_LENGTH ? xorKeyStartPos : xorKeyPos;	
+				
+				// XOR each character of filename against characters of XOR_KEY string. Store output characters in "outName".
 				// Depending on Mode, filename is either encrypted or decrypted.
+				outName += inName[indexPos] ^ XOR_KEY[xorKeyPos++];	
 			}
 
 			if (pdv.MODE == "-i") {
@@ -376,9 +383,9 @@ void encryptDecrypt(pdvStruct& pdv) {
 
 			SBYTE
 				profileDataVecSizeIndex = 0,
-				profileChunkSizeIndex = 0,		// Start index of the PNG iCCP Profile chunk's 4 byte length field.
+				profileChunkSizeIndex = 0,	// Start index of the PNG iCCP Profile chunk's 4 byte length field.
 				profileNameLengthIndex = 100,	// Index location inside the iCCP Profile to store the length value of the embedded data's filename (1 byte).
-				profileNameIndex = 101;			// Start index inside the iCCP Profile to store the filename for the embedded data file.
+				profileNameIndex = 101;		// Start index inside the iCCP Profile to store the filename for the embedded data file.
 
 			// Insert the character length value of the filename (user's data file) into the iCCP Profile,
 			// We need to know how many characters to read when later retrieving the filename from the profile.
@@ -604,7 +611,7 @@ To embed larger files for Reddit (up to 20MB), please use jdvrif (JPG images). Y
 This program works on Linux and Windows.
 
 For Mastodon, the 16MB size limit is measured by the total size of your "file-embedded" PNG image file. 
-For Reddit and Twitter, the size limit is measured by the uncompressed size of the ICC Profile, where your data is stored.
+For Reddit and Twitter, the size limit is measured by the uncompressed size of the ICC Profile chunk, where your data is stored.
 
 Reddit: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.
 404 bytes is used for the basic iCC Profile. (404 + 1048172 = 1,048,576 bytes [1MB]).
