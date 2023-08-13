@@ -11,9 +11,10 @@ You can then post your data embedded image file on ***Mastodon*** (***16MB*** ma
 [**Video_1 (YouTube) - Embed Image Prompt & Share Image on Reddit. Download Image & Extract Prompt.**](https://youtu.be/HqBbsCjenZQ)  
 [**Video_2 (YouTube) - Download & Extract Multipart RAR File (MP3).**](https://youtu.be/SHElh8VJ3ZQ)  
 
-If your data file is under ***10KB***, you can also share your "***file-embedded***" image on ***Twitter***.
-To embed larger files for ***Twitter*** (***5MB***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip)
-To embed larger files for ***Reddit*** (***20MB***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif). You can also use ***jdvrif*** for ***Mastodon***.
+If your data file is under ***10KB***, you can also share your "***file-embedded***" image on ***Twitter***.  
+To embed larger files for ***Twitter*** (***5MB***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).  
+To embed larger files for ***Reddit*** (***20MB***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).  
+You can also use ***jdvrif*** for ***Mastodon***.
 
 This program works on Linux and Windows.
 
