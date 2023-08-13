@@ -1,4 +1,4 @@
-//	PNG Data Vehicle for Reddit, (PDVRDT v1.3). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle (PDVRDT v1.4). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 	Compile program (Linux):
 //	g++ pdvrdt.cpp -lz -s -o pdvrdt
 // 	Run program:
