@@ -13,8 +13,9 @@ You can then post your data embedded image file on ***Mastodon*** (***16MB*** ma
 
 If your data file is under ***10KB***, you can also share your "***file-embedded***" image on ***Twitter***.  
 
-To embed larger files for ***Twitter*** (***5MB***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).  
-To embed larger files for ***Reddit*** (***20MB***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).  
+To embed larger files for ***Twitter*** (***5MB***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).  (PNG Images).
+To embed larger files for ***Reddit*** (***20MB***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).  (JPG Images).
+
 You can also use ***jdvrif*** for ***Mastodon***.
 
 This program works on Linux and Windows.
@@ -22,10 +23,10 @@ This program works on Linux and Windows.
 For ***Mastodon***, the ***16MB*** size limit is measured by the total size of your ***"file-embedded"*** PNG image file.  
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size of the ***iCC Profile***, where your data is stored.
 
-***Reddit***: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.
+***Reddit***: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.  
 404 bytes is used for the basic ***iCC Profile***. (404 + 1048172 = 1,048,576 bytes [***1MB***]).
 
-***Twitter***: 9,836 bytes is the uncompressed (zlib inflate) limit for your data file.
+***Twitter***: 9,836 bytes is the uncompressed (zlib inflate) limit for your data file.  
 404 bytes is used for the basic ***iCC Profile*** (404 + 9836 = 10,240 bytes [***10KB***])
 
 To maximise the amount of data you can embed in your image file for ***Reddit*** or ***Twitter***, compress the data file to a ***ZIP*** or ***RAR*** file, etc. 
