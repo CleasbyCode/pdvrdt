@@ -129,9 +129,9 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 		// When Reddit encodes the uploaded PNG image, if it's a PNG-8, it will write the PLTE chunk BEFORE the iCCP Profile chunk. 
 		// We need to check for this and make ajustments so as to remain aligned with the file.
 		SBYTE
-			plteChunkSize = 0,			// If no PLTE chunk (PNG 32/24), then this value remains 0.
+			plteChunkSize = 0,		// If no PLTE chunk (PNG 32/24), then this value remains 0.
 			plteChunkSizeIndex = 33,	// If PNG-8, location of PLTE chunk length field.
-			chunkIndex = 37;	  		// If PNG-8, chunk index location of PLTE chunk. If PNG-32/24, chunk index of iCCP Profile. 
+			chunkIndex = 37;	  	// If PNG-8, chunk index location of PLTE chunk. If PNG-32/24, chunk index of iCCP Profile. 
 
 		const std::string
 			PLTE_SIG = "PLTE",
