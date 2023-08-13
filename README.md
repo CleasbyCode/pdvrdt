@@ -18,7 +18,7 @@ To embed larger files for ***Reddit*** (***20MB***), please use [jdvrif](https:/
 
 You can also use ***jdvrif*** for ***Mastodon***.
 
-This program works on Linux and Windows.
+***pdvrdt*** works on Linux and Windows.
 
 For ***Mastodon***, the ***16MB*** size limit is measured by the total size of your ***"file-embedded"*** PNG image file.  
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size of the ***iCC Profile***, where your data is stored.
@@ -32,7 +32,7 @@ For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompress
 To maximise the amount of data you can embed in your image file for ***Reddit*** or ***Twitter***, compress the data file to a ***ZIP*** or ***RAR*** file, etc. 
 Make sure the compressed ***ZIP*** or ***RAR*** file does not exceed 1,048,172 bytes for ***Reddit*** or 9,836 bytes for ***Twitter***. 
 
-You can insert up to ***six*** files at a time (outputs one image per file).
+You can insert up to ***six*** files at a time (outputs one image per file).  
 You can also extract files from up to ***six*** images at a time.
 
 Compile and run the program under Windows or **Linux**.
