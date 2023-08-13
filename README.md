@@ -6,7 +6,7 @@ Embed & extract files (up to ~1MB) via a PNG image.
 Post & share your "*file-embedded*" image on *Reddit (*Desktop / Desktop mode only. Does not work with mobile app*).
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/source.png)  
-{***Image demo (github): ZIP archive embedded within this PNG (contains the source code for this repo)***} 
+{***Image has an embedded ZIP file containing the source code for this repo)***} 
 
 [**Video_1 (YouTube) - Embed Image Prompt & Share Image on Reddit. Download Image & Extract Prompt.**](https://youtu.be/HqBbsCjenZQ)  
 [**Video_2 (YouTube) - Download & Extract Multipart RAR File (MP3).**](https://youtu.be/SHElh8VJ3ZQ)  
