@@ -60,7 +60,7 @@ Created output file: "pdvimg1.png"
 
 Complete!  
 
-You can now post your file-embedded PNG image(s) on reddit.  
+You can now post your "file-embedded" PNG image(s) to the relevant supported platforms.
 
 $ ./pdvrdt
 
@@ -84,7 +84,7 @@ Created output file: "pdvimg3.png"
 
 Complete!
 
-You can now post your file-embedded PNG image(s) on reddit.  
+You can now post your "file-embedded" PNG image(s) to the relevant supported platforms.
 
 $ ./pdvrdt -x pdvimg1.png pdvimg2.png pdvimg3.png  
 
