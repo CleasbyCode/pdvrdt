@@ -2,7 +2,7 @@
 
 PNG Data Vehicle for ***Mastodon*** & ***Reddit***
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/mastodon.png)  
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/mastodon2.png)  
 Image Credit: [MechanicMind](https://twitter.com/mechanicmind_ai/status/1689737722410553361)  
 {***Image has an embedded ZIP file containing the source code for this repo)***} 
 
