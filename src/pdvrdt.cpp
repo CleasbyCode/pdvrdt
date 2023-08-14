@@ -14,6 +14,9 @@
 typedef unsigned char BYTE;
 typedef unsigned short SBYTE;
 
+typedef unsigned char BYTE;
+typedef unsigned short SBYTE;
+
 struct pdvStruct {
 	std::vector<BYTE> ImageVec, FileVec, ProfileDataVec, ProfileChunkVec, EmbdImageVec, EncryptedVec, DecryptedVec;
 	std::string IMAGE_FILE, DATA_FILE, MODE;
@@ -35,7 +38,7 @@ void openFiles(char* [], pdvStruct& pdv);
 void encryptDecrypt(pdvStruct& pdv);
 
 // Search and remove all unnecessary PNG chunks found before the first IDAT chunk.
-void eraseChunks(pdvStruct& pdv);
+void eraseChunks(std::vector<BYTE>& Vec, pdvStruct& pdv);
 
 // Inflate or Deflate iCCP Profile chunk, which include user's data file.
 void inflateDeflate(std::vector<BYTE>&, bool);
@@ -85,7 +88,7 @@ int main(int argc, char** argv) {
 			std::cout << "\nComplete!\n\n";
 		}
 		else {
-			std::cout << "\nComplete!\n\nYou can now post your file-embedded PNG image(s) on reddit.\n\n";
+			std::cout << "\nComplete!\n\nYou can now post your \"file-embedded\" PNG image(s) to the relevant supported platforms.\n\n";
 		}
 	}
 	return 0;
@@ -125,6 +128,9 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 		// Read file-embedded PNG image into vector "ImageVec".
 		pdv.EmbdImageVec.resize(pdv.IMAGE_SIZE / sizeof(BYTE));
 		readImage.read((char*)pdv.EmbdImageVec.data(), pdv.IMAGE_SIZE);
+
+		// Find and remove unwanted chunks.
+		eraseChunks(pdv.EmbdImageVec, pdv);
 
 		// When Reddit encodes the uploaded PNG image, if it's a PNG-8, it will write the PLTE chunk BEFORE the iCCP Profile chunk. 
 		// We need to check for this and make ajustments so as to remain aligned with the file.
@@ -302,7 +308,7 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 		}
 
 		// Find and remove unwanted chunks.
-		eraseChunks(pdv);
+		eraseChunks(pdv.ImageVec, pdv);
 	}
 }
 
@@ -514,25 +520,31 @@ void inflateDeflate(std::vector<BYTE>& Vec, bool inflateData) {
 	delete[] temp_buffer;
 }
 
-void eraseChunks(pdvStruct& pdv) {
+void eraseChunks(std::vector<BYTE>& Vec, pdvStruct& pdv) {
 
-	const std::string CHUNK[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
+	std::string CHUNK[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
+
+	if (pdv.MODE == "-x") {
+		CHUNK[5] = "KEEP_ME";
+	}
 
 	for (int chunkIndex = 14; chunkIndex > 0; chunkIndex--) {
 		size_t
 			// Get first IDAT chunk index location. Don't remove chunks after this point.
-			firstIdatIndex = search(pdv.ImageVec.begin(), pdv.ImageVec.end(), CHUNK[0].begin(), CHUNK[0].end()) - pdv.ImageVec.begin(),
+			firstIdatIndex = search(Vec.begin(), Vec.end(), CHUNK[0].begin(), CHUNK[0].end()) - Vec.begin(),
 			// From last to first, search and get index location of each chunk to remove.
-			chunkFoundIndex = search(pdv.ImageVec.begin(), pdv.ImageVec.end(), CHUNK[chunkIndex].begin(), CHUNK[chunkIndex].end()) - pdv.ImageVec.begin() - 4;
+			chunkFoundIndex = search(Vec.begin(), Vec.end(), CHUNK[chunkIndex].begin(), CHUNK[chunkIndex].end()) - Vec.begin() - 4;
 		// If found chunk is located before first IDAT, remove it.
 		if (firstIdatIndex > chunkFoundIndex) {
-			int chunkSize = (pdv.ImageVec[chunkFoundIndex + 1] << 16) | pdv.ImageVec[chunkFoundIndex + 2] << 8 | pdv.ImageVec[chunkFoundIndex + 3];
-			pdv.ImageVec.erase(pdv.ImageVec.begin() + chunkFoundIndex, pdv.ImageVec.begin() + chunkFoundIndex + (chunkSize + 12));
+			int chunkSize = (Vec[chunkFoundIndex + 1] << 16) | Vec[chunkFoundIndex + 2] << 8 | Vec[chunkFoundIndex + 3];
+			Vec.erase(Vec.begin() + chunkFoundIndex, Vec.begin() + chunkFoundIndex + (chunkSize + 12));
 			chunkIndex++; // Increment chunkIndex so that we search again for the same chunk, in case of multiple occurrences.
 		}
 	}
 	// Now that we have removed unwanted chunks, encrypt the user's data file.
-	encryptDecrypt(pdv);
+	if (pdv.MODE == "-i") {
+		encryptDecrypt(pdv);
+	}
 }
 
 size_t updateCrc(const size_t& crc, BYTE* buf, const size_t& len)
@@ -611,7 +623,7 @@ To embed larger files for Reddit (up to 20MB), please use jdvrif (JPG images). Y
 This program works on Linux and Windows.
 
 For Mastodon, the 16MB size limit is measured by the total size of your "file-embedded" PNG image file. 
-For Reddit and Twitter, the size limit is measured by the uncompressed size of the ICC Profile chunk, where your data is stored.
+For Reddit and Twitter, the size limit is measured by the uncompressed size of the ICC Profile, where your data is stored.
 
 Reddit: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.
 404 bytes is used for the basic iCC Profile. (404 + 1048172 = 1,048,576 bytes [1MB]).
