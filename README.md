@@ -4,7 +4,7 @@ PNG Data Vehicle for ***Mastodon*** & ***Reddit***
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/mastodon2.png)  
 Image Credit: [MechanicMind](https://twitter.com/mechanicmind_ai/status/1689737722410553361)  
-{***Image has an embedded ZIP file containing the source code for this repo)***} 
+{***Image has an embedded 15MB ZIP file containing a collection of AI images.)***} 
 
 
 This command line tool enables you to embed & extract any file type of upto ***\*16MB*** within a PNG image.  
