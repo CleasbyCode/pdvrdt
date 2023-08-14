@@ -10,7 +10,7 @@ Image Credit: [MechanicMind](https://twitter.com/mechanicmind_ai/status/16897377
 This command line tool enables you to embed & extract any file type of upto ***\*16MB*** within a PNG image.  
 You can then post your data embedded image file on ***Mastodon*** (***16MB*** max) or ***\*Reddit*** (***1MB*** max).
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/reddit.png)  
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/reddit2.png)  
 {***Image has an embedded ZIP file containing the source code for this repo)***} 
 
 [**Video Demo 1: Mastodon.**](https://youtu.be/ShZjovJW31I)  
