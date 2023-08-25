@@ -13,7 +13,7 @@ You can then post your data embedded image file on ***Mastodon*** (***16MB*** ma
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/reddit2.png)  
 {***Image has an embedded ZIP file containing the source code for this repo)***} 
 
-[**Video Demo 1: Mastodon.**](https://youtu.be/ShZjovJW31I)  
+[**Video Demo 1: Mastodon.**](https://youtu.be/-zFJcljHzZU)  
 [**Video Demo 2: Download & Extract Multipart RAR File (MP3).**](https://youtu.be/SHElh8VJ3ZQ)  
 
 If your data file is under ***10KB***, you can also share your "***file-embedded***" image on ***Twitter***.  
