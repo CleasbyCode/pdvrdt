@@ -2,8 +2,8 @@
 
 PNG Data Vehicle for ***Mastodon*** & ***Reddit***
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/mastodon2.png)  
-Image Credit: [MechanicMind](https://twitter.com/mechanicmind_ai/status/1689737722410553361)  
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/witch.png)  
+Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
 {***Image has an embedded 15MB ZIP file containing a collection of AI images.)***} 
 
 
