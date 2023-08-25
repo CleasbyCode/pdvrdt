@@ -4,7 +4,7 @@ PNG Data Vehicle for ***Mastodon*** & ***Reddit***
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/Witch.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
-{***Image contains an embedded/encrypted 7MB MP3 music file.)***} 
+{***Image contains an embedded/encrypted 7MB MP3 music file / extract: pdvrdt -x Witch_Image.png)***} 
 
 
 This command line tool enables you to embed & extract any file type of upto ***\*16MB*** within a PNG image.  
