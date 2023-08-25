@@ -14,9 +14,6 @@
 typedef unsigned char BYTE;
 typedef unsigned short SBYTE;
 
-typedef unsigned char BYTE;
-typedef unsigned short SBYTE;
-
 struct pdvStruct {
 	std::vector<BYTE> ImageVec, FileVec, ProfileDataVec, ProfileChunkVec, EmbdImageVec, EncryptedVec, DecryptedVec;
 	std::string IMAGE_FILE, DATA_FILE, MODE;
