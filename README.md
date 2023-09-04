@@ -7,7 +7,7 @@ You can share your embedded image file on Mastodon (*16MB max.) or *Reddit (1MB 
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/Witch_Image.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
-{***Image contains an embedded/encrypted MP3 file (7MB) / extract: pdvrdt -x Witch_Image.png)***} 
+{***Image contains an embedded MP3 file (7MB) / extract: pdvrdt -x Witch_Image.png)***} 
 
 [**Video Demo 1: Mastodon.**](https://youtu.be/-zFJcljHzZU)   
 [**Video Demo 2: Reddit.**](https://youtu.be/SHElh8VJ3ZQ)  
