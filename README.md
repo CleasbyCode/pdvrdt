@@ -2,7 +2,7 @@
 
 PNG Data Vehicle for ***Mastodon*** & ***Reddit***  
 
-This command line tool enables you to embed & extract any file type within a PNG image.  
+This command line tool enables you to embed & extract any file type via a PNG image.  
 You can share your embedded image file on Mastodon (*16MB max.) or *Reddit (1MB max).  
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/Witch_Image.png)  
