@@ -39,9 +39,8 @@ where your data is stored (encrypted & compressed).
 404 bytes is used for the basic ***iCC Profile*** (404 + 9836 = 10,240 bytes [***10KB***])
 
 To maximise the amount of data you can embed in your image file for ***Reddit*** or ***Twitter***,  
-compress the data file to a ***ZIP*** or ***RAR*** file, etc.  
-Make sure the compressed ***ZIP*** or ***RAR*** file does not exceed 1,048,172 bytes for ***Reddit***  
-or 9,836 bytes for ***Twitter***. 
+compress the data file to a ***ZIP*** or ***RAR*** file, etc. Make sure the compressed ***ZIP*** or ***RAR***  
+file does not exceed 1,048,172 bytes for ***Reddit*** or 9,836 bytes for ***Twitter***. 
 
 You can insert up to ***six*** files at a time (outputs one image per file).  
 You can also extract files from up to ***six*** images at a time.
