@@ -28,7 +28,9 @@ are slower to post and may not always upload. [jdvrif](https://github.com/Cleasb
 The graphics editor program, GIMP, will not display pdvrdt embedded PNG image files over ~7MB.***
 
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size of the ***iCC Profile***,  
-where your data is stored (encrypted & compressed).
+where your data is stored (encrypted & compressed).  
+
+![profile Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/profile.png)  
 
 ***Reddit***: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.  
 404 bytes is used for the basic ***iCC Profile***. (404 + 1048172 = 1,048,576 bytes [***1MB***]).
