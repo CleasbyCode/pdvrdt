@@ -9,19 +9,18 @@ You can share your embedded image file on Mastodon (*16MB max.) or *Reddit (1MB 
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
 {***Image contains an embedded MP3 file (7MB) / extract: pdvrdt -x Witch_Image.png)***} 
 
-[**Video Demo 1: Mastodon.**](https://youtu.be/-zFJcljHzZU)   
-[**Video Demo 2: Reddit.**](https://youtu.be/SHElh8VJ3ZQ)  
+[**Video Demo 1: Mastodon**](https://youtu.be/-zFJcljHzZU)   
+[**Video Demo 2: Reddit**](https://youtu.be/SHElh8VJ3ZQ)  
 
 If your data file is under ***10KB***, you can also share your "***embedded***" PNG image on ***Twitter***.  
 
-To embed larger files for ***Twitter*** (***5MB***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).  ***(PNG Images)***.  
-To embed larger files for ***Reddit*** (***20MB***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).  ***(JPG Images)***.
+To embed larger files for ***Twitter*** (***5MB max.***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).  ***(PNG Images)***.  
+To embed larger files for ***Reddit*** (***20MB max. ***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).  ***(JPG Images)***.
 
-You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***. 
+You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.  
+Other image hosting sites may also be compatible with pdvrdt embedded images.
 
-***pdvrdt*** works on Linux and Windows.
-
-For ***Mastodon***, the ***16MB*** size limit is measured by the total size of your ***"file-embedded"*** PNG image file.  
+For ***Mastodon***, the ****16MB*** size limit is measured by the total size of your ***"file-embedded"*** PNG image file.  
 
 **Note:** 	***While techinically the image size limit for Mastodon is 16MB, embedded PNG images over 10MB are slower to post
 	and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.***
