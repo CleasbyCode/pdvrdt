@@ -55,11 +55,11 @@ $ g++ pdvrdt.cpp -lz -s -o pdvrdt
 $
 $ ./pdvrdt 
 
-Usage:  pdvrdt -i <png-image>  <file(s)>  
+Usage:  pdvrdt -i <png-image> <file(s)>  
 	pdvrdt -x <png-image(s)>  
 	pdvrdt --info
 
-$ ./pdvrdt -i image.png  document.pdf
+$ ./pdvrdt -i image.png document.pdf
   
 Created output file: "pdvimg1.png"  
 
@@ -69,7 +69,7 @@ You can now post your "file-embedded" PNG image(s) to the relevant supported pla
 
 $ ./pdvrdt
 
-Usage:  pdvrdt -i <png-image>  <file(s)>  
+Usage:  pdvrdt -i <png-image> <file(s)>  
 	pdvrdt -x <png-image(s)>  
 	pdvrdt --info
         
