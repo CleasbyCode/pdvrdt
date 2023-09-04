@@ -17,7 +17,7 @@ If your data file is under ***10KB***, you can also share your "***file-embedded
 To embed larger files for ***Twitter*** (***5MB***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).  ***(PNG Images)***.  
 To embed larger files for ***Reddit*** (***20MB***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).  ***(JPG Images)***.
 
-You can also use ***jdvrif*** for ***Mastodon***.
+You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.
 
 ***pdvrdt*** works on Linux and Windows.
 
