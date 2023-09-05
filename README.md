@@ -15,8 +15,8 @@ Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status
 ***If your data file is under ***10KB*** and image dimensions 900x900 or less, you can also  
 share your "***embedded***" PNG image on ***Twitter***.***
 
-To embed larger files for ***Twitter*** (***5MB max.***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).  ***(PNG Images)***.  
-To embed larger files for ***Reddit*** (***20MB max.***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).  ***(JPG Images)***.
+To embed larger files for ***Twitter*** (***5MB max.***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).
+To embed larger files for ***Reddit*** (***20MB max.***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).
 
 You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.  
 
