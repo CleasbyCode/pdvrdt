@@ -29,7 +29,7 @@ are slower to post and may not always upload. [jdvrif](https://github.com/Cleasb
 
 The graphics editor program, GIMP, will not display pdvrdt embedded PNG image files over 7MB.
 
-For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size of the ***iCC Profile***,  
+For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size of the ***ICC Profile***,  
 where your data is stored (encrypted & compressed).  
 
 ![profile Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/profile.png)  
