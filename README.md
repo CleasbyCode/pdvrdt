@@ -13,7 +13,7 @@ Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status
 [**Video Demo 2: Reddit**](https://youtu.be/SHElh8VJ3ZQ)  
 
 ***If your data file is under ***10KB*** and image dimensions 900x900 or less, you can also  
-share your "***embedded***" PNG image on ***Twitter***.***  
+share your "***file-embedded***" PNG image on ***Twitter***.***  
 
 Other image hosting sites may also be compatible with pdvrdt embedded images.
 
