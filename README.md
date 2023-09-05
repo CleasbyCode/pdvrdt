@@ -17,8 +17,8 @@ share your "***file-embedded***" PNG image on ***Twitter***.***
 
 Other image hosting sites may also be compatible with pdvrdt embedded images.
 
-To embed larger files for ***Twitter*** (***5MB max.***), please use **[pdvzip](https://github.com/CleasbyCode/pdvzip)**  
-To embed larger files for ***Reddit*** (***20MB max.***), please use **[jdvrif](https://github.com/CleasbyCode/jdvrif)**
+To embed larger files for ***Twitter*** (***5MB max.***), please try **[pdvzip](https://github.com/CleasbyCode/pdvzip)**  
+To embed larger files for ***Reddit*** (***20MB max.***), please try **[jdvrif](https://github.com/CleasbyCode/jdvrif)**
 
 You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.  
 
