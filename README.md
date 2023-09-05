@@ -63,7 +63,7 @@ Usage:  pdvrdt -i <png-image> <file(s)>
 
 $ ./pdvrdt -i image.png document.pdf
   
-Created output file: "pdvimg1.png"  
+Created output file: "pdv_img1.png 912426 Bytes"  
 
 Complete!  
 
@@ -75,41 +75,42 @@ Usage:  pdvrdt -i <png-image> <file(s)>
 	pdvrdt -x <png-image(s)>  
 	pdvrdt --info
         
-$ ./pdvrdt -x pdvimg1.png
+$ ./pdvrdt -x pdv_img1.png
 
-Created output file: "pdv_document.pdf"  
+Extracted file: "document.pdf 911314 Bytes"  
 
 Complete!  
 
 $ ./pdvrdt -i czar_music.png  czar.part1.rar czar.part2.rar czar.part3.rar  
 
-Created output file: "pdvimg1.png"
+Created output file: "pdv_img1.png 777307 Bytes"
 
-Created output file: "pdvimg2.png"
+Created output file: "pdv_img2.png 777307 Bytes"
 
-Created output file: "pdvimg3.png"
+Created output file: "pdv_img3.png 777307 Bytes"
 
 Complete!
 
 You can now post your "file-embedded" PNG image(s) to the relevant supported platforms.
 
-$ ./pdvrdt -x pdvimg1.png pdvimg2.png pdvimg3.png  
+$ ./pdvrdt -x pdv_img1.png pdv_img2.png pdv_img3.png  
 
-Created output file: "pdv_czar.part1.rar"
+Extracted file: "czar.part1.rar 776302 Bytes"
 
-Created output file: "pdv_czar.part2.rar"
+Extracted file: "czar.part2.rar 776302 Bytes"
 
-Created output file: "pdv_czar.part3.rar"  
+Extracted file: "czar.part3.rar 776302 Bytes"  
 
 Complete!
 
 ```
 
  My other programs you may find useful:-
-
-* [jdvrif - JPG Data Vehicle for Reddit, Imgur, Flickr & Other Compatible Social Media / Image Hosting Sites.](https://github.com/CleasbyCode/jdvrif)
-* [pdvzip - PNG Data Vehicle (ZIP Edition) for Compatible Social Media & Image Hosting Sites.](https://github.com/CleasbyCode/pdvzip)
-* [imgprmt - Embed image prompts as a basic HTML page within a JPG image file](https://github.com/CleasbyCode/imgprmt)
-* [pdvps - PNG Data Vehicle for Twitter, PowerShell Edition](https://github.com/CleasbyCode/pdvps)   
+ 
+* [pdvzip: CLI tool to embed a ZIP file within a tweetable and "executable" PNG-ZIP polyglot image.](https://github.com/CleasbyCode/pdvzip)
+* [jdvrif: CLI tool to encrypt & embed any file type within a JPG image.](https://github.com/CleasbyCode/jdvrif)
+* [imgprmt: CLI tool to embed an image prompt (e.g. "Midjourney") within a tweetable JPG-HTML polyglot image.](https://github.com/CleasbyCode/imgprmt)
+* [xif: CLI tool to embed small files (e.g. "workflow.json") within a tweetable JPG-ZIP polyglot image.](https://github.com/CleasbyCode/xif)  
+* [pdvps: PowerShell / C++ CLI tool to encrypt & embed any file type within a tweetable & "executable" PNG image](https://github.com/CleasbyCode/pdvps)  
 
 ##
