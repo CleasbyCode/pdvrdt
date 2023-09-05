@@ -22,7 +22,7 @@ You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Ma
 
 Other image hosting sites may also be compatible with pdvrdt embedded images.
 
-For ***Mastodon***, the ****16MB*** size limit is measured by the total size of your ***"file-embedded"*** PNG image file.  
+For ***Mastodon***, the ****16MB*** size limit is measured by the total size of your ***"file-embedded"*** PNG image.  
 
 **Note:** 	***While techinically the image size limit for Mastodon is 16MB, embedded PNG images over ~10MB  
 are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.  
