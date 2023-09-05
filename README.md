@@ -17,17 +17,17 @@ share your "***embedded***" PNG image on ***Twitter***.***
 
 Other image hosting sites may also be compatible with pdvrdt embedded images.
 
-To embed larger files for ***Twitter*** (***5MB max.***), please use [pdvzip](https://github.com/CleasbyCode/pdvzip).  
-To embed larger files for ***Reddit*** (***20MB max.***), please use [jdvrif](https://github.com/CleasbyCode/jdvrif).
+To embed larger files for ***Twitter*** (***5MB max.***), please use **[pdvzip](https://github.com/CleasbyCode/pdvzip)**  
+To embed larger files for ***Reddit*** (***20MB max.***), please use **[jdvrif](https://github.com/CleasbyCode/jdvrif)**
 
 You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.  
 
 For ***Mastodon***, the ****16MB*** size limit is measured by the total size of your ***"file-embedded"*** PNG image.  
 
-***Note: While techinically the image size limit for Mastodon is 16MB, embedded PNG images over ~10MB  
+***Note: While techinically the image size limit for Mastodon is 16MB, embedded PNG images over 10MB  
 are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.***
 
-The graphics editor program, GIMP, will not display pdvrdt embedded PNG image files over ~7MB.
+The graphics editor program, GIMP, will not display pdvrdt embedded PNG image files over 7MB.
 
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size of the ***iCC Profile***,  
 where your data is stored (encrypted & compressed).  
