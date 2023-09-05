@@ -24,10 +24,10 @@ Other image hosting sites may also be compatible with pdvrdt embedded images.
 
 For ***Mastodon***, the ****16MB*** size limit is measured by the total size of your ***"file-embedded"*** PNG image.  
 
-**Note:** 	***While techinically the image size limit for Mastodon is 16MB, embedded PNG images over ~10MB  
-are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.  
+***Note: While techinically the image size limit for Mastodon is 16MB, embedded PNG images over ~10MB  
+are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.***
 
-The graphics editor program, GIMP, will not display pdvrdt embedded PNG image files over ~7MB.***
+The graphics editor program, GIMP, will not display pdvrdt embedded PNG image files over ~7MB.
 
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size of the ***iCC Profile***,  
 where your data is stored (encrypted & compressed).  
