@@ -10,7 +10,7 @@ Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status
 {***Image contains an embedded MP3 file (7MB) / extract: pdvrdt -x Witch_Image.png)***} 
 
 [**Video Demo 1: Mastodon**](https://youtu.be/-zFJcljHzZU)   
-[**Video Demo 2: Reddit**](https://youtu.be/SHElh8VJ3ZQ)  
+[**Video Demo 2: Reddit**](https://youtu.be/j7BC31nVrMg)  
 
 ***If your data file is under ***10KB*** and image dimensions 900x900 or less, you can also  
 share your "***file-embedded***" PNG image on ***Twitter***.***  
