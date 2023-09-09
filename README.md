@@ -35,10 +35,10 @@ of the ***ICC Profile***, where your data is stored (encrypted & compressed).
 ![profile Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/profile.png)  
 
 ***Reddit***: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.  
-404 bytes is used for the basic ***iCC Profile***. (404 + 1048172 = 1,048,576 bytes [***1MB***]).
+404 bytes is used for the basic ***ICC Profile***. (404 + 1048172 = 1,048,576 bytes [***1MB***]).
 
 ***Twitter***: 9,836 bytes is the uncompressed (zlib inflate) limit for your data file.  
-404 bytes is used for the basic ***iCC Profile*** (404 + 9836 = 10,240 bytes [***10KB***])
+404 bytes is used for the basic ***ICC Profile*** (404 + 9836 = 10,240 bytes [***10KB***])
 
 To maximise the amount of data you can embed in your image file for ***Reddit*** or ***Twitter***,  
 first compress the data file to a ***ZIP*** or ***RAR*** file. Make sure the compressed ***ZIP*** or ***RAR***  
