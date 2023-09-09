@@ -28,7 +28,7 @@ For ***Mastodon***, the ****16MB*** size limit is measured by the total size of 
 are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.***
 
 ***The graphics editor program GIMP will not display pdvrdt "file-embedded" PNG images over 7MB.  
-(No display problem with [jdvrif](https://github.com/CleasbyCode/jdvrif).***
+(No display problem with [jdvrif](https://github.com/CleasbyCode/jdvrif)).***
 
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size (zlib inflate)  
 of the ***ICC Profile***, where your data is stored (encrypted & compressed).  
