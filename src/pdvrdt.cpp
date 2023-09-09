@@ -388,7 +388,7 @@ void encryptDecrypt(pdvStruct& pdv) {
 				profileChunkSizeIndex = 0,	// Start index of the PNG iCCP Profile header chunk's 4 byte length field.
 				profileNameLengthIndex = 100,	// Index location inside the profile to store the length value of the user's data filename (Max. 1 byte).
 				profileNameIndex = 101,		// Start index location inside the profile to store the filename for the user's embedded data file.
-				bits = 32;			// 1 byte. Value used in "updateValue" function.
+				bits = 32;			// Value used in "updateValue" function.
 		
 			// Insert the character length value of the filename into the profile,
 			// We need to know how many characters to read when we later retrieve the filename from the profile, during file extraction.
