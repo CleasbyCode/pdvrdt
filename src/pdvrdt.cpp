@@ -1,4 +1,4 @@
-//	PNG Data Vehicle for Reddit, (PDVRDT v1.4). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle for Mastodon & Reddit, (PDVRDT v1.4). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 //	Compile program (Linux)
 //	$ g++ pdvrdt.cpp -lz -s -o pdvrdt
 //	Run it
@@ -12,7 +12,7 @@
 #include <vector>
 #include <zlib.h>
 
-namespace fs = std::filesystem;
+namespace fs = std::filesystem;		// C++ 17 or later required for "filesystem".
 
 typedef unsigned char BYTE;
 typedef unsigned short SBYTE;
