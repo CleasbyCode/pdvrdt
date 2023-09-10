@@ -5,7 +5,7 @@ Share your "*file-embedded*" image on the following compatible sites.
 
 Image size limit is platform dependant:-  
 * ***Flickr (200MB), ImgBB (32MB), ImageShack (25MB), PostImage (24MB)***,
-* ***Mastodon (16MB), ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / Desktop only)***.
+* ***\*Mastodon (16MB), ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / Desktop only)***.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/Witch_Image.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
@@ -22,8 +22,8 @@ To embed larger files for ***Reddit*** (***20MB max.***), please try **[jdvrif](
 
 You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.  
 
-For ***Flickr, Mastodon, ImgBB, ImageShack, PostImage, Mastodon, ImgPile & Imgur***, the size limit  
-is measured by the total size of your ***"file-embedded"*** PNG image.  
+For ***Flickr, Mastodon, ImgBB, ImageShack, PostImage, Mastodon, ImgPile & Imgur***,  
+the size limit is measured by the total size of your ***"file-embedded"*** PNG image.  
 
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size (zlib inflate)  
 of the ***ICC Profile***, where your data is stored (encrypted & compressed).  
@@ -40,7 +40,7 @@ To maximise the amount of data you can embed in your image file for ***Reddit***
 first compress the data file to a ***ZIP*** or ***RAR*** file. Make sure the compressed ***ZIP*** or ***RAR***  
 file does not exceed 1,048,172 bytes for ***Reddit*** or 9,836 bytes for ***Twitter***. 
 
-***Note: While techinically the image size limit for Mastodon is 16MB, embedded PNG images over 10MB  
+\****While techinically the image size limit for Mastodon is 16MB, embedded PNG images over 10MB  
 are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.***
 
 ***The graphics editor program GIMP will not display pdvrdt "file-embedded" PNG images over 7MB.  
