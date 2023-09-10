@@ -1,9 +1,11 @@
 # pdvrdt
 
-PNG Data Vehicle for ***Mastodon*** & ***Reddit***  
+A simple command-line tool to embed and extract any file type via a PNG image file.  
+Share your "*file-embedded*" image on the following compatible sites.  
 
-This command line tool enables you to embed & extract any file type via a PNG image.  
-You can share your embedded image file on Mastodon, 16MB max. or Reddit, 1MB max.  
+Image size limit is platform dependant:-  
+* ***Flickr (200MB), ImgBB (32MB), ImageShack (25MB), PostImage (24MB)***,
+* ***Mastodon (16MB), ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / Desktop only)***.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/Witch_Image.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
@@ -15,20 +17,13 @@ Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status
 ***If your data file is under ***10KB*** and image dimensions 900x900 or less, you can also  
 share your "***file-embedded***" PNG image on ***Twitter***.***  
 
-Other image hosting sites may also be compatible with pdvrdt embedded images.
-
 To embed larger files for ***Twitter*** (***5MB max.***), please try **[pdvzip](https://github.com/CleasbyCode/pdvzip)**  
 To embed larger files for ***Reddit*** (***20MB max.***), please try **[jdvrif](https://github.com/CleasbyCode/jdvrif)**
 
 You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.  
 
-For ***Mastodon***, the ****16MB*** size limit is measured by the total size of your ***"file-embedded"*** PNG image.  
-
-***Note: While techinically the image size limit for Mastodon is 16MB, embedded PNG images over 10MB  
-are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.***
-
-***The graphics editor program GIMP will not display pdvrdt "file-embedded" PNG images over 7MB.  
-(No display problem with [jdvrif](https://github.com/CleasbyCode/jdvrif)).***
+For ***Flickr, Mastodon, ImgBB, ImageShack, PostImage, Mastodon, ImgPile & Imgur***, the size limit  
+is measured by the total size of your ***"file-embedded"*** PNG image.  
 
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size (zlib inflate)  
 of the ***ICC Profile***, where your data is stored (encrypted & compressed).  
@@ -44,6 +39,12 @@ of the ***ICC Profile***, where your data is stored (encrypted & compressed).
 To maximise the amount of data you can embed in your image file for ***Reddit*** or ***Twitter***,  
 first compress the data file to a ***ZIP*** or ***RAR*** file. Make sure the compressed ***ZIP*** or ***RAR***  
 file does not exceed 1,048,172 bytes for ***Reddit*** or 9,836 bytes for ***Twitter***. 
+
+***Note: While techinically the image size limit for Mastodon is 16MB, embedded PNG images over 10MB  
+are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.***
+
+***The graphics editor program GIMP will not display pdvrdt "file-embedded" PNG images over 7MB.  
+(No display problem with [jdvrif](https://github.com/CleasbyCode/jdvrif)).***
 
 You can insert up to ***six*** files at a time (outputs one image per file).  
 You can also extract files from up to ***six*** images at a time.
