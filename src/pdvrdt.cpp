@@ -1,4 +1,5 @@
-/	PNG Data Vehicle for Flickr, ImgBB, ImageShack, PostImage, Mastodon, ImgPile, Imgur, Reddit & Twitter. (PDVRDT v1.5). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle for Flickr, ImgBB, ImageShack, PostImage, Mastodon, ImgPile, Imgur, Reddit & Twitter. (PDVRDT v1.5). 
+//	Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 //	Compile program (Linux)
 //	$ g++ pdvrdt.cpp -lz -s -o pdvrdt
 //	Run it
