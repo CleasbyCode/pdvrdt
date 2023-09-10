@@ -1,7 +1,7 @@
 # pdvrdt
 
 A simple command-line tool to embed and extract any file type via a PNG image.  
-Share your "*file-embedded*" image on the following compatible sites.  
+Share your *file-embedded* image on the following compatible sites.  
 
 * ***Flickr (200MB), ImgBB (32MB), ImageShack (25MB), PostImage (24MB)***,
 * ***\*Mastodon (16MB), ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / Desktop only)***.
@@ -14,7 +14,7 @@ Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status
 [**Video Demo 2: Reddit**](https://youtu.be/j7BC31nVrMg)  
 
 ***If your data file is under ***10KB*** and image dimensions 900x900 or less, you can also  
-share your "***file-embedded***" PNG image on ***Twitter***.***  
+share your *file-embedded* PNG image on ***Twitter***.***  
 
 To embed larger files for ***Twitter*** (***5MB max.***), please try **[pdvzip](https://github.com/CleasbyCode/pdvzip)**  
 To embed larger files for ***Reddit*** (***20MB max.***), please try **[jdvrif](https://github.com/CleasbyCode/jdvrif)**
@@ -22,7 +22,7 @@ To embed larger files for ***Reddit*** (***20MB max.***), please try **[jdvrif](
 You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.  
 
 For ***Flickr, Mastodon, ImgBB, ImageShack, PostImage, Mastodon, ImgPile & Imgur***,  
-the size limit is measured by the total size of your ***"file-embedded"*** PNG image.  
+the size limit is measured by the total size of your *file-embedded* PNG image.  
 
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size (zlib inflate)  
 of the ***ICC Profile***, where your data is stored (encrypted & compressed).  
@@ -42,7 +42,7 @@ file does not exceed 1,048,172 bytes for ***Reddit*** or 9,836 bytes for ***Twit
 \****While techinically the image size limit for Mastodon is 16MB, embedded PNG images over 10MB  
 are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.***
 
-***The graphics editor program GIMP will not display pdvrdt "file-embedded" PNG images over 7MB.  
+***The graphics editor program GIMP will not display pdvrdt *file-embedded* PNG images over 7MB.  
 (No display problem with [jdvrif](https://github.com/CleasbyCode/jdvrif)).***
 
 You can insert up to ***six*** files at a time (outputs one image per file).  
