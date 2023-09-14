@@ -22,7 +22,7 @@ To embed larger files for ***Reddit*** (***20MB max.***), please try **[jdvrif](
 
 You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.  
 
-For ***Flickr, Mastodon, ImgBB, ImageShack, PostImage, Mastodon, ImgPile & Imgur***,  
+For ***Flickr, ImgBB, ImageShack, PostImage, Mastodon, ImgPile & Imgur***,  
 the size limit is measured by the total size of your *file-embedded* PNG image.  
 
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size (zlib inflate)  
