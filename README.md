@@ -5,7 +5,7 @@ A simple command-line tool to embed and extract any file type via a PNG image.
 Share your *file-embedded* image on the following compatible sites.  
 
 * ***Flickr (200MB), ImgBB (32MB), ImageShack (25MB), PostImage (24MB)***,
-* ***\*Mastodon (16MB), ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / Desktop only)***.
+* ***\*Mastodon (16MB), ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / Desktop/browser only)***.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/Witch_Image.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
