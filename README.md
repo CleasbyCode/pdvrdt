@@ -43,9 +43,6 @@ file does not exceed 1,048,172 bytes for ***Reddit*** or 9,836 bytes for ***Twit
 \****While techinically the image size limit for Mastodon is 16MB, embedded PNG images over 10MB  
 are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.***
 
-***The graphics editor program GIMP will not display pdvrdt *file-embedded* PNG images over 7MB.  
-(No display problem with [jdvrif](https://github.com/CleasbyCode/jdvrif)).***
-
 You can insert up to ***six*** files at a time (outputs one image per file).  
 You can also extract files from up to ***six*** images at a time.
 
@@ -55,7 +52,7 @@ Compile and run the program under Windows or **Linux**.
 
 ```bash
 
-$ g++ pdvrdt.cpp -lz -s -o pdvrdt
+$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 $
 $ ./pdvrdt 
 
