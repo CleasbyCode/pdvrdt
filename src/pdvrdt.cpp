@@ -1,7 +1,6 @@
-//	PNG Data Vehicle for Flickr, ImgBB, ImageShack, PostImage, Mastodon, ImgPile, Imgur, Reddit & Twitter. (PDVRDT v1.5). 
-//	Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle for Flickr, ImgBB, ImageShack, PostImage, Mastodon, ImgPile, Imgur, Reddit & Twitter. (PDVRDT v1.5). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 //	Compile program (Linux)
-//	$ g++ pdvrdt.cpp -lz -s -o pdvrdt
+//	$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 //	Run it
 //	$ ./pdvrdt
 
@@ -9,28 +8,24 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <filesystem>
 #include <vector>
 #include <zlib.h>
 
-namespace fs = std::filesystem;		// C++ 17 or later required for "filesystem".
-
 typedef unsigned char BYTE;
-typedef unsigned short SBYTE;
 
 struct pdvStruct {
 	std::vector<BYTE> ImageVec, FileVec, ProfileDataVec, ProfileChunkVec, EncryptedVec, DecryptedVec;
 	std::string IMAGE_FILE, DATA_FILE, MODE;
 	size_t IMAGE_SIZE{}, DATA_SIZE{};
-	SBYTE imgVal{}, subVal{};
+	uint8_t Img_Value{}, Sub_Value{};
 };
 
 // Update values, such as chunk lengths, file sizes & other values. Write them into the relevant vector index locations. Overwrites previous values.
 class ValueUpdater {
 public:
-	void Value(std::vector<BYTE>& vec, size_t valueInsertIndex, const size_t VALUE, SBYTE bits) {
-			while (bits) vec[valueInsertIndex++] = (VALUE >> (bits -= 8)) & 0xff;
-		}
+	void Value(std::vector<BYTE>& vec, size_t valueInsertIndex, const size_t VALUE, uint8_t Bits) {
+		while (Bits) vec[valueInsertIndex++] = (VALUE >> (Bits -= 8)) & 0xff;
+	}
 } *update;
 
 // Open user image & data file and check file size requirements. Display error & exit program if any file fails to open or exceeds size limits.
@@ -52,11 +47,11 @@ void writeOutFile(pdvStruct& pdv);
 void displayInfo();
 
 // Code to compute CRC32 (for ICCP Profile chunk within this program) was taken from: https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
-size_t crcUpdate(const size_t&, BYTE*, const size_t&);
-size_t crc(BYTE*, const size_t&);
+uint32_t Crc_Update(const uint32_t, BYTE*, const uint32_t);
+uint32_t Crc(BYTE*, const uint32_t);
 
 int main(int argc, char** argv) {
-	
+
 	pdvStruct pdv;
 
 	if (argc == 2 && std::string(argv[1]) == "--info") {
@@ -64,10 +59,10 @@ int main(int argc, char** argv) {
 		displayInfo();
 	}
 	else if (argc >= 4 && argc < 10 && std::string(argv[1]) == "-i") { // Insert file mode.
-		pdv.MODE = argv[1], pdv.subVal = argc - 1, pdv.IMAGE_FILE = argv[2];
+		pdv.MODE = argv[1], pdv.Sub_Value = argc - 1, pdv.IMAGE_FILE = argv[2];
 		argc -= 2;
 		while (argc != 1) {
-			pdv.imgVal = argc, pdv.DATA_FILE = argv[3];
+			pdv.Img_Value = argc, pdv.DATA_FILE = argv[3];
 			openFiles(argv++, pdv);
 			argc--;
 		}
@@ -112,52 +107,51 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 		std::cerr << ERR_MSG;
 		std::exit(EXIT_FAILURE);
 	}
-	
-	// Get size of image (embedded / non-embedded).
-	pdv.IMAGE_SIZE = fs::file_size(pdv.IMAGE_FILE);
 
 	// Read PNG image (embedded / non-embedded) into vector "ImageVec".
-	pdv.ImageVec.resize(pdv.IMAGE_SIZE / sizeof(BYTE));
-	readImage.read((char*)pdv.ImageVec.data(), pdv.IMAGE_SIZE);
+	pdv.ImageVec.assign(std::istreambuf_iterator<char>(readImage), std::istreambuf_iterator<char>());
+
+	// Get size of image (embedded / non-embedded).
+	pdv.IMAGE_SIZE = pdv.ImageVec.size();
 
 	if (pdv.MODE == "-x") { // Extract mode. Inflate, decrypt and extract embedded data file from PNG image.
-		
+
 		// Find and remove unwanted chunks. Some media sites add chunks to the downloaded image.
 		eraseChunks(pdv.ImageVec, pdv);
 
 		// When Reddit encodes the uploaded PNG image, if it is PNG-8, it will write the PLTE chunk BEFORE the ICCP Profile chunk. 
 		// We need to check for this and make adjustments so as to remain correctly aligned with the file.
-		SBYTE
-			plteChunkSize = 0,		// If no PLTE chunk (PNG-32/24), then this value remains 0.
-			plteChunkSizeIndex = 33,	// If PNG-8, location of PLTE chunk length field.
-			chunkIndex = 37;	  	// If PNG-8, chunk index location of PLTE chunk. If PNG-32/24, chunk index of ICCP Profile. 
+		uint8_t
+			Plte_Chunk_Size = 0,		// If no PLTE chunk (PNG-32/24), then this value remains 0.
+			Plte_Chunk_Size_Index = 0x21,	// If PNG-8, location of PLTE chunk length field.
+			Chunk_Index = 0x25;	  	// If PNG-8, chunk index location of PLTE chunk. If PNG-32/24, chunk index of ICCP Profile. 
 
 		const std::string
 			PLTE_SIG = "PLTE",
-			PLTE_GET_SIG { pdv.ImageVec.begin() + chunkIndex, pdv.ImageVec.begin() + chunkIndex + PLTE_SIG.length() };
+			GET_PLTE_SIG{ pdv.ImageVec.begin() + Chunk_Index, pdv.ImageVec.begin() + Chunk_Index + PLTE_SIG.length() };
 
-		if (PLTE_GET_SIG == PLTE_SIG) {
+		if (GET_PLTE_SIG == PLTE_SIG) {
 			// Get length of the PLTE chunk
-			plteChunkSize = 12 + (pdv.ImageVec[plteChunkSizeIndex + 1] << 16) | pdv.ImageVec[plteChunkSizeIndex + 2] << 8 | pdv.ImageVec[plteChunkSizeIndex + 3];
+			Plte_Chunk_Size = 0xC + (pdv.ImageVec[Plte_Chunk_Size_Index + 1] << 16) | pdv.ImageVec[Plte_Chunk_Size_Index + 2] << 8 | pdv.ImageVec[Plte_Chunk_Size_Index + 3];
 		}
 
 		// Get ICCP Profile chunk signature from vector.
 		const std::string
 			PROFILE_COMMON_SIG = "iCCPICC\x20Profile",
 			PROFILE_MASTODON_SIG = "iCCPicc", // Mastodon saves images with a shorter profile name. 		
-			GET_PROFILE_COMMON_SIG{ pdv.ImageVec.begin() + chunkIndex + plteChunkSize, pdv.ImageVec.begin() + chunkIndex + plteChunkSize + PROFILE_COMMON_SIG.length() },
-			GET_PROFILE_MASTODON_SIG{ pdv.ImageVec.begin() + chunkIndex + plteChunkSize, pdv.ImageVec.begin() + chunkIndex + plteChunkSize + PROFILE_MASTODON_SIG.length() };
+			GET_PROFILE_COMMON_SIG{ pdv.ImageVec.begin() + Chunk_Index + Plte_Chunk_Size, pdv.ImageVec.begin() + Chunk_Index + Plte_Chunk_Size + PROFILE_COMMON_SIG.length() },
+			GET_PROFILE_MASTODON_SIG{ pdv.ImageVec.begin() + Chunk_Index + Plte_Chunk_Size, pdv.ImageVec.begin() + Chunk_Index + Plte_Chunk_Size + PROFILE_MASTODON_SIG.length() };
 
 		bool PROFILE_MASTODON = false;
 
 		if (GET_PROFILE_COMMON_SIG != PROFILE_COMMON_SIG) {
-			
+
 			if (GET_PROFILE_MASTODON_SIG == PROFILE_MASTODON_SIG) {
 
 				// If a shorter Mastodon profile signature is found, remove it and replace it with the common one. 
 				// This keeps the file in correct alignment for inflating, decrypting and extracting the data file.
-				pdv.ImageVec.erase(pdv.ImageVec.begin() + chunkIndex + plteChunkSize, pdv.ImageVec.begin() + chunkIndex + plteChunkSize + PROFILE_MASTODON_SIG.length());
-				pdv.ImageVec.insert(pdv.ImageVec.begin() + chunkIndex + plteChunkSize, PROFILE_COMMON_SIG.begin(), PROFILE_COMMON_SIG.end());
+				pdv.ImageVec.erase(pdv.ImageVec.begin() + Chunk_Index + Plte_Chunk_Size, pdv.ImageVec.begin() + Chunk_Index + Plte_Chunk_Size + PROFILE_MASTODON_SIG.length());
+				pdv.ImageVec.insert(pdv.ImageVec.begin() + Chunk_Index + Plte_Chunk_Size, PROFILE_COMMON_SIG.begin(), PROFILE_COMMON_SIG.end());
 				PROFILE_MASTODON = true;
 			}
 			else {
@@ -168,77 +162,94 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 			}
 		}
 
-		int
-			profileChunkSizeIndex = 33 + plteChunkSize, // Start index location of 4 byte ICCP Profile chunk length field.
+		uint16_t
+			Profile_Chunk_Size_Index = 0x21 + Plte_Chunk_Size, // Start index location of 4 byte ICCP Profile chunk length field.
+			Deflate_Data_Index = 0x36 + Plte_Chunk_Size; // Start index location of deflate data within ICCP Profile chunk. (78, 9C...).
+
+		uint32_t
 			// Get ICCP Profile chunk length.
-			profileChunkSize = (pdv.ImageVec[profileChunkSizeIndex] << 24) | pdv.ImageVec[profileChunkSizeIndex + 1] << 16 | pdv.ImageVec[profileChunkSizeIndex + 2] << 8 | pdv.ImageVec[profileChunkSizeIndex + 3],
-			deflateDataIndex = 54 + plteChunkSize, // Start index location of deflate data within ICCP Profile chunk. (78, 9C...).
-			deflateChunkSize = profileChunkSize - 13;
+			Profile_Chunk_Size = (pdv.ImageVec[Profile_Chunk_Size_Index] << 24) | pdv.ImageVec[Profile_Chunk_Size_Index + 1] << 16 | pdv.ImageVec[Profile_Chunk_Size_Index + 2] << 8 | pdv.ImageVec[Profile_Chunk_Size_Index + 3],
+			Deflate_Chunk_Size = Profile_Chunk_Size - 0xD;
 
 		if (PROFILE_MASTODON) {
 			// Because Mastodon wrote a shorter profile name, it also changed the chunk size.  
 			// We also need to update these size fields.
-			profileChunkSize += 8;
-			deflateChunkSize = profileChunkSize - 13;
+			Profile_Chunk_Size += 8;
+			Deflate_Chunk_Size = Profile_Chunk_Size - 0xD;
 		}
 
 		// From "ImageVec" vector index 0, erase n bytes so that start of the vector's contents is now the beginning of the deflate data (78,9C...).
-		pdv.ImageVec.erase(pdv.ImageVec.begin(), pdv.ImageVec.begin() + deflateDataIndex);
+		pdv.ImageVec.erase(pdv.ImageVec.begin(), pdv.ImageVec.begin() + Deflate_Data_Index);
 
 		// Erase all bytes of "ImageVec" after the end of the deflate data. Vector should now just contain the deflate data.
-		pdv.ImageVec.erase(pdv.ImageVec.begin() + deflateChunkSize, pdv.ImageVec.end());
+		pdv.ImageVec.erase(pdv.ImageVec.begin() + Deflate_Chunk_Size, pdv.ImageVec.end());
 
-		bool inflate = true; // Inflate (uncompress).
+		bool Inflate = true; // Inflate (uncompress).
 
 		// Call function to inflate the profile chunk, which includes user's encrypted data file. 
-		inflateDeflate(pdv.ImageVec, inflate);
-		
-		const int
-			FILENAME_LENGTH = pdv.ImageVec[100],
-			FILENAME_START_INDEX = 101,
-			PDV_SIG_START_INDEX = 401,
-			DATA_FILE_START_INDEX = 404;
-		
+		inflateDeflate(pdv.ImageVec, Inflate);
+
+		const uint16_t
+			FILENAME_LENGTH = pdv.ImageVec[0x64],
+			FILENAME_START_INDEX = 0x65,
+			PDV_SIG_START_INDEX = 0x191,
+			DATA_FILE_START_INDEX = 0x194;
+
 		// Get encrypted embedded filename from vector "ImageVec".
-		pdv.DATA_FILE = { pdv.ImageVec.begin() + FILENAME_START_INDEX, pdv.ImageVec.begin() + FILENAME_START_INDEX + FILENAME_LENGTH };	
+		pdv.DATA_FILE = { pdv.ImageVec.begin() + FILENAME_START_INDEX, pdv.ImageVec.begin() + FILENAME_START_INDEX + FILENAME_LENGTH };
 
 		const std::string
 			PDV_SIG = "pdv",
 			// Get the pdvrdt signature from vector "ImageVec".
-			PDV_GET_SIG{ pdv.ImageVec.begin() + PDV_SIG_START_INDEX, pdv.ImageVec.begin() + PDV_SIG_START_INDEX + PDV_SIG.length() };		
-		
+			GET_PDV_SIG{ pdv.ImageVec.begin() + PDV_SIG_START_INDEX, pdv.ImageVec.begin() + PDV_SIG_START_INDEX + PDV_SIG.length() };
+
 		// Make sure this is a pdvrdt file-embedded image.
-		if (PDV_GET_SIG != PDV_SIG) {
+		if (GET_PDV_SIG != PDV_SIG) {
 			std::cerr << "\nProfile Error: Profile does not appear to be a PDVRDT \"file-embedded\" profile.\n\n";
 			std::exit(EXIT_FAILURE);
 		}
-		
+
 		// Delete the profile from the inflated file, leaving just our encrypted data file.
 		pdv.ImageVec.erase(pdv.ImageVec.begin(), pdv.ImageVec.begin() + DATA_FILE_START_INDEX);
 
 		// This vector will be used to store the decrypted user's data file. 
 		pdv.DATA_SIZE = pdv.ImageVec.size();
 		pdv.DecryptedVec.reserve(pdv.DATA_SIZE);
-		
+
 		// Decrypt the contents of vector "ImageVec".
 		encryptDecrypt(pdv);
 
 	}
 	else { // "-i" Insert Mode
 
+		// Read-in user's data file and store it in vector "FileVec".
+		pdv.FileVec.assign(std::istreambuf_iterator<char>(readFile), std::istreambuf_iterator<char>());
+
 		// Get size of the user's data file.
-		pdv.DATA_SIZE = fs::file_size(pdv.DATA_FILE);
+		pdv.DATA_SIZE = pdv.FileVec.size();
+		
+		const std::string
+			PNG_SIG = "\x89PNG",
+			GET_PNG_SIG{ pdv.ImageVec.begin(), pdv.ImageVec.begin() + PNG_SIG.length() };	// Get image header from vector. 
 
-		const int MAX_FILE_SIZE_BYTES = 209715200;	// 200MB Max. (Flickr limit. The largest of the range).
+		// Make sure image has valid PNG header.
+		if (GET_PNG_SIG != PNG_SIG) {
+			// File requirements check failure, display relevant error message and exit program.
+			std::cerr << "\nImage Error: File does not appear to be a valid PNG image.\n\n";
+			std::exit(EXIT_FAILURE);
+		}
 
-		if ((pdv.IMAGE_SIZE + pdv.DATA_SIZE + 404) > MAX_FILE_SIZE_BYTES) {
+		const uint32_t MAX_FILE_SIZE_BYTES = 0xC800000;	// 200MB Max. (Flickr limit. The largest of the range).
+
+		if ((pdv.IMAGE_SIZE + pdv.DATA_SIZE + 0x194) > MAX_FILE_SIZE_BYTES) {
 			// File size check failure, display relevant error message and exit program.
 			std::cerr << "\nImage Size Error: PNG image (+including embedded data file) must not exceed 200MB.\n\n";
 			std::exit(EXIT_FAILURE);
 		}
 
-		pdv.ProfileDataVec.reserve(pdv.DATA_SIZE);
-		pdv.ProfileChunkVec.reserve(pdv.DATA_SIZE);
+		pdv.ProfileDataVec.reserve(pdv.DATA_SIZE + 0x194 );
+		pdv.ProfileChunkVec.reserve(pdv.DATA_SIZE + 0x1AD );
+		pdv.EncryptedVec.reserve(pdv.DATA_SIZE);
 
 		// The first 401 bytes of the vector "ProfileDataVec" contains the basic profile, followed by a 3-byte signature "pdv". 404 bytes total.
 		// The length value of the user's data filename and the encrypted filename are stored within this profile.
@@ -287,23 +298,6 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 			0x50, 0x72, 0x6F, 0x66, 0x69, 0x6C, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00 };
 
-		// Read-in user's data file and store it in vector "FileVec".
-		pdv.FileVec.resize(pdv.DATA_SIZE / sizeof(BYTE));
-		readFile.read((char*)pdv.FileVec.data(), pdv.DATA_SIZE);
-
-		pdv.EncryptedVec.reserve(pdv.DATA_SIZE);
-
-		const std::string
-			PNG_SIG = "\x89PNG",
-			PNG_CHECK{ pdv.ImageVec.begin(), pdv.ImageVec.begin() + PNG_SIG.length() };	// Get image header from vector. 
-
-		// Make sure image has valid PNG header.
-		if (PNG_CHECK != PNG_SIG) {
-			// File requirements check failure, display relevant error message and exit program.
-			std::cerr << "\nImage Error: File does not appear to be a valid PNG image.\n\n";
-			std::exit(EXIT_FAILURE);
-		}
-
 		// Find and remove unwanted PNG chunks.
 		eraseChunks(pdv.ImageVec, pdv);
 	}
@@ -311,173 +305,173 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 
 void encryptDecrypt(pdvStruct& pdv) {
 
-		if (pdv.MODE == "-i") {
+	if (pdv.MODE == "-i") {
 
-			// We don't want "./" or ".\" characters at the start of the filename (user's data file), which we will store in the profile. 
-			std::size_t lastSlashPos = pdv.DATA_FILE.find_last_of("\\/");
+		// We don't want "./" or ".\" characters at the start of the filename (user's data file), which we will store in the profile. 
+		const uint32_t Last_Slash_Pos = static_cast<uint32_t>(pdv.DATA_FILE.find_last_of("\\/"));
 
-			if (lastSlashPos <= pdv.DATA_FILE.length()) {
-				std::string_view new_name(pdv.DATA_FILE.c_str() + (lastSlashPos + 1), pdv.DATA_FILE.length() - (lastSlashPos + 1));
-				pdv.DATA_FILE = new_name;
-			}
-		}
-
-		const std::string XOR_KEY = "\xFC\xD8\xF9\xE2\x9F\x7E";	// String used to XOR encrypt/decrypt the filename of user's data file.
-
-		size_t indexPos = 0;
-
-		const int MAX_LENGTH_FILENAME = 23;
-
-		const size_t
-			NAME_LENGTH = pdv.DATA_FILE.length(),	// Character length of user's data file name.
-			XOR_KEY_LENGTH = XOR_KEY.length();
-
-		// Make sure character length of filename does not exceed set maximum.
-		if (NAME_LENGTH > MAX_LENGTH_FILENAME) {
-			std::cerr << "\nFile Error: Filename length of your data file (" + std::to_string(NAME_LENGTH) + " characters) is too long.\n"
-				"\nFor compatibility requirements, your filename must be under 24 characters.\nPlease try again with a shorter filename.\n\n";
-			std::exit(EXIT_FAILURE);
-		}
-
-		std::string
-			inName = pdv.DATA_FILE,
-			outName;
-
-		SBYTE
-			xorKeyStartPos = 0,
-			xorKeyPos = xorKeyStartPos,	// Character position variable for XOR_KEY string.
-			nameKeyStartPos = 0,
-			nameKeyPos = nameKeyStartPos;	// Character position variable for filename string (outName / inName).
-
-		if (NAME_LENGTH > pdv.DATA_SIZE) {
-			std::cerr << "\nFile Size Error: File size is too small.\n\n";
-			std::exit(EXIT_FAILURE);
-		}
-
-		// XOR encrypt or decrypt filename and data file.
-		while (pdv.DATA_SIZE > indexPos) {
-
-			if (indexPos >= NAME_LENGTH) {
-				nameKeyPos = nameKeyPos > NAME_LENGTH ? nameKeyStartPos : nameKeyPos;	 // Reset filename character position to the start if it's reached last character.
-			}
-			else {
-				xorKeyPos = xorKeyPos > XOR_KEY_LENGTH ? xorKeyStartPos : xorKeyPos;	// Reset XOR_KEY position to the start if it has reached last character.
-				outName += inName[indexPos] ^ XOR_KEY[xorKeyPos++];	// XOR each character of filename against characters of XOR_KEY string. Store output characters in "outName".
-											// Depending on Mode, filename is either encrypted or decrypted.
-			}
-
-			if (pdv.MODE == "-i") {
-				// Encrypt data file. XOR each byte of the data file within vector "FileVec" against each character of the encrypted filename, "outName". 
-				// Store encrypted output in vector "ProfileDataVec".
-				pdv.ProfileDataVec.emplace_back(pdv.FileVec[indexPos++] ^ outName[nameKeyPos++]);
-			}
-			else {
-				// Decrypt data file: XOR each byte of the data file within vector "ImageVec" against each character of the encrypted filename, "inName". 
-				// Store decrypted output in vector "DecryptedVec".
-				pdv.DecryptedVec.emplace_back(pdv.ImageVec[indexPos++] ^ inName[nameKeyPos++]);
-			}
-		}
-
-		if (pdv.MODE == "-i") {
-
-			SBYTE
-				profileDataVecSizeIndex = 0,	// Start index location of the compressed profile's 4 byte length field.
-				profileChunkSizeIndex = 0,	// Start index of the PNG ICCP Profile header chunk's 4 byte length field.
-				profileNameLengthIndex = 100,	// Index location inside the profile to store the length value of the user's data filename (Max. 1 byte).
-				profileNameIndex = 101,		// Start index location inside the profile to store the filename for the user's embedded data file.
-				bits = 32;			// Value used in "updateValue" function.
-		
-			// Insert the character length value of the filename into the profile,
-			// We need to know how many characters to read when we later retrieve the filename from the profile, during file extraction.
-			pdv.ProfileDataVec[profileNameLengthIndex] = static_cast<int>(NAME_LENGTH);
-
-			// Make space for the filename by removing equivalent length of characters from profile.
-			pdv.ProfileDataVec.erase(pdv.ProfileDataVec.begin() + profileNameIndex, pdv.ProfileDataVec.begin() + NAME_LENGTH + profileNameIndex);
-
-			// Insert the encrypted filename into the profile.
-			pdv.ProfileDataVec.insert(pdv.ProfileDataVec.begin() + profileNameIndex, outName.begin(), outName.end());
-
-			// Update internal profile size.
-			update->Value(pdv.ProfileDataVec, profileDataVecSizeIndex, pdv.ProfileDataVec.size(), bits);
-
-			bool inflate = false; // deflate (compress).
-			
-			// Call function to deflate/compress the contents of vector "ProfileDataVec" (profile with user's encrypted data file).
-			inflateDeflate(pdv.ProfileDataVec, inflate);
-		
-			const size_t
-				PROFILE_DEFLATE_SIZE = pdv.ProfileDataVec.size(),
-				PROFILE_CHUNK_SIZE = PROFILE_DEFLATE_SIZE + 17, // "iCCPICC Profile\x00\x00" (17 chars).
-				PROFILE_DATA_INSERT_INDEX = 21,   // Index location within ProfileChunkVec to insert the deflate contents of ProfileDataVec. 		   
-				PROFILE_CHUNK_INSERT_INDEX = 33;  // Index location within ImageVec (image file) to insert ProfileChunkVec (ICCP Profile chunk).
-
-			// Insert the deflate/compressed ICCP Profile (with user's encrypted/compressed data file) into vector "ProfileChunkVec", begining at index location 21.
-			pdv.ProfileChunkVec.insert((pdv.ProfileChunkVec.begin() + PROFILE_DATA_INSERT_INDEX), pdv.ProfileDataVec.begin(), pdv.ProfileDataVec.end());
-
-			// Call function to insert new chunk length value into "ProfileChunkVec" vector's index length field. 
-			update->Value(pdv.ProfileChunkVec, profileChunkSizeIndex, PROFILE_DEFLATE_SIZE + 13, bits);
-
-			const int PROFILE_CHUNK_START_INDEX = 4;
-
-			// Pass these two values (PROFILE_CHUNK_START_INDEX and PROFILE_CHUNK_SIZE) to the CRC fuction to get correct ICCP Profile chunk CRC.
-			const size_t PROFILE_CHUNK_CRC = crc(&pdv.ProfileChunkVec[PROFILE_CHUNK_START_INDEX], PROFILE_CHUNK_SIZE);
-
-			// Index location for the 4-byte CRC field of the ICCP Profile chunk.
-			size_t profileCrcInsertIndex = PROFILE_CHUNK_START_INDEX + (PROFILE_CHUNK_SIZE);
-
-			// Call function to insert ICCP Profile chunk CRC value into "ProfileChunkVec" vector's CRC index field. 
-			update->Value(pdv.ProfileChunkVec, profileCrcInsertIndex, PROFILE_CHUNK_CRC, bits);
-			
-			// Insert contents of vector "ProfileChunkVec" into vector "ImageVec", combining ICCP Profile chunk (compressed profile & user's data file) with PNG image.
-			pdv.ImageVec.insert((pdv.ImageVec.begin() + PROFILE_CHUNK_INSERT_INDEX), pdv.ProfileChunkVec.begin(), pdv.ProfileChunkVec.end());
-
-			// If we embed multiple data files (Max. 6), each outputted image will be differentiated by a number in the filename, e.g. jdv_img1.jpg, jdv_img2.jpg, jdv_img3.jpg.
-			std::string diffVal = std::to_string(pdv.subVal - pdv.imgVal);	
-			pdv.DATA_FILE = "pdv_img" + diffVal + ".png";
-
-			// Write out to file the PNG image with the embedded (encrypted/compressed) user's data file.
-			writeOutFile(pdv);
-		}
-		else { // Extract Mode.
-
-			// Update string variable with the decrypted filename.
-			pdv.DATA_FILE = outName;
-
-			// Write the extracted (inflated / decrypted) data file out to disk.
-			writeOutFile(pdv);
+		if (Last_Slash_Pos <= pdv.DATA_FILE.length()) {
+			const std::string_view No_Slash_Name(pdv.DATA_FILE.c_str() + (Last_Slash_Pos + 1), pdv.DATA_FILE.length() - (Last_Slash_Pos + 1));
+			pdv.DATA_FILE = No_Slash_Name;
 		}
 	}
 
-void inflateDeflate(std::vector<BYTE>& Vec, bool inflateData) {
+	const std::string XOR_KEY = "\xFC\xD8\xF9\xE2\x9F\x7E";	// String used to XOR encrypt/decrypt the filename of user's data file.
+
+	uint32_t Index_Pos = 0;
+
+	const uint8_t
+		MAX_LENGTH_FILENAME = 0x17,
+		NAME_LENGTH = static_cast<uint8_t>(pdv.DATA_FILE.length()),	// Character length of user's data file name.
+		XOR_KEY_LENGTH = static_cast<uint8_t>(XOR_KEY.length()),
+		XOR_KEY_START_POS = 0,
+		NAME_KEY_START_POS = 0;
+
+	// Make sure character length of filename does not exceed set maximum.
+	if (NAME_LENGTH > MAX_LENGTH_FILENAME) {
+		std::cerr << "\nFile Error: Filename length of your data file (" + std::to_string(NAME_LENGTH) + " characters) is too long.\n"
+			"\nFor compatibility requirements, your filename must be under 24 characters.\nPlease try again with a shorter filename.\n\n";
+		std::exit(EXIT_FAILURE);
+	}
+
+	const std::string In_Name = pdv.DATA_FILE;
+
+	std::string Out_Name;
+
+	uint8_t
+		Xor_Key_Pos = XOR_KEY_START_POS,	// Character position variable for XOR_KEY string.
+		Name_Key_Pos = NAME_KEY_START_POS;	// Character position variable for filename string (Out_Name / In_Name).
+
+	if (NAME_LENGTH > pdv.DATA_SIZE) {		// File size needs to be greater than filename length.
+		std::cerr << "\nFile Size Error: File size is too small.\n\n";
+		std::exit(EXIT_FAILURE);
+	}
+
+	// XOR encrypt or decrypt filename and data file.
+	while (pdv.DATA_SIZE > Index_Pos) {
+
+		if (Index_Pos >= NAME_LENGTH) {
+			Name_Key_Pos = Name_Key_Pos > NAME_LENGTH ? NAME_KEY_START_POS : Name_Key_Pos;	 // Reset filename character position to the start if it's reached last character.
+		}
+		else {
+			Xor_Key_Pos = Xor_Key_Pos > XOR_KEY_LENGTH ? XOR_KEY_START_POS : Xor_Key_Pos;	// Reset XOR_KEY position to the start if it has reached last character.
+			Out_Name += In_Name[Index_Pos] ^ XOR_KEY[Xor_Key_Pos++];			// XOR each character of filename against characters of XOR_KEY string. Store output characters in "outName".
+			// Depending on Mode, filename is either encrypted or decrypted.
+		}
+
+		if (pdv.MODE == "-i") {
+			// Encrypt data file. XOR each byte of the data file within vector "FileVec" against each character of the encrypted filename, "outName". 
+			// Store encrypted output in vector "ProfileDataVec".
+			pdv.ProfileDataVec.emplace_back(pdv.FileVec[Index_Pos++] ^ Out_Name[Name_Key_Pos++]);
+		}
+		else {
+			// Decrypt data file: XOR each byte of the data file within vector "ImageVec" against each character of the encrypted filename, "inName". 
+			// Store decrypted output in vector "DecryptedVec".
+			pdv.DecryptedVec.emplace_back(pdv.ImageVec[Index_Pos++] ^ In_Name[Name_Key_Pos++]);
+		}
+	}
+
+	if (pdv.MODE == "-i") {
+
+		uint8_t
+			Profile_DataVec_Size_Index = 0,		// Start index location of the compressed profile's 4 byte length field.
+			Profile_Chunk_Size_Index = 0,		// Start index of the PNG ICCP Profile header chunk's 4 byte length field.
+			Profile_Name_Length_Index = 0x64,	// Index location inside the profile to store the length value of the user's data filename (Max. 1 byte).
+			Profile_Name_Index = 0x65,		// Start index location inside the profile to store the filename for the user's embedded data file.
+			Bits = 32;				// Value used in "updateValue" function.
+
+		// Insert the character length value of the filename into the profile,
+		// We need to know how many characters to read when we later retrieve the filename from the profile, during file extraction.
+		pdv.ProfileDataVec[Profile_Name_Length_Index] = NAME_LENGTH;
+
+		// Make space for the filename by removing equivalent length of characters from profile.
+		pdv.ProfileDataVec.erase(pdv.ProfileDataVec.begin() + Profile_Name_Index, pdv.ProfileDataVec.begin() + NAME_LENGTH + Profile_Name_Index);
+
+		// Insert the encrypted filename into the profile.
+		pdv.ProfileDataVec.insert(pdv.ProfileDataVec.begin() + Profile_Name_Index, Out_Name.begin(), Out_Name.end());
+
+		// Update internal profile size.
+		update->Value(pdv.ProfileDataVec, Profile_DataVec_Size_Index, pdv.ProfileDataVec.size(), Bits);
+
+		bool Inflate = false; // deflate (compress).
+
+		// Call function to deflate/compress the contents of vector "ProfileDataVec" (profile with user's encrypted data file).
+		inflateDeflate(pdv.ProfileDataVec, Inflate);
+
+		const uint32_t
+			PROFILE_DEFLATE_SIZE = static_cast<uint32_t>(pdv.ProfileDataVec.size()),
+			PROFILE_CHUNK_SIZE = PROFILE_DEFLATE_SIZE + 0x11; // "iCCPICC Profile\x00\x00" (+ 17 bytes).
+
+		const uint8_t
+			PROFILE_DATA_INSERT_INDEX = 0x15,   // Index location within ProfileChunkVec to insert the deflate contents of ProfileDataVec. 		   
+			PROFILE_CHUNK_INSERT_INDEX = 0x21,  // Index location within ImageVec (image file) to insert ProfileChunkVec (ICCP Profile chunk).
+			PROFILE_CHUNK_START_INDEX = 4;
+
+		// Insert the deflate/compressed ICCP Profile (with user's encrypted/compressed data file) into vector "ProfileChunkVec", begining at index location 21.
+		pdv.ProfileChunkVec.insert((pdv.ProfileChunkVec.begin() + PROFILE_DATA_INSERT_INDEX), pdv.ProfileDataVec.begin(), pdv.ProfileDataVec.end());
+
+		// Call function to insert new chunk length value into "ProfileChunkVec" vector's index length field. 
+		update->Value(pdv.ProfileChunkVec, Profile_Chunk_Size_Index, PROFILE_DEFLATE_SIZE + 0xD, Bits);
+
+		// Pass these two values (PROFILE_CHUNK_START_INDEX and PROFILE_CHUNK_SIZE) to the CRC fuction to get correct ICCP Profile chunk CRC.
+		const uint32_t PROFILE_CHUNK_CRC = Crc(&pdv.ProfileChunkVec[PROFILE_CHUNK_START_INDEX], PROFILE_CHUNK_SIZE);
+
+		// Index location for the 4-byte CRC field of the ICCP Profile chunk.
+		size_t Profile_Crc_Insert_Index = PROFILE_CHUNK_START_INDEX + PROFILE_CHUNK_SIZE;
+
+		// Call function to insert ICCP Profile chunk CRC value into "ProfileChunkVec" vector's CRC index field. 
+		update->Value(pdv.ProfileChunkVec, Profile_Crc_Insert_Index, PROFILE_CHUNK_CRC, Bits);
+
+		// Insert contents of vector "ProfileChunkVec" into vector "ImageVec", combining ICCP Profile chunk (compressed profile & user's data file) with PNG image.
+		pdv.ImageVec.insert((pdv.ImageVec.begin() + PROFILE_CHUNK_INSERT_INDEX), pdv.ProfileChunkVec.begin(), pdv.ProfileChunkVec.end());
+
+		// If we embed multiple data files (Max. 6), each outputted image will be differentiated by a number in the filename, e.g. jdv_img1.jpg, jdv_img2.jpg, jdv_img3.jpg.
+		std::string Diff_Value = std::to_string(pdv.Sub_Value - pdv.Img_Value);
+		pdv.DATA_FILE = "pdv_img" + Diff_Value + ".png";
+
+		// Write out to file the PNG image with the embedded (encrypted/compressed) user's data file.
+		writeOutFile(pdv);
+	}
+	else { // Extract Mode.
+
+		// Update string variable with the decrypted filename.
+		pdv.DATA_FILE = Out_Name;
+
+		// Write the extracted (inflated / decrypted) data file out to disk.
+		writeOutFile(pdv);
+	}
+}
+
+void inflateDeflate(std::vector<BYTE>& Vec, bool Inflate_Data) {
 
 	// zlib function, see https://zlib.net/
 
 	std::vector <BYTE> Buffer;
 
-	const size_t VEC_SIZE = Vec.size();
+	const uint32_t VEC_SIZE = static_cast<uint32_t>(Vec.size());
 
 	Buffer.reserve(VEC_SIZE);
 
-	size_t BUFSIZE;
+	uint32_t BUFSIZE;
 
-	if (!inflateData) {
-		BUFSIZE = 256 * 1024;  // Deflate
+	if (!Inflate_Data) {
+		BUFSIZE = 0x100 * 0x400;  // Deflate
 	}
 	else {
-		BUFSIZE = 256 * 1024;  // inflate.
+		BUFSIZE = 0x100 * 0x400;  // inflate.
 	}
-    
-	BYTE* temp_buffer{ new BYTE[BUFSIZE]};
+
+	BYTE* Temp_Buffer{ new BYTE[BUFSIZE] };
 
 	z_stream strm;
 	strm.zalloc = 0;
 	strm.zfree = 0;
 	strm.next_in = Vec.data();
-	strm.avail_in = static_cast<uInt>(VEC_SIZE);
-	strm.next_out = temp_buffer;
-	strm.avail_out = static_cast<uInt>(BUFSIZE);
+	strm.avail_in = VEC_SIZE;
+	strm.next_out = Temp_Buffer;
+	strm.avail_out = BUFSIZE;
 
-	if (inflateData) {
+	if (Inflate_Data) {
 		inflateInit(&strm);
 	}
 	else {
@@ -486,63 +480,63 @@ void inflateDeflate(std::vector<BYTE>& Vec, bool inflateData) {
 
 	while (strm.avail_in)
 	{
-		if (inflateData) {
+		if (Inflate_Data) {
 			inflate(&strm, Z_NO_FLUSH);
 		}
 		else {
 			deflate(&strm, Z_NO_FLUSH);
-			
+
 		}
 
 		if (!strm.avail_out)
 		{
-			Buffer.insert(Buffer.end(), temp_buffer, temp_buffer + BUFSIZE);
-			strm.next_out = temp_buffer;
-			strm.avail_out = static_cast<uInt>(BUFSIZE);
+			Buffer.insert(Buffer.end(), Temp_Buffer, Temp_Buffer + BUFSIZE);
+			strm.next_out = Temp_Buffer;
+			strm.avail_out = BUFSIZE;
 		}
 		else
 			break;
 	}
-	if (inflateData) {
+	if (Inflate_Data) {
 		inflate(&strm, Z_FINISH);
-		Buffer.insert(Buffer.end(), temp_buffer, temp_buffer + BUFSIZE - strm.avail_out);
+		Buffer.insert(Buffer.end(), Temp_Buffer, Temp_Buffer + BUFSIZE - strm.avail_out);
 		inflateEnd(&strm);
 	}
 	else {
 		deflate(&strm, Z_FINISH);
-		Buffer.insert(Buffer.end(), temp_buffer, temp_buffer + BUFSIZE - strm.avail_out);
+		Buffer.insert(Buffer.end(), Temp_Buffer, Temp_Buffer + BUFSIZE - strm.avail_out);
 		deflateEnd(&strm);
 	}
 
 	Vec.clear();
 	Vec.swap(Buffer);
-	delete[] temp_buffer;
+	delete[] Temp_Buffer;
 	Buffer.clear();
 }
 
 void eraseChunks(std::vector<BYTE>& Vec, pdvStruct& pdv) {
 
-	std::string CHUNK[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
+	std::string CHUNK[0xF]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
 
 	if (pdv.MODE == "-x") {  // If extracting data, we need to keep the ICCP chunk, so rename it. 
-				 // Also change the first (0) element to "iCCP", so that it becomes our search limit marker. See for-loop below.
+		// Also change the first (0) element to "iCCP", so that it becomes our search limit marker. See for-loop below.
 		CHUNK[5] = "pdVRdt_KEeP_Me_PDvrDT";
 		CHUNK[0] = "iCCP";
 	}
 
-	for (int chunkIndex = 14; chunkIndex > 0; chunkIndex--) {
-			// If Mode is Insert ("--i"). Get first IDAT chunk index location. Don't remove chunks after this search limit location.
-			// If Mode is Extract ("--x"). Get ICCP chunk index location. Don't remove chunks after this search limit location.
-			size_t
-				searchLimitIndex = search(Vec.begin(), Vec.end(), CHUNK[0].begin(), CHUNK[0].end()) - Vec.begin(),
-				// From last to first, search and get index location of each chunk to remove.
-				chunkFoundIndex = search(Vec.begin(), Vec.end(), CHUNK[chunkIndex].begin(), CHUNK[chunkIndex].end()) - Vec.begin() - 4;
+	for (uint8_t Chunk_Index = 0xE; Chunk_Index > 0; Chunk_Index--) {
+		// If Mode is Insert ("--i"). Get first IDAT chunk index location. Don't remove chunks after this search limit location.
+		// If Mode is Extract ("--x"). Get ICCP chunk index location. Don't remove chunks after this search limit location.
+		uint32_t
+			Search_Limit_Index = static_cast<uint32_t>(search(Vec.begin(), Vec.end(), CHUNK[0].begin(), CHUNK[0].end()) - Vec.begin()),
+			// From last to first, search and get index location of each chunk to remove.
+			Chunk_Found_Index = static_cast<uint32_t>(search(Vec.begin(), Vec.end(), CHUNK[Chunk_Index].begin(), CHUNK[Chunk_Index].end()) - Vec.begin()) - 4;
 
 		// If found chunk is located before search limit location, we can remove it.
-		if (searchLimitIndex > chunkFoundIndex) {
-			int chunkSize = (Vec[chunkFoundIndex + 1] << 16) | Vec[chunkFoundIndex + 2] << 8 | Vec[chunkFoundIndex + 3];
-			Vec.erase(Vec.begin() + chunkFoundIndex, Vec.begin() + chunkFoundIndex + (chunkSize + 12));
-			chunkIndex++; // Increment chunkIndex so that we search again for the same chunk, in case of multiple occurrences.
+		if (Search_Limit_Index > Chunk_Found_Index) {
+			uint32_t Chunk_Size = (Vec[Chunk_Found_Index + 1] << 16) | Vec[Chunk_Found_Index + 2] << 8 | Vec[Chunk_Found_Index + 3];
+			Vec.erase(Vec.begin() + Chunk_Found_Index, Vec.begin() + Chunk_Found_Index + (Chunk_Size + 0xC));
+			Chunk_Index++; // Increment chunkIndex so that we search again for the same chunk, in case of multiple occurrences.
 		}
 	}
 	// Now that we have removed unwanted chunks, encrypt the user's data file (if embedding file).
@@ -551,39 +545,47 @@ void eraseChunks(std::vector<BYTE>& Vec, pdvStruct& pdv) {
 	}
 }
 
-size_t updateCrc(const size_t& crc, BYTE* buf, const size_t& len)
+uint32_t Crc_Update(const uint32_t Crc, BYTE* buf, const uint32_t len)
 {
+	// Table of CRCs of all 8-bit messages.
+	uint32_t Crc_Table[0x100]
+	{ 0, 	 0x77073096, 0xee0e612c, 0x990951ba, 0x76dc419,  0x706af48f, 0xe963a535, 0x9e6495a3, 0xedb8832,  0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x9b64c2b,
+		 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7, 0x136c9856,
+		 0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9, 0xfa0f3d63, 0x8d080df5, 0x3b6e20c8, 0x4c69105e, 0xd56041e4, 0xa2677172, 0x3c03e4d1,
+		 0x4b04d447, 0xd20d85fd, 0xa50ab56b, 0x35b5a8fa, 0x42b2986c, 0xdbbbc9d6, 0xacbcf940, 0x32d86ce3, 0x45df5c75, 0xdcd60dcf, 0xabd13d59, 0x26d930ac,
+		 0x51de003a, 0xc8d75180, 0xbfd06116, 0x21b4f4b5, 0x56b3c423, 0xcfba9599, 0xb8bda50f, 0x2802b89e, 0x5f058808, 0xc60cd9b2, 0xb10be924, 0x2f6f7c87,
+		 0x58684c11, 0xc1611dab, 0xb6662d3d, 0x76dc4190, 0x1db7106,  0x98d220bc, 0xefd5102a, 0x71b18589, 0x6b6b51f,  0x9fbfe4a5, 0xe8b8d433, 0x7807c9a2,
+		 0xf00f934,  0x9609a88e, 0xe10e9818, 0x7f6a0dbb, 0x86d3d2d,  0x91646c97, 0xe6635c01, 0x6b6b51f4, 0x1c6c6162, 0x856530d8, 0xf262004e, 0x6c0695ed,
+		 0x1b01a57b, 0x8208f4c1, 0xf50fc457, 0x65b0d9c6, 0x12b7e950, 0x8bbeb8ea, 0xfcb9887c, 0x62dd1ddf, 0x15da2d49, 0x8cd37cf3, 0xfbd44c65, 0x4db26158,
+		 0x3ab551ce, 0xa3bc0074, 0xd4bb30e2, 0x4adfa541, 0x3dd895d7, 0xa4d1c46d, 0xd3d6f4fb, 0x4369e96a, 0x346ed9fc, 0xad678846, 0xda60b8d0, 0x44042d73,
+		 0x33031de5, 0xaa0a4c5f, 0xdd0d7cc9, 0x5005713c, 0x270241aa, 0xbe0b1010, 0xc90c2086, 0x5768b525, 0x206f85b3, 0xb966d409, 0xce61e49f, 0x5edef90e,
+		 0x29d9c998, 0xb0d09822, 0xc7d7a8b4, 0x59b33d17, 0x2eb40d81, 0xb7bd5c3b, 0xc0ba6cad, 0xedb88320, 0x9abfb3b6, 0x3b6e20c,  0x74b1d29a, 0xead54739,
+		 0x9dd277af, 0x4db2615,  0x73dc1683, 0xe3630b12, 0x94643b84, 0xd6d6a3e,  0x7a6a5aa8, 0xe40ecf0b, 0x9309ff9d, 0xa00ae27,  0x7d079eb1, 0xf00f9344,
+		 0x8708a3d2, 0x1e01f268, 0x6906c2fe, 0xf762575d, 0x806567cb, 0x196c3671, 0x6e6b06e7, 0xfed41b76, 0x89d32be0, 0x10da7a5a, 0x67dd4acc, 0xf9b9df6f,
+		 0x8ebeeff9, 0x17b7be43, 0x60b08ed5, 0xd6d6a3e8, 0xa1d1937e, 0x38d8c2c4, 0x4fdff252, 0xd1bb67f1, 0xa6bc5767, 0x3fb506dd, 0x48b2364b, 0xd80d2bda,
+		 0xaf0a1b4c, 0x36034af6, 0x41047a60, 0xdf60efc3, 0xa867df55, 0x316e8eef, 0x4669be79, 0xcb61b38c, 0xbc66831a, 0x256fd2a0, 0x5268e236, 0xcc0c7795,
+		 0xbb0b4703, 0x220216b9, 0x5505262f, 0xc5ba3bbe, 0xb2bd0b28, 0x2bb45a92, 0x5cb36a04, 0xc2d7ffa7, 0xb5d0cf31, 0x2cd99e8b, 0x5bdeae1d, 0x9b64c2b0,
+		 0xec63f226, 0x756aa39c, 0x26d930a,  0x9c0906a9, 0xeb0e363f, 0x72076785, 0x5005713,  0x95bf4a82, 0xe2b87a14, 0x7bb12bae, 0xcb61b38,  0x92d28e9b,
+		 0xe5d5be0d, 0x7cdcefb7, 0xbdbdf21,  0x86d3d2d4, 0xf1d4e242, 0x68ddb3f8, 0x1fda836e, 0x81be16cd, 0xf6b9265b, 0x6fb077e1, 0x18b74777, 0x88085ae6,
+		 0xff0f6a70, 0x66063bca, 0x11010b5c, 0x8f659eff, 0xf862ae69, 0x616bffd3, 0x166ccf45, 0xa00ae278, 0xd70dd2ee, 0x4e048354, 0x3903b3c2, 0xa7672661,
+		 0xd06016f7, 0x4969474d, 0x3e6e77db, 0xaed16a4a, 0xd9d65adc, 0x40df0b66, 0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9, 0xbdbdf21c,
+		 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf, 0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37,
+		 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d };
 
-	size_t crcTable[256]{ 0,1996959894,3993919788,2567524794,124634137,1886057615,3915621685,2657392035,249268274,2044508324,3772115230,2547177864,162941995,2125561021,3887607047,
-				2428444049,498536548,1789927666,4089016648,2227061214,450548861,1843258603,4107580753,2211677639,325883990, 1684777152,4251122042,2321926636,335633487,1661365465,
-				4195302755,2366115317,997073096,1281953886,3579855332,2724688242,1006888145,1258607687,3524101629,2768942443,901097722,1119000684,3686517206,2898065728,853044451,
-				1172266101,3705015759,2882616665,651767980, 1373503546,3369554304,3218104598,565507253,1454621731,3485111705,3099436303,671266974,1594198024,3322730930,2970347812,
-				795835527,1483230225,3244367275,3060149565,1994146192,31158534,2563907772,4023717930,1907459465,112637215,2680153253,3904427059,2013776290,251722036,2517215374,
-				3775830040,2137656763,141376813,2439277719,3865271297,1802195444,476864866,2238001368,4066508878,1812370925,453092731,2181625025,4111451223,1706088902,314042704,
-				2344532202,4240017532,1658658271,366619977,2362670323,4224994405,1303535960,984961486,2747007092,3569037538,1256170817,1037604311,2765210733,3554079995,1131014506,
-				879679996,2909243462,3663771856,1141124467,855842277,2852801631,3708648649,1342533948,654459306,3188396048,3373015174,1466479909,544179635,3110523913,3462522015,
-				1591671054,702138776,2966460450,3352799412,1504918807,783551873,3082640443,3233442989,3988292384,2596254646,62317068,1957810842,3939845945,2647816111,81470997,
-				1943803523,3814918930,2489596804,225274430,2053790376,3826175755,2466906013,167816743,2097651377,4027552580,2265490386,503444072,1762050814,4150417245,2154129355,
-				426522225,1852507879,4275313526,2312317920,282753626,1742555852,4189708143,2394877945,397917763,1622183637,3604390888,2714866558,953729732,1340076626,3518719985,
-				2797360999,1068828381,1219638859,3624741850,2936675148,906185462,1090812512,3747672003,2825379669,829329135,1181335161,3412177804,3160834842,628085408,1382605366,
-				3423369109,3138078467,570562233,1426400815,3317316542,2998733608,733239954,1555261956,3268935591,3050360625,752459403,1541320221,2607071920,3965973030,1969922972,
-				40735498,2617837225,3943577151,1913087877,83908371,2512341634,3803740692,2075208622,213261112,2463272603,3855990285,2094854071,198958881,2262029012,4057260610,
-				1759359992,534414190,2176718541,4139329115,1873836001,414664567,2282248934,4279200368,1711684554,285281116,2405801727,4167216745,1634467795,376229701,2685067896,
-				3608007406,1308918612,956543938,2808555105,3495958263,1231636301,1047427035,2932959818,3654703836,1088359270,936918000,2847714899,3736837829,1202900863,817233897,
-				3183342108,3401237130,1404277552,615818150,3134207493,3453421203,1423857449,601450431,3009837614,3294710456,1567103746,711928724,3020668471,3272380065,1510334235,
-				755167117 };
+	// Update a running CRC with the bytes buf[0..len - 1] the CRC should be initialized to all 1's, 
+	// and the transmitted value is the 1's complement of the final running CRC (see the crc() routine below).
+	uint32_t c = Crc;
 
-	size_t c = crc;
-
-	for (size_t n{}; n < len; n++) {
-		c = crcTable[(c ^ buf[n]) & 0xff] ^ (c >> 8);
+	for (uint32_t n{}; n < len; n++) {
+		c = Crc_Table[(c ^ buf[n]) & 0xff] ^ (c >> 8);
 	}
 	return c;
 }
 
-size_t crc(BYTE* buf, const size_t& len)
+// Return the CRC of the bytes buf[0..len-1].
+uint32_t Crc(BYTE* buf, const uint32_t len)
 {
-	return updateCrc(0xffffffffL, buf, len) ^ 0xffffffffL;
+	return Crc_Update(0xffffffffL, buf, len) ^ 0xffffffffL;
 }
 
 void writeOutFile(pdvStruct& pdv) {
@@ -601,7 +603,7 @@ void writeOutFile(pdvStruct& pdv) {
 		writeFile.write((char*)&pdv.ImageVec[0], pdv.ImageVec.size());
 
 		std::cout << "\nCreated output file: \"" + pdv.DATA_FILE + " " << pdv.ImageVec.size() << " " << "Bytes\"\n";
-		
+
 		pdv.EncryptedVec.clear();  // Clear vector. Important if encrypting multiple, separate files. 
 	}
 	else {
@@ -610,7 +612,7 @@ void writeOutFile(pdvStruct& pdv) {
 		std::cout << "\nExtracted file: \"" + pdv.DATA_FILE + " " << pdv.DecryptedVec.size() << " " << "Bytes\"\n";
 
 		pdv.DecryptedVec.clear();  // Clear vector. Important if decrypting multiple images.
-		
+
 	}
 }
 
@@ -651,4 +653,3 @@ You can also extract files from up to six images at a time.
 
 )";
 }
-
