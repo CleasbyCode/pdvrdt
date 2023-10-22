@@ -5,7 +5,7 @@ A simple command-line tool to embed and extract any file type via a PNG image.
 Share your *file-embedded* image on the following compatible sites.  
 
 * ***Flickr (200MB), ImgBB (32MB), ImageShack (25MB), PostImage (24MB)***,
-* ***\*Mastodon (16MB), ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / Desktop/browser only)***.
+* ***Mastodon (16MB), ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / Desktop/browser only)***.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/Witch_Image.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
@@ -39,9 +39,6 @@ of the ***ICC Profile***, where your data is stored (encrypted & compressed).
 To maximise the amount of data you can embed in your image file for ***Reddit*** or ***Twitter***,  
 first compress the data file to a ***ZIP*** or ***RAR*** file. Make sure the compressed ***ZIP*** or ***RAR***  
 file does not exceed 1,048,172 bytes for ***Reddit*** or 9,836 bytes for ***Twitter***. 
-
-\****While techinically the image size limit for Mastodon is 16MB, embedded PNG images over 10MB  
-are slower to post and may not always upload. [jdvrif](https://github.com/CleasbyCode/jdvrif) is faster and more reliable for larger files.***
 
 You can insert up to ***six*** files at a time (outputs one image per file).  
 You can also extract files from up to ***six*** images at a time.
