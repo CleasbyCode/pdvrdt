@@ -1,5 +1,7 @@
 
-//	PNG Data Vehicle for Flickr, ImgBB, PostImage, Mastodon, ImgPile (Account required), Imgur, Reddit & Twitter. (PDVRDT v1.5). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle for Flickr, ImgBB, PostImage, Mastodon, ImgPile (Account required), Imgur, Reddit & Twitter. (PDVRDT v1.6). 
+//	Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+
 //	Compile program (Linux)
 //	$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 //	Run it
@@ -635,7 +637,7 @@ void writeOutFile(pdvStruct& pdv) {
 void displayInfo() {
 
 	std::cout << R"(
-PNG Data Vehicle (pdvrdt v1.5). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
+PNG Data Vehicle (pdvrdt v1.6). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
 A simple command-line tool to embed and extract any file type via a PNG image file.  
 Share your data-embedded image on the following compatible sites.  
