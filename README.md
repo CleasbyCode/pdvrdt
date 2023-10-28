@@ -7,7 +7,7 @@ Share your *file-embedded* image on the following compatible sites.
 * ***Flickr (200MB), ImgBB (32MB), PostImage (24MB)***, Mastodon (16MB),
 * ***ImgPile (8MB / Account required), Imgur (5MB), \*Reddit (1MB / Browser only)***.
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/Witch_Image.png)  
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/witch_pic.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
 {***Image contains an embedded MP3 file (7MB) / extract: pdvrdt -x Witch_Image.png)***} 
 
