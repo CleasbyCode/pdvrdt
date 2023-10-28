@@ -4,8 +4,8 @@ A simple command-line tool to embed and extract any file type via a PNG image.
 
 Share your *file-embedded* image on the following compatible sites.  
 
-* ***Flickr (200MB), ImgBB (32MB), ImageShack (25MB), PostImage (24MB)***,
-* ***Mastodon (16MB), ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / Desktop/browser only)***.
+* ***Flickr (200MB), ImgBB (32MB), PostImage (24MB)***, Mastodon (16MB),
+* ***ImgPile (8MB / Account required), Imgur (5MB), \*Reddit (1MB / Desktop/browser only)***.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/Witch_Image.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
@@ -14,27 +14,27 @@ Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status
 [**Video Demo 1: Mastodon**](https://youtu.be/-zFJcljHzZU)   
 [**Video Demo 2: Reddit**](https://youtu.be/j7BC31nVrMg)  
 
-***If your data file is under ***10KB*** and image dimensions 900x900 or less, you can also  
-share your *file-embedded* PNG image on ***Twitter***.***  
+***If your data file is under ***10KB*** and image dimensions 900x900 or less (PNG-32/24),
+4096x4096 or less (PNG-8), you can also share your *file-embedded* PNG image on ***Twitter***.***  
 
 To embed larger files for ***Twitter*** (***5MB max.***), please try **[pdvzip](https://github.com/CleasbyCode/pdvzip)**  
 To embed larger files for ***Reddit*** (***20MB max.***), please try **[jdvrif](https://github.com/CleasbyCode/jdvrif)**
 
 You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.  
 
-For ***Flickr, ImgBB, ImageShack, PostImage, Mastodon, ImgPile & Imgur***,  
+For ***Flickr, ImgBB, PostImage, Mastodon, ImgPile & Imgur***,  
 the size limit is measured by the total size of your *file-embedded* PNG image.  
 
 For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size (zlib inflate)  
-of the ***ICC Profile***, where your data is stored (encrypted & compressed).  
+of the ***iCCP chunk***, where your data is stored (encrypted & compressed).  
 
 ![profile Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/profile.png)  
 
 ***Reddit***: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.  
-404 bytes is used for the basic ***ICC Profile***. (404 + 1048172 = 1,048,576 bytes [***1MB***]).
+404 bytes is used for the basic ***iCC Profile***. (404 + 1048172 = 1,048,576 bytes [***1MB***]).
 
 ***Twitter***: 9,836 bytes is the uncompressed (zlib inflate) limit for your data file.  
-404 bytes is used for the basic ***ICC Profile*** (404 + 9836 = 10,240 bytes [***10KB***])
+404 bytes is used for the basic ***iCC Profile*** (404 + 9836 = 10,240 bytes [***10KB***])
 
 To maximise the amount of data you can embed in your image file for ***Reddit*** or ***Twitter***,  
 first compress the data file to a ***ZIP*** or ***RAR*** file. Make sure the compressed ***ZIP*** or ***RAR***  
