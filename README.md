@@ -14,7 +14,7 @@ Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status
 [**Video Demo 1: Mastodon**](https://youtu.be/-zFJcljHzZU)   
 [**Video Demo 2: Reddit**](https://youtu.be/j7BC31nVrMg)  
 
-***If your data file is under ***10KB*** and image dimensions 900x900 or less (PNG-32/24),
+***If your data file is under ***10KB*** and image dimensions 900x900 or less (PNG-32/24),  
 4096x4096 or less (PNG-8), you can also share your *file-embedded* PNG image on ***Twitter***.***  
 
 To embed larger files for ***Twitter*** (***5MB max.***), please try **[pdvzip](https://github.com/CleasbyCode/pdvzip)**  
