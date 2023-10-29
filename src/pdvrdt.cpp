@@ -589,30 +589,30 @@ void writeOutFile(pdvStruct& pdv) {
 
 		std::string Size_Warning =
 			"\n**Warning**\n\nDue to the file size of your data-embedded PNG image,\nyou will only be able to share this image on the following platforms:\n\n"
-			"Flickr, ImgBB, PostImage, Mastodon, ImgPile (Account required) & Imgur";
+			"Flickr, ImgBB, PostImage, Mastodon, ImgPile & Imgur";
 
-		const uint8_t Msg_Len = static_cast<uint8_t>(Size_Warning.length());
+		const uint8_t MSG_LEN = static_cast<uint8_t>(Size_Warning.length());
 
 		const uint32_t
-			Img_Size = static_cast<uint32_t>(pdv.ImageVec.size()),
+			IMG_SIZE = static_cast<uint32_t>(pdv.ImageVec.size()),
 			// Twitter 9.5KB. While not officially supported because of the tiny size requirement, if your data file is this size 
 			// (9.5KB, 9836 bytes) or lower with image dimensions 900x900 or less (PNG-32/24) 4096x4096 or less (PNG-8), 
 			// then you should be able to use Twitter to share your data-embedded image.
-			Reddit_Size =	 1048172,	// Just under 1MB.
-			Imgur_Size =	 5242880,	// 5MB
-			Img_Pile_Size =  8388608,	// 8MB
-			Mastodon_Size =  16777216,	// 16MB
-			Post_Img_Size =	 25165824,	// 24MB
-			Imgbb_Size =	 33554432;	// 32MB
+			REDDIT_SIZE =	 1048172,	// Just under 1MB.
+			IMGUR_SIZE =	 5242880,	// 5MB
+			IMG_PILE_SIZE =  8388608,	// 8MB
+			MASTODON_SIZE =  16777216,	// 16MB
+			POST_IMG_SIZE =	 25165824,	// 24MB
+			IMGBB_SIZE =	 33554432;	// 32MB
 			// Flickr is 200MB, this programs max size, no need to make a variable for it.
 		
-		Size_Warning = (Img_Size > Imgur_Size && Img_Size <= Img_Pile_Size ? Size_Warning.substr(0, Msg_Len - 8)
-						: (Img_Size > Img_Pile_Size && Img_Size <= Mastodon_Size ? Size_Warning.substr(0, Msg_Len - 36)
-						: (Img_Size > Mastodon_Size && Img_Size <= Post_Img_Size ? Size_Warning.substr(0, Msg_Len - 46)
-						: (Img_Size > Post_Img_Size && Img_Size <= Imgbb_Size ? Size_Warning.substr(0, Msg_Len - 57)
-						: (Img_Size > Imgbb_Size ? Size_Warning.substr(0, Msg_Len - 64) : Size_Warning)))));
+		Size_Warning = (IMG_SIZE > IMGUR_SIZE && IMG_SIZE <= IMG_PILE_SIZE ? Size_Warning.substr(0, MSG_LEN - 8)
+						: (IMG_SIZE > IMG_PILE_SIZE && IMG_SIZE <= MASTODON_SIZE ? Size_Warning.substr(0, MSG_LEN - 17)
+						: (IMG_SIZE > MASTODON_SIZE && IMG_SIZE <= POST_IMG_SIZE ? Size_Warning.substr(0, MSG_LEN - 27)
+						: (IMG_SIZE > POST_IMG_SIZE && IMG_SIZE <= IMGBB_SIZE ? Size_Warning.substr(0, MSG_LEN - 38)
+						: (IMG_SIZE > IMGBB_SIZE ? Size_Warning.substr(0, MSG_LEN - 45) : Size_Warning)))));
 
-		if (pdv.DATA_SIZE > Reddit_Size) {
+		if (pdv.DATA_SIZE > REDDIT_SIZE) {
 			std::cerr << Size_Warning << ".\n";
 		}
 
