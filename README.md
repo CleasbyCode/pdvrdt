@@ -56,7 +56,7 @@ user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 user1@linuxbox:~/Desktop$
 user1@linuxbox:~/Desktop$ ./pdvrdt 
 
-Usage:  pdvrdt -i <png-image>  <file(s)>  
+Usage:  pdvrdt -i <png-image> <file(s)>  
 	pdvrdt -x <png-image(s)>  
 	pdvrdt --info
 
