@@ -1,9 +1,8 @@
-
-//	PNG Data Vehicle for Flickr, ImgBB, PostImage, Mastodon, ImgPile (Account required), Imgur, Reddit & Twitter. (PDVRDT v1.6). 
-//	Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
-
+//	PNG Data Vehicle (pdvrdt v1.6). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+// 
 //	Compile program (Linux)
 //	$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
+// 
 //	Run it
 //	$ ./pdvrdt
 
@@ -19,8 +18,8 @@ typedef unsigned char BYTE;
 struct pdvStruct {
 	std::vector<BYTE> ImageVec, FileVec, ProfileDataVec, ProfileChunkVec, EncryptedVec, DecryptedVec;
 	std::vector<std::string> ChunkNameVec;
-	std::string IMAGE_FILE, DATA_FILE;
-	uint64_t IMAGE_SIZE{}, DATA_SIZE{};
+	std::string Image_File, Data_File;
+	uint64_t Image_Size{}, Data_Size{};
 	uint8_t Img_Value{}, Sub_Value{};
 	bool Insert_File = false, Extract_File = false, Inflate_Data = false, Deflate_Data = false;
 };
@@ -66,10 +65,10 @@ int main(int argc, char** argv) {
 		displayInfo();
 	}
 	else if (argc >= 4 && argc < 10 && std::string(argv[1]) == "-i") { // Insert file mode.
-		pdv.Insert_File = true, pdv.Deflate_Data = true, pdv.Sub_Value = argc - 1, pdv.IMAGE_FILE = argv[2];
+		pdv.Insert_File = true, pdv.Deflate_Data = true, pdv.Sub_Value = argc - 1, pdv.Image_File = argv[2];
 		argc -= 2;
 		while (argc != 1) {
-			pdv.Img_Value = argc, pdv.DATA_FILE = argv[3];
+			pdv.Img_Value = argc, pdv.Data_File = argv[3];
 			openFiles(argv++, pdv);
 			argc--;
 		}
@@ -78,7 +77,7 @@ int main(int argc, char** argv) {
 	else if (argc >= 3 && argc < 9 && std::string(argv[1]) == "-x") { // Extract file mode.
 		pdv.Extract_File = true;
 		while (argc >= 3) {
-			pdv.IMAGE_FILE = argv[2];
+			pdv.Image_File = argv[2];
 			openFiles(argv++, pdv);
 			argc--;
 		}
@@ -89,7 +88,7 @@ int main(int argc, char** argv) {
 	}
 	if (argc != 0) {
 		if (argc == 2) {
-			std::cout << "\nComplete!\n\n";
+			std::cout << "\nComplete! Please check your extracted file(s).\n\n";
 		}
 		else {
 			std::cout << "\nComplete!\n\nYou can now post your data-embedded PNG image(s) to the relevant supported platforms.\n\n";
@@ -101,22 +100,22 @@ int main(int argc, char** argv) {
 void openFiles(char* argv[], pdvStruct& pdv) {
 
 	std::ifstream
-		readImage(pdv.IMAGE_FILE, std::ios::binary),
-		readFile(pdv.DATA_FILE, std::ios::binary);
+		readImage(pdv.Image_File, std::ios::binary),
+		readFile(pdv.Data_File, std::ios::binary);
 
 	if (pdv.Insert_File && (!readImage || !readFile) || pdv.Extract_File && !readImage) {
 		
 		// Open file failure, display relevant error message and exit program.
 		const std::string 
 			READ_ERR_MSG = "\nRead Error: Unable to open/read file: ",
-			ERR_MSG = !readImage ? READ_ERR_MSG + "\"" + pdv.IMAGE_FILE + "\"\n\n" : READ_ERR_MSG + "\"" + pdv.DATA_FILE + "\"\n\n";
+			ERR_MSG = !readImage ? READ_ERR_MSG + "\"" + pdv.Image_File + "\"\n\n" : READ_ERR_MSG + "\"" + pdv.Data_File + "\"\n\n";
 
 		std::cerr << ERR_MSG;
 		std::exit(EXIT_FAILURE);
 	}
 
-	std::string Start_Msg = pdv.Insert_File ? "\nInsert mode selected.\n\nReading files. Please wait...\n" : "\nExtract mode selected.\n\nReading embedded PNG image file. Please wait...\n";
-	std::cout << Start_Msg;
+	const std::string START_MSG = pdv.Insert_File ? "\nInsert mode selected.\n\nReading files. Please wait...\n" : "\nExtract mode selected.\n\nReading embedded PNG image file. Please wait...\n";
+	std::cout << START_MSG;
 
 	// Read PNG image (embedded or non-embedded) into vector "ImageVec".
 	pdv.ImageVec.assign(std::istreambuf_iterator<char>(readImage), std::istreambuf_iterator<char>());
@@ -134,12 +133,12 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 	}
 
 	// Get size of image (embedded or non-embedded).
-	pdv.IMAGE_SIZE = pdv.ImageVec.size();
+	pdv.Image_Size = pdv.ImageVec.size();
 	
 	if (pdv.Extract_File) { // Extract mode. Inflate, decrypt and extract embedded data file from PNG image.
 
 		uint8_t
-			Profile_Chunk_Index = 0x25;	// iCCP chunk location within the PNG image file. 
+			Profile_Chunk_Index = 0x25;	  // iCCP chunk location within the PNG image file. 
 
 		// Get iCCP Profile chunk signature from vector "ImageVec".
 		const std::string
@@ -149,21 +148,20 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 		// Make sure an iCCP chunk exists somewhere within the PNG image.
 		const auto PROFILE_POS = search(pdv.ImageVec.begin(), pdv.ImageVec.end(), PROFILE_SIG.begin(), PROFILE_SIG.end()) - pdv.ImageVec.begin();
 
-		if (PROFILE_POS == pdv.IMAGE_SIZE) {
+		if (PROFILE_POS == pdv.Image_Size) { // Reached end of image file without finding iCCP.
 
 			// File requirement check failure, display relevant error message and exit program.
 			std::cerr << "\nImage Error: No iCCP chunk found within this PNG file. This is not a pdvrdt data-embedded image.\n\n";
 			std::exit(EXIT_FAILURE);
 		}
 
-		// Find and remove unwanted chunks. Some media sites add various PNG chunks to the downloaded image, 
-		// which could cause issues with the expected location of the iCCP chunk.
+		// Find and remove unwanted chunks. Some media sites add various PNG chunks to the downloaded image, which could cause issues with the expected location of the iCCP chunk.
 		eraseChunks(pdv);
 
-		if (GET_PROFILE_SIG != PROFILE_SIG)  {
+		if (GET_PROFILE_SIG != PROFILE_SIG)  {  // An iCCP chunk was found somewhere within the image, but wasn't in the correct location, so not a pdvrdt data-embedded image.
 
 			// File requirements check failure, display relevant error message and exit program.
-			std::cerr << "\nPNG Error: Image file \"" << pdv.IMAGE_FILE << "\" does not appear to contain a valid iCCP chunk.\n\n";
+			std::cerr << "\nPNG Error: Image file \"" << pdv.Image_File << "\" does not appear to contain a valid iCCP chunk.\n\n";
 			std::exit(EXIT_FAILURE);
 		}
 
@@ -176,7 +174,7 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 		const uint32_t
 			// Get iCCP Profile chunk length.
 			PROFILE_CHUNK_SIZE = (pdv.ImageVec[PROFILE_CHUNK_SIZE_INDEX] << 24) | pdv.ImageVec[PROFILE_CHUNK_SIZE_INDEX + 1] << 16 | pdv.ImageVec[PROFILE_CHUNK_SIZE_INDEX + 2] << 8 | pdv.ImageVec[PROFILE_CHUNK_SIZE_INDEX + 3],
-			DEFLATE_CHUNK_SIZE = PROFILE_CHUNK_SIZE - static_cast<uint32_t>(PROFILE_SIG.length() + 2); // + 2 is the two zero bytes after the iCCPicc chunk name.
+			DEFLATE_CHUNK_SIZE = PROFILE_CHUNK_SIZE - static_cast<uint32_t>(PROFILE_SIG.length() + 2); // + 2 includes the two zero bytes after the iCCPicc chunk name.
 
 		// From "ImageVec" vector index 0, erase n bytes so that start of the vector's contents is now the beginning of the deflate data (78,9C...).
 		pdv.ImageVec.erase(pdv.ImageVec.begin(), pdv.ImageVec.begin() + DEFLATE_DATA_INDEX);
@@ -184,7 +182,7 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 		// Erase all bytes of "ImageVec" after the end of the deflate data. Vector should now just contain the deflate data.
 		pdv.ImageVec.erase(pdv.ImageVec.begin() + DEFLATE_CHUNK_SIZE, pdv.ImageVec.end());
 
-		std::cout << "\nUncompressing iCCP chunk.\n";
+		std::cout << "\nInflating iCCP chunk.\n";
 
 		// Call function to inflate the profile chunk, which includes user's encrypted data file. 
 		zlibCompress(pdv.ImageVec, pdv.Inflate_Data);
@@ -196,7 +194,7 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 			DATA_FILE_START_INDEX = 0x194;
 
 		// Get encrypted embedded filename from vector "ImageVec".
-		pdv.DATA_FILE = { pdv.ImageVec.begin() + FILENAME_START_INDEX, pdv.ImageVec.begin() + FILENAME_START_INDEX + FILENAME_LENGTH };
+		pdv.Data_File = { pdv.ImageVec.begin() + FILENAME_START_INDEX, pdv.ImageVec.begin() + FILENAME_START_INDEX + FILENAME_LENGTH };
 
 		const std::string
 			PDV_SIG = "PDV",
@@ -209,7 +207,7 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 			std::exit(EXIT_FAILURE);
 		}
 
-		std::cout << "\nFound pdvrdt embedded data file.\n\nExtracting encrypted data file from iCCP chunk.\n";
+		std::cout << "\nFound pdvrdt embedded data file.\n\nExtracting encrypted data file from the iCCP chunk.\n";
 
 		// Delete the profile from the inflated file, leaving just our encrypted data file.
 		pdv.ImageVec.erase(pdv.ImageVec.begin(), pdv.ImageVec.begin() + DATA_FILE_START_INDEX);
@@ -229,13 +227,13 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 		pdv.FileVec.assign(std::istreambuf_iterator<char>(readFile), std::istreambuf_iterator<char>());
 
 		// Get size of the user's data file.
-		pdv.DATA_SIZE = pdv.FileVec.size();
+		pdv.Data_Size = pdv.FileVec.size();
 		
 		const uint32_t 
 			MAX_FILE_SIZE_BYTES = 209715200,	// 200MB Max. (Flickr limit. The largest of the range of supported platforms).
-			LAST_SLASH_POS = static_cast<uint32_t>(pdv.DATA_FILE.find_last_of("\\/"));
+			LAST_SLASH_POS = static_cast<uint32_t>(pdv.Data_File.find_last_of("\\/"));
 
-		if ((pdv.IMAGE_SIZE + pdv.DATA_SIZE + 0x194) > MAX_FILE_SIZE_BYTES) {
+		if ((pdv.Image_Size + pdv.Data_Size) > MAX_FILE_SIZE_BYTES) {
 
 			// File size check failure, display relevant error message and exit program.
 			std::cerr << "\nImage Size Error: PNG image (including embedded data file) must not exceed 200MB.\n\n";
@@ -243,14 +241,14 @@ void openFiles(char* argv[], pdvStruct& pdv) {
 		}
 
 		// We don't want "./" or ".\" characters at the start of the filename (user's data file), which we will store in the profile. 
-		if (LAST_SLASH_POS <= pdv.DATA_FILE.length()) {
-			const std::string_view NO_SLASH_NAME(pdv.DATA_FILE.c_str() + (LAST_SLASH_POS + 1), pdv.DATA_FILE.length() - (LAST_SLASH_POS + 1));
-			pdv.DATA_FILE = NO_SLASH_NAME;
+		if (LAST_SLASH_POS <= pdv.Data_File.length()) {
+			const std::string_view NO_SLASH_NAME(pdv.Data_File.c_str() + (LAST_SLASH_POS + 1), pdv.Data_File.length() - (LAST_SLASH_POS + 1));
+			pdv.Data_File = NO_SLASH_NAME;
 		}
 
-		pdv.ProfileDataVec.reserve(pdv.DATA_SIZE + 404);
-		pdv.ProfileChunkVec.reserve(pdv.DATA_SIZE + 429);
-		pdv.EncryptedVec.reserve(pdv.DATA_SIZE);
+		pdv.ProfileDataVec.reserve(pdv.Data_Size);
+		pdv.ProfileChunkVec.reserve(pdv.Data_Size);
+		pdv.EncryptedVec.reserve(pdv.Data_Size);
 
 		// The first 401 bytes of the vector "ProfileDataVec" contains the basic profile, followed by a 3-byte signature "PDV". 404 bytes total.
 		// The length value of the user's data filename and the encrypted filename are stored within this profile.
@@ -306,7 +304,7 @@ void encryptDecrypt(pdvStruct& pdv) {
 
 	const uint8_t
 		MAX_LENGTH_FILENAME = 23,
-		NAME_LENGTH = static_cast<uint8_t>(pdv.DATA_FILE.length()),	// Character length of user's data file name.
+		NAME_LENGTH = static_cast<uint8_t>(pdv.Data_File.length()),	// Character length of user's data file name.
 		XOR_KEY_LENGTH = static_cast<uint8_t>(XOR_KEY.length()),
 		XOR_KEY_START_POS = 0,
 		NAME_KEY_START_POS = 0;
@@ -318,7 +316,7 @@ void encryptDecrypt(pdvStruct& pdv) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	const std::string INPUT_NAME = pdv.DATA_FILE;
+	const std::string INPUT_NAME = pdv.Data_File;
 
 	std::string Output_Name;
 
@@ -413,7 +411,7 @@ void encryptDecrypt(pdvStruct& pdv) {
 
 		// If we embed multiple data files (Max. 6), each outputted image will be differentiated by a number in the filename, e.g. jdv_img1.jpg, jdv_img2.jpg, jdv_img3.jpg.
 		const std::string DIFF_VALUE = std::to_string(pdv.Sub_Value - pdv.Img_Value);
-		pdv.DATA_FILE = "pdv_img" + DIFF_VALUE + ".png";
+		pdv.Data_File = "pdv_img" + DIFF_VALUE + ".png";
 
 		std::cout << "\nWriting data-embedded PNG image out to disk.\n";
 
@@ -423,7 +421,7 @@ void encryptDecrypt(pdvStruct& pdv) {
 	else { // Extract Mode.
 
 		// Update string variable with the decrypted filename.
-		pdv.DATA_FILE = Output_Name;
+		pdv.Data_File = Output_Name;
 
 		// Write the extracted (inflated / decrypted) data file out to disk.
 		writeOutFile(pdv);
@@ -438,9 +436,9 @@ void zlibCompress(std::vector<BYTE>& Vec, bool Deflate_Data) {
 
 	const uint32_t 
 		VEC_SIZE = static_cast<uint32_t>(Vec.size()),
-		BUFSIZE = 256 * 1024;
+		BUFSIZE = 512 * 1024;
 
-	Buffer.reserve(VEC_SIZE);
+	Buffer.reserve(VEC_SIZE + 4194304);  // + 4MB
 	
 	BYTE* Temp_Buffer{ new BYTE[BUFSIZE] };
 
@@ -500,6 +498,7 @@ void eraseChunks(pdvStruct& pdv) {
 
 	if (pdv.Extract_File) {  // If extracting data, we need to keep the iCCP chunk, so rename it to prevent find/removal. 
 				 // Also change the first (0) name element to "iCCP", so that it becomes our search limit marker. See for-loop below.
+		
 		pdv.ChunkNameVec[5] = "pdVRdt_KEeP_Me_PDvrDT";
 		pdv.ChunkNameVec[0] = "iCCP";
 	}
@@ -562,7 +561,6 @@ uint32_t Crc_Update(const uint32_t Crc, BYTE* buf, const uint32_t len)
 	for (uint32_t n{}; n < len; n++) {
 		c = CrcTableVec[(c ^ buf[n]) & 0xff] ^ (c >> 8);
 	}
-	
 	CrcTableVec.clear();
 	return c;
 }
@@ -575,7 +573,7 @@ uint32_t Crc(BYTE* buf, const uint32_t len)
 
 void writeOutFile(pdvStruct& pdv) {
 
-	std::ofstream writeFile(pdv.DATA_FILE, std::ios::binary);
+	std::ofstream writeFile(pdv.Data_File, std::ios::binary);
 
 	if (!writeFile) {
 		std::cerr << "\nWrite Error: Unable to write to file.\n\n";
@@ -612,11 +610,11 @@ void writeOutFile(pdvStruct& pdv) {
 				: (IMG_SIZE > POST_IMG_SIZE && IMG_SIZE <= IMGBB_SIZE ? Size_Warning.substr(0, MSG_LEN - 38)
 				: (IMG_SIZE > IMGBB_SIZE ? Size_Warning.substr(0, MSG_LEN - 45) : Size_Warning)))));
 
-		if (pdv.DATA_SIZE > REDDIT_SIZE) {
+		if (pdv.Data_Size > REDDIT_SIZE) {
 			std::cerr << Size_Warning << ".\n";
 		}
 
-		std::cout << "\nCreated data-embedded PNG image: \"" + pdv.DATA_FILE + "\" Size: \"" << pdv.ImageVec.size() << " Bytes\".\n";
+		std::cout << "\nCreated data-embedded PNG image: \"" + pdv.Data_File + "\" Size: \"" << pdv.ImageVec.size() << " Bytes\".\n";
 
 		pdv.EncryptedVec.clear();  // Clear vector. Important when encrypting multiple, separate files. 
 	}
@@ -627,7 +625,7 @@ void writeOutFile(pdvStruct& pdv) {
 		// Write out to disk the extracted data file.
 		writeFile.write((char*)&pdv.DecryptedVec[0], pdv.DecryptedVec.size());
 
-		std::cout << "\nSaved file: \"" + pdv.DATA_FILE + "\" Size: \"" << pdv.DecryptedVec.size() << " Bytes\"\n";
+		std::cout << "\nSaved file: \"" + pdv.Data_File + "\" Size: \"" << pdv.DecryptedVec.size() << " Bytes\"\n";
 
 		pdv.DecryptedVec.clear();  // Clear vector. Important when decrypting/extracting multiple data-embedded image files.
 
@@ -639,20 +637,26 @@ void displayInfo() {
 	std::cout << R"(
 PNG Data Vehicle (pdvrdt v1.6). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
-A simple command-line tool to embed and extract any file type via a PNG image file.  
+A simple command-line tool used to embed and extract any file type via a PNG image file.  
 Share your data-embedded image on the following compatible sites.  
 
 Image size limit is platform dependant:-  
 
-* Flickr (200MB), ImgBB (32MB), PostImage (24MB), Mastodon (16MB), 
-* ImgPile (8MB Account required), Imgur (5MB), *Reddit (1MB Desktop/Browser only), *Twitter (10KB).
+  Flickr (200MB), ImgBB (32MB), PostImage (24MB), Mastodon (16MB), 
+  *ImgPile (8MB), Imgur (5MB), *Reddit (1MB Desktop/Browser only), *Twitter (10KB).
 
-To embed larger files for Twitter (5MB max.), please use pdvzip.
-To embed larger files for Reddit (20MB max.), please use jdvrif. You can also use jdvrif for Mastodon (16MB max).
+Options: [-i] File insert mode.
+	 [-x] File extract mode.
+
+*ImgPile - You must sign in to an account before sharing your data-embedded PNG image on this platform.
+Sharing your image without logging in, your embedded data will not be preserved.
+
+To embed larger files for Twitter (up to 5MB), please use pdvzip.
+To embed larger files for Reddit (up to 20MB), please use jdvrif. You can also use jdvrif for Mastodon (up to 16MB).
 
 This program works on Linux and Windows.
 
-For Flickr, Mastodon, ImgBB, PostImage, Mastodon, ImgPile & Imgur,
+For Flickr, Mastodon, ImgBB, ImageShack (account required), PostImage, Mastodon, ImgPile (account required) & Imgur,
 the size limit is measured by the total size of your data-embedded PNG image file. 
 
 For Reddit & Twitter, the size limit is measured by the uncompressed size of the ICC Profile, where your data is stored.
