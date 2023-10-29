@@ -607,10 +607,10 @@ void writeOutFile(pdvStruct& pdv) {
 			// Flickr is 200MB, this programs max size, no need to make a variable for it.
 		
 		Size_Warning = (IMG_SIZE > IMGUR_SIZE && IMG_SIZE <= IMG_PILE_SIZE ? Size_Warning.substr(0, MSG_LEN - 8)
-						: (IMG_SIZE > IMG_PILE_SIZE && IMG_SIZE <= MASTODON_SIZE ? Size_Warning.substr(0, MSG_LEN - 17)
-						: (IMG_SIZE > MASTODON_SIZE && IMG_SIZE <= POST_IMG_SIZE ? Size_Warning.substr(0, MSG_LEN - 27)
-						: (IMG_SIZE > POST_IMG_SIZE && IMG_SIZE <= IMGBB_SIZE ? Size_Warning.substr(0, MSG_LEN - 38)
-						: (IMG_SIZE > IMGBB_SIZE ? Size_Warning.substr(0, MSG_LEN - 45) : Size_Warning)))));
+				: (IMG_SIZE > IMG_PILE_SIZE && IMG_SIZE <= MASTODON_SIZE ? Size_Warning.substr(0, MSG_LEN - 17)
+				: (IMG_SIZE > MASTODON_SIZE && IMG_SIZE <= POST_IMG_SIZE ? Size_Warning.substr(0, MSG_LEN - 27)
+				: (IMG_SIZE > POST_IMG_SIZE && IMG_SIZE <= IMGBB_SIZE ? Size_Warning.substr(0, MSG_LEN - 38)
+				: (IMG_SIZE > IMGBB_SIZE ? Size_Warning.substr(0, MSG_LEN - 45) : Size_Warning)))));
 
 		if (pdv.DATA_SIZE > REDDIT_SIZE) {
 			std::cerr << Size_Warning << ".\n";
