@@ -52,55 +52,63 @@ Compile and run the program under Windows or **Linux**.
 
 ```bash
 
-$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
-$
-$ ./pdvrdt 
+user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
+user1@linuxbox:~/Desktop$
+user1@linuxbox:~/Desktop$ ./pdvrdt 
 
-Usage:  pdvrdt -i <png-image> <file(s)>  
+Usage:  pdvrdt -i <png-image>  <file(s)>  
 	pdvrdt -x <png-image(s)>  
 	pdvrdt --info
 
-$ ./pdvrdt -i image.png document.pdf
+user1@linuxbox:~/Desktop$ ./pdvrdt -i rabbit.png document.pdf
   
-Created output file: "pdv_img1.png 912426 Bytes"  
+Insert mode selected.
 
-Complete!  
+Reading files. Please wait...
 
-You can now post your "file-embedded" PNG image(s) to the relevant supported platforms.
+Encrypting data file.
 
-$ ./pdvrdt
+Compressing data file.
+
+Embedding data file within the iCCP chunk of the PNG image.
+
+Writing data-embedded PNG image out to disk.
+
+Created data-embedded PNG image: "pdv_img1.png" Size: "1245285 Bytes".
+
+Complete!
+
+You can now post your data-embedded PNG image(s) to the relevant supported platforms.
+
+user1@linuxbox:~/Desktop$ ./pdvrdt
 
 Usage:  pdvrdt -i <png-image> <file(s)>  
 	pdvrdt -x <png-image(s)>  
 	pdvrdt --info
         
-$ ./pdvrdt -x pdv_img1.png
+user1@linuxbox:~/Desktop$ ./pdvrdt -x pdv_img1.png
 
-Extracted file: "document.pdf 911314 Bytes"  
+Extract mode selected.
 
-Complete!  
+Reading embedded PNG image file. Please wait...
 
-$ ./pdvrdt -i czar_music.png  czar.part1.rar czar.part2.rar czar.part3.rar  
+Found compressed iCCP chunk.
 
-Created output file: "pdv_img1.png 777307 Bytes"
+Inflating iCCP chunk.
 
-Created output file: "pdv_img2.png 777307 Bytes"
+Found pdvrdt embedded data file.
 
-Created output file: "pdv_img3.png 777307 Bytes"
+Extracting encrypted data file from the iCCP chunk.
 
-Complete!
+Decrypting extracted data file.
 
-You can now post your "file-embedded" PNG image(s) to the relevant supported platforms.
+Writing decrypted data file out to disk.
 
-$ ./pdvrdt -x pdv_img1.png pdv_img2.png pdv_img3.png  
+Saved file: "document.pdf" Size: "1016540 Bytes"
 
-Extracted file: "czar.part1.rar 776302 Bytes"
-
-Extracted file: "czar.part2.rar 776302 Bytes"
-
-Extracted file: "czar.part3.rar 776302 Bytes"  
-
-Complete!
+Complete! Please check your extracted file(s).
+  
+user1@linuxbox:~/Desktop$ 
 
 ```
 
