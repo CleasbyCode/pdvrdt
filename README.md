@@ -50,7 +50,7 @@ Compile and run the program under Windows or **Linux**.
 
 ## Usage (Linux - Insert file into PNG image / Extract file from image)
 
-```bash
+```console
 
 user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 user1@linuxbox:~/Desktop$
