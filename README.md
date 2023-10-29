@@ -14,8 +14,8 @@ Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status
 [**Video Demo 1: Mastodon**](https://youtu.be/-zFJcljHzZU)   
 [**Video Demo 2: Reddit**](https://youtu.be/j7BC31nVrMg)  
 
-**\*ImgPile** - *You must sign in to an account before sharing your data-embedded PNG image on this platform. Sharing your image
-without logging in, your embedded data will not be preserved.*
+**\*ImgPile** - *You must sign in to an account before sharing your data-embedded PNG image on this platform.  
+Sharing your image without logging in, your embedded data will not be preserved.*
 
 ***If your data file is under ***10KB*** and image dimensions 900x900 or less (PNG-32/24),  
 4096x4096 or less (PNG-8), you can also share your *file-embedded* PNG image on ***Twitter***.***  
