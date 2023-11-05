@@ -15,7 +15,11 @@ Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status
 [**Video Demo 2: Reddit**](https://youtu.be/j7BC31nVrMg)  
 
 **\*ImgPile** - *You must sign in to an account before sharing your data-embedded PNG image on this platform.  
-Sharing your image without logging in, your embedded data will not be preserved.*
+Sharing your image without logging in, your embedded data will not be preserved.*  
+
+**\*Redditt** - *Using the -r option when embedding a data file increases the Reddit upload size limit from 1MB to 20MB.*  
+**Note:** - *The data-embedded PNG image created using the -r option, can only be shared on Reddit and is incompatible with  
+the other platforms listed above.*
 
 ***If your data file is under ***10KB*** and image dimensions 900x900 or less (PNG-32/24),  
 4096x4096 or less (PNG-8), you can also share your *file-embedded* PNG image on ***Twitter***.***  
