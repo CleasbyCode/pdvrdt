@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
 		}
 	}
 	else {
-		std::cerr << "\nUsage:\tpdvrdt -i [-r] <png-image> <file(s)>\n\tpdvrdt -x <png-image(s)>\n\tpdvrdt --info\n\n";
+		std::cerr << "\nUsage:\tpdvrdt -i [-r] <png_image> <file(s)>\n\tpdvrdt -x <png_image(s)>\n\tpdvrdt --info\n\n";
 		argc = 0;
 	}
 	if (argc != 0) {
