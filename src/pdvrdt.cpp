@@ -10,7 +10,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-// #include <cstdint>	// Uncomment if required.
+#include <cstdint>	
 #include <vector>
 #include <zlib.h>
 
