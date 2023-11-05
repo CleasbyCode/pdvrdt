@@ -4,8 +4,8 @@ A simple command-line tool to embed and extract any file type via a PNG image.
 
 Share your *file-embedded* image on the following compatible sites.  
 
-* ***Flickr (200MB), ImgBB (32MB), PostImage (24MB)***, Mastodon (16MB),
-* ***\*ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / Browser only)***.
+* ***Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*Reddit(20MB / with -r option)***, 
+* ***Mastodon (16MB), \*ImgPile (8MB), Imgur (5MB), \*Reddit (1MB / without -r option)***.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/witch_pic.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
@@ -21,27 +21,24 @@ Sharing your image without logging in, your embedded data will not be preserved.
 4096x4096 or less (PNG-8), you can also share your *file-embedded* PNG image on ***Twitter***.***  
 
 To embed larger files for ***Twitter*** (***5MB max.***), please try **[pdvzip](https://github.com/CleasbyCode/pdvzip)**  
-To embed larger files for ***Reddit*** (***20MB max.***), please try **[jdvrif](https://github.com/CleasbyCode/jdvrif)**
 
-You can also use ***[jdvrif](https://github.com/CleasbyCode/jdvrif)*** for ***Mastodon***.  
-
-For ***Flickr, ImgBB, PostImage, Mastodon, ImgPile & Imgur***,  
+For ***Flickr, ImgBB, PostImage, \*Reddit (with -r option), Mastodon, ImgPile & Imgur***,  
 the size limit is measured by the total size of your *file-embedded* PNG image.  
 
-For ***Reddit*** and ***Twitter***, the size limit is measured by the uncompressed size (zlib inflate)  
+For ***\*Reddit (without -r option)*** and ***Twitter***, the size limit is measured by the uncompressed size (zlib inflate)  
 of the ***iCCP chunk***, where your data is stored (encrypted & compressed).  
 
 ![profile Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/iccp.png)  
 
-***Reddit***: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.  
+***\*Reddit (without -r option)***: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.  
 404 bytes is used for the basic ***iCC Profile***. (404 + 1048172 = 1,048,576 bytes [***1MB***]).
 
 ***Twitter***: 9,836 bytes is the uncompressed (zlib inflate) limit for your data file.  
 404 bytes is used for the basic ***iCC Profile*** (404 + 9836 = 10,240 bytes [***10KB***])
 
-To maximise the amount of data you can embed in your image file for ***Reddit*** or ***Twitter***,  
+To maximise the amount of data you can embed in your image file for ***Reddit (without -r option)*** or ***Twitter***,  
 first compress the data file to a ***ZIP*** or ***RAR*** file. Make sure the compressed ***ZIP*** or ***RAR***  
-file does not exceed 1,048,172 bytes for ***Reddit*** or 9,836 bytes for ***Twitter***. 
+file does not exceed 1,048,172 bytes for ***Reddit (without -r option)*** or 9,836 bytes for ***Twitter***. 
 
 You can insert up to ***six*** files at a time (outputs one image per file).  
 You can also extract files from up to ***six*** images at a time.
