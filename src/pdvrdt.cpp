@@ -528,13 +528,13 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 		// Update image size variable after chunks deleted.
 		pdv.image_size = pdv.Image_Vec.size();
 
-		const uint32_t MAX_FILE_SIZE_BYTES = 209715200;	// 200MB Max. (Flickr limit. The largest of the range of supported platforms).
-		
+		const uint32_t MAX_FILE_SIZE_BYTES = pdv.reddit_opt ? 20971520 :  209715200;	// Default 200MB Max. (Flickr limit. The largest of the range of supported platforms),
+												// or 20MB max. limit with -r (Reddit) option.
 		const uint8_t MAX_FILENAME_LENGTH = 23;
 
 		if ((pdv.image_size + pdv.data_size) > MAX_FILE_SIZE_BYTES) {
 			// File size check failure, display relevant error message and exit program.
-			std::cerr << "\nImage Size Error: PNG image (including embedded data file) must not exceed 200MB.\n\n";
+			std::cerr << "\nImage Size Error: PNG image (with embedded data file) must not exceed " << MAX_FILE_SIZE_BYTES << " bytes.\n\n";
 			std::exit(EXIT_FAILURE);
 		}
 		 
