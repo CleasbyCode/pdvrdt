@@ -9,7 +9,7 @@ Share your *file-embedded* image on the following compatible sites.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/witch_pic.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
-{***Image contains an embedded MP3 file (7MB) / extract: pdvrdt -x witch_pic.png)***} 
+{***Image contains an embedded MP3 file. Extract: pdvrdt -x witch_pic.png)***} 
 
 Video Demo 1: [**Mastodon**](https://youtu.be/-zFJcljHzZU)   
 Video Demo 2: [**Reddit**](https://youtu.be/j7BC31nVrMg)  
