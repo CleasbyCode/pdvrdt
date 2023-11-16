@@ -5,7 +5,7 @@ A simple command-line tool to embed and extract any file type via a PNG image.
 Share your *file-embedded* image on the following compatible sites.  
 
 * ***Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*Reddit (20MB / with -r option)***, 
-* ***Mastodon (16MB), \*ImgPile (8MB), Imgur (5MB), \*Reddit (1MB)***.
+* ***Mastodon (16MB), \*ImgPile (8MB), Imgur (5MB), \*Reddit (1MB), Twitter (10KB).***
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/witch_pic.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
@@ -23,9 +23,6 @@ all images to Webp format.*
 *Using the -r option when embedding a data file increases the **Reddit** upload size limit from **1MB** to **20MB**.*  
 *The data-embedded PNG image created with the -r option can only be shared on Reddit and is incompatible  
 with the other platforms listed above.*
-
-***If your data file is under ***10KB*** and image dimensions 900x900 or less (PNG-32/24),  
-4096x4096 or less (PNG-8), you can also share your *file-embedded* PNG image on ***Twitter***.***  
 
 To embed larger files for ***Twitter*** (***5MB max.***), please try **[pdvzip](https://github.com/CleasbyCode/pdvzip)**  
 
