@@ -51,9 +51,9 @@ user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 user1@linuxbox:~/Desktop$
 user1@linuxbox:~/Desktop$ ./pdvrdt 
 
-Usage:  pdvrdt -i [-r] <png_image> <file(s)>  
-	pdvrdt -x <png_image(s)>  
-	pdvrdt --info
+Usage: pdvrdt -i [-r] <png_image> <file(s)>  
+       pdvrdt -x <png_image(s)>  
+       pdvrdt --info
 
 user1@linuxbox:~/Desktop$ ./pdvrdt -i rabbit.png document.pdf
   
@@ -77,9 +77,9 @@ You can now post your data-embedded PNG image(s) to the relevant supported platf
 
 user1@linuxbox:~/Desktop$ ./pdvrdt
 
-Usage:  pdvrdt -i [-r] <png_image> <file(s)>  
-	pdvrdt -x <png_image(s)>  
-	pdvrdt --info
+Usage: pdvrdt -i [-r] <png_image> <file(s)>  
+       pdvrdt -x <png_image(s)>  
+       pdvrdt --info
         
 user1@linuxbox:~/Desktop$ ./pdvrdt -x pdv_img1.png
 
