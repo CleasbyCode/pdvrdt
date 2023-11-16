@@ -1,8 +1,8 @@
 # pdvrdt
 
-A simple command-line tool to embed and extract any file type via a PNG image.  
+A simple command-line tool used to embed or extract any file type via a PNG image.  
 
-Share your *file-embedded* image on the following compatible sites.  
+You can share your *file-embedded* PNG image(s) on the following compatible sites.
 
 * ***Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*Reddit (20MB / with -r option)***, 
 * ***Mastodon (16MB), \*ImgPile (8MB), Imgur (5MB), \*Reddit (1MB), Twitter (10KB).***
