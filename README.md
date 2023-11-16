@@ -11,8 +11,8 @@ Share your *file-embedded* image on the following compatible sites.
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
 {***Image contains an embedded MP3 file (7MB) / extract: pdvrdt -x witch_pic.png)***} 
 
-Video Demo 1: [***Mastodon**](https://youtu.be/-zFJcljHzZU)   
-Video Demo 2: [***Reddit**](https://youtu.be/j7BC31nVrMg)  
+Video Demo 1: [**Mastodon**](https://youtu.be/-zFJcljHzZU)   
+Video Demo 2: [**Reddit**](https://youtu.be/j7BC31nVrMg)  
 
 **\*ImgPile** - *You must sign in to an account before sharing your data-embedded PNG image on this platform.  
 Sharing your image without logging in, your embedded data will not be preserved.*  
