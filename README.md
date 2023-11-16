@@ -35,7 +35,7 @@ the size limit is measured by the total size of your *file-embedded* PNG image.
 For ***\*Reddit (without -r option)*** and ***Twitter***, the size limit is measured by the uncompressed size (zlib inflate)  
 of the ***iCCP chunk***, where your data is stored (encrypted & compressed).  
 
-![profile Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/iccp.png)  
+![profile Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/icc_rdt.png)  
 
 ***\*Reddit (without -r option)***: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.  
 404 bytes is used for the basic ***iCC Profile***. (404 + 1048172 = 1,048,576 bytes [***1MB***]).
