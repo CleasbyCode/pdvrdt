@@ -325,9 +325,9 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 	const size_t
 		// Get iCCP Profile chunk length.
 		PROFILE_CHUNK_SIZE = ((static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX]) << 24) 
-							| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 1]) << 16) 
-							| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 2]) << 8)
-							| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 3]))),
+				| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 1]) << 16) 
+				| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 2]) << 8)
+				| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 3]))),
 
 		DEFLATE_CHUNK_SIZE = PROFILE_CHUNK_SIZE - PROFILE_SIG.length() + 2; // + 2 includes the two zero bytes after the iCCPicc chunk name.
 
@@ -580,9 +580,9 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 			
 			// Get the length of the chunk.
 			const size_t CHUNK_SIZE = ((static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX]) << 24) 
-								| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 1]) << 16) 
-								| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 2]) << 8)
-								| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 3])));
+						| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 1]) << 16) 
+						| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 2]) << 8)
+						| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 3])));
 
 			pdv.Image_Vec.erase(pdv.Image_Vec.begin() + CHUNK_FOUND_INDEX, pdv.Image_Vec.begin() + CHUNK_FOUND_INDEX + (CHUNK_SIZE + 12));
 			++chunk_index; // Increment chunk name element value so that we search again for the same chunk, in case of multiple occurrences.
