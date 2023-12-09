@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
 			pdv.data_file_name = pdv.reddit_opt ? argv[4] : argv[3];
 			Check_Arguments_Input(pdv.data_file_name);
 			Check_Image_File(pdv);
-			argv++, argc--;
+			argv++, argc--;	// Move to next data file, reduce file count.
 		}
 
 		argc = 1;
@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
 			pdv.image_file_name = argv[2];
 			Check_Arguments_Input(pdv.image_file_name);
 			Check_Image_File(pdv);
-			argv++, argc--;
+			argv++, argc--;	// Move to next embedded image file, reduce file count.
 		}
 
 	} else {
@@ -132,29 +132,25 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 	std::ifstream read_image_fs(pdv.image_file_name, std::ios::binary);
 
 	if (!read_image_fs || GET_IMAGE_EXTENSION !="png") {
-		const std::string
-			OPEN_ERR_MSG = "\nRead File Error: Unable to open image file.\n\n",
-			EXTENSION_ERR_MSG = "\nFile Type Error: Invalid file extension. Only expecting 'png' for image file.\n\n";
-		std::cerr << (!read_image_fs ? OPEN_ERR_MSG : EXTENSION_ERR_MSG);
+		std::cerr << (!read_image_fs ? "\nRead File Error: Unable to open image file" 
+				: "\nImage File Error: Invalid file extension. Only expecting 'png' for image file") << ".\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 	// Check PNG image for valid file size requirements.
 	pdv.image_size = std::filesystem::file_size(pdv.image_file_name);
 
 	if (pdv.image_size > pdv.MAX_FILE_SIZE || pdv.reddit_opt && pdv.image_size > pdv.MAX_FILE_SIZE_REDDIT || pdv.PNG_MIN_SIZE > pdv.image_size) {
-		// Image size is smaller or larger than the set size limits. Display relevant error message and exit program.
-		const std::string
-			MIN_SIZE_ERR_MSG = "\nImage File Error: Size of image is too small to be a valid PNG image.\n\n",
-			MAX_SIZE_ERR_MSG = "\nImage File Error: Size of image exceeds the maximum limit of " + (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT) : std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes.\n\n";
-
-		std::cerr << (pdv.PNG_MIN_SIZE > pdv.image_size ? MIN_SIZE_ERR_MSG : MAX_SIZE_ERR_MSG);
+		// Image size is too small or larger than the set size limit. Display relevant error message and exit program.
+		std::cerr << "\nImage File Error: "  << (pdv.PNG_MIN_SIZE > pdv.image_size ? "Size of image is too small to be a valid PNG image" 
+			: "Size of image exceeds the maximum limit of " + (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT) 
+			: std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes") << ".\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 	
 	// Display Start message. Different depending on mode and options selected.
-	std::cout << (pdv.insert_file_mode && pdv.reddit_opt ? "\nInsert mode selected with -r option.\n\nReading files. Please wait...\n"
-				: (pdv.insert_file_mode ? "\nInsert mode selected.\n\nReading files. Please wait...\n"
-				: "\nExtract mode selected.\n\nReading embedded PNG image file. Please wait...\n"));
+	std::cout << (pdv.insert_file_mode && pdv.reddit_opt ? "\nInsert mode selected with -r option.\n\nReading files"
+				: (pdv.insert_file_mode ? "\nInsert mode selected.\n\nReading files"
+				: "\nExtract mode selected.\n\nReading embedded PNG image file")) << ". Please wait...\n";
 
 	// Read PNG image (embedded or non-embedded) into vector "Image_Vec".
 	pdv.Image_Vec.assign(std::istreambuf_iterator<char>(read_image_fs), std::istreambuf_iterator<char>());
@@ -168,7 +164,7 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 		GET_PNG_HEADER_SIG{ pdv.Image_Vec.begin(), pdv.Image_Vec.begin() + PNG_HEADER_SIG.length() },	// Attempt to get both image signatures from file stored in vector. 
 		GET_PNG_END_SIG{ pdv.Image_Vec.end() - PNG_END_SIG.length(), pdv.Image_Vec.end() };
 
-	// Make sure image has valid PNG header.
+	// Make sure image has valid PNG signatures.
 	if (GET_PNG_HEADER_SIG != PNG_HEADER_SIG || GET_PNG_END_SIG != PNG_END_SIG) {
 
 		// File requirements check failure, display relevant error message and exit program.
@@ -211,16 +207,10 @@ void Check_Data_File(PDV_STRUCT& pdv) {
 	const uint_fast8_t MAX_FILENAME_LENGTH = 23;
 
 	if (pdv.data_size > pdv.MAX_FILE_SIZE || pdv.reddit_opt && pdv.data_size > pdv.MAX_FILE_SIZE_REDDIT || FILE_NAME_LENGTH > pdv.data_size || FILE_NAME_LENGTH > MAX_FILENAME_LENGTH) {
-		// Image size is smaller or larger than the set size limits. Display relevant error message and exit program.
-		const std::string
-			MIN_SIZE_ERR_MSG = "\nData File Error: Size of file is too small.\n\nFor compatibility requirements, file size must be greater than the length of the file name.\n\n",
-			MAX_SIZE_ERR_MSG = "\nData File Error: Size of file exceeds the maximum limit of " + (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT) : std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes.\n\n",
-			MAX_FILE_NAME_LENGTH_ERR_MSG = "\nData File Error: Length of file name is too long.\n\nFor compatibility requirements, length of file name must be under 24 characters.\n\n";
-
-		std::cerr << (pdv.data_size > (pdv.reddit_opt ? pdv.MAX_FILE_SIZE_REDDIT : pdv.MAX_FILE_SIZE) ? MAX_SIZE_ERR_MSG
-					: (FILE_NAME_LENGTH > pdv.data_size ? MIN_SIZE_ERR_MSG
-					: MAX_FILE_NAME_LENGTH_ERR_MSG));
-
+		// File name too long, or image size is too small or larger than size limit. Display relevant error message and exit program.
+		std::cerr << "\nData File Error: " << (FILE_NAME_LENGTH > MAX_FILENAME_LENGTH ? "Length of file name is too long.\n\nFor compatibility requirements, length of file name must be under 24 characters"
+		: (FILE_NAME_LENGTH > pdv.data_size ? "Size of file is too small.\n\nFor compatibility requirements, file size must be greater than the length of the file name"
+		: "Size of file exceeds the maximum limit of " + (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT) : std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes")) << ".\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -276,11 +266,13 @@ void Fill_Profile_Vec(PDV_STRUCT& pdv) {
 		0x80, 0x25, 0xC8, 0x30, 0xA1, 0x3D, 0x19, 0x4B, 0x40, 0x5B, 0x27, 0x6C, 0xDB, 0x80, 0x6B,
 		0x95, 0xE3, 0xAD, 0x50, 0xC6, 0xC2, 0xE2, 0x31, 0xFF, 0xFF, 0x00, 0x50, 0x44, 0x56
 	},
-		// The above vector "Profile_Data_Vec", containing the basic profile, that will later be compressed (deflate), 
-		// and will also contain the encrypted & compressed user's data file, will be inserted into this vector "Profile_Chunk_Vec". 
-		// The vector initially contains just the PNG iCCP chunk header (Length, Name and CRC value fields).
-		pdv.Profile_Chunk_Vec = {
-			0x00, 0x00, 0x00, 0x00, 0x69, 0x43, 0x43, 0x50, 0x69, 0x63, 0x63, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+		
+	// The above vector "Profile_Data_Vec", containing the basic profile, that will later be compressed (deflate), 
+	// and will also contain the encrypted & compressed user's data file, will be inserted into this vector "Profile_Chunk_Vec". 
+	// The vector initially contains just the PNG iCCP chunk header (Length, Name and CRC value fields).
+		
+	pdv.Profile_Chunk_Vec = {
+		0x00, 0x00, 0x00, 0x00, 0x69, 0x43, 0x43, 0x50, 0x69, 0x63, 0x63, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 	};
 
 	std::cout << "\nEncrypting data file.\n";
@@ -325,9 +317,9 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 	const size_t
 		// Get iCCP Profile chunk length.
 		PROFILE_CHUNK_SIZE = ((static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX]) << 24) 
-				| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 1]) << 16) 
-				| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 2]) << 8)
-				| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 3]))),
+			| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 1]) << 16) 
+			| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 2]) << 8)
+			| (static_cast<size_t>(pdv.Image_Vec[PROFILE_CHUNK_SIZE_INDEX + 3]))),
 
 		DEFLATE_CHUNK_SIZE = PROFILE_CHUNK_SIZE - PROFILE_SIG.length() + 2; // + 2 includes the two zero bytes after the iCCPicc chunk name.
 
@@ -347,8 +339,8 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 		FILENAME_START_INDEX = 101;		// Vector index start location of the embedded file name of user's data file.
 
 	const uint_fast16_t
-		PDV_SIG_START_INDEX = 401,	// Vector index for this program's embedded signature.
-		DATA_FILE_START_INDEX = 404;	// Vector index start location for user's embedded data file.
+		PDV_SIG_START_INDEX = 401,		// Vector index for this program's embedded signature.
+		DATA_FILE_START_INDEX = 404;		// Vector index start location for user's embedded data file.
 
 	// Get encrypted embedded file name from vector "Image_Vec".
 	pdv.data_file_name = { pdv.Image_Vec.begin() + FILENAME_START_INDEX, pdv.Image_Vec.begin() + FILENAME_START_INDEX + FILENAME_LENGTH };
@@ -561,8 +553,9 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 
 	std::string chunks[15]{ "IDAT", "bKGD", "cHRM", "sRGB", "hIST", "iCCP", "pHYs", "sBIT", "gAMA", "sPLT", "tIME", "tRNS", "tEXt", "iTXt", "zTXt" };
 
-	if (pdv.extract_file_mode) {  	// If extracting data, we need to keep the iCCP chunk, so rename it to prevent removal. 
-					// Also change the first (0) name element to "iCCP", so that it becomes our search limit marker. See for-loop below.
+	if (pdv.extract_file_mode) {  
+		// If extracting data, we need to keep the iCCP chunk, so rename it to prevent removal. 
+		// Also change the first (0) name element to "iCCP", so that it becomes our search limit marker. See for-loop below.
 		chunks[5] = "pdVRdt_KEeP_Me_PDvrDT";
 		chunks[0] = "iCCP";
 	}
@@ -580,9 +573,9 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 			
 			// Get the length of the chunk.
 			const size_t CHUNK_SIZE = ((static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX]) << 24) 
-						| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 1]) << 16) 
-						| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 2]) << 8)
-						| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 3])));
+					| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 1]) << 16) 
+					| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 2]) << 8)
+					| (static_cast<size_t>(pdv.Image_Vec[CHUNK_FOUND_INDEX + 3])));
 
 			pdv.Image_Vec.erase(pdv.Image_Vec.begin() + CHUNK_FOUND_INDEX, pdv.Image_Vec.begin() + CHUNK_FOUND_INDEX + (CHUNK_SIZE + 12));
 			++chunk_index; // Increment chunk name element value so that we search again for the same chunk, in case of multiple occurrences.
