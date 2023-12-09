@@ -133,7 +133,7 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 
 	if (!read_image_fs || GET_IMAGE_EXTENSION !="png") {
 		std::cerr << (!read_image_fs ? "\nRead File Error: Unable to open image file" 
-				: "\nImage File Error: Invalid file extension. Only expecting 'png' for image file") << ".\n\n";
+			: "\nImage File Error: Invalid file extension. Only expecting 'png' for image file") << ".\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 	// Check PNG image for valid file size requirements.
@@ -149,8 +149,8 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 	
 	// Display Start message. Different depending on mode and options selected.
 	std::cout << (pdv.insert_file_mode && pdv.reddit_opt ? "\nInsert mode selected with -r option.\n\nReading files"
-				: (pdv.insert_file_mode ? "\nInsert mode selected.\n\nReading files"
-				: "\nExtract mode selected.\n\nReading embedded PNG image file")) << ". Please wait...\n";
+			: (pdv.insert_file_mode ? "\nInsert mode selected.\n\nReading files"
+			: "\nExtract mode selected.\n\nReading embedded PNG image file")) << ". Please wait...\n";
 
 	// Read PNG image (embedded or non-embedded) into vector "Image_Vec".
 	pdv.Image_Vec.assign(std::istreambuf_iterator<char>(read_image_fs), std::istreambuf_iterator<char>());
