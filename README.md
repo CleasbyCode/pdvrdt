@@ -7,7 +7,7 @@ You can share your *file-embedded* PNG image(s) on the following compatible site
 * ***Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*Reddit (20MB / with -r option)***, 
 * ***Mastodon (16MB), \*ImgPile (8MB), Imgur (5MB), \*Reddit (1MB), Twitter (10KB).***
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/demon.png)  
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdv_img1.png)  
 Image Credit: [ZOOT / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
 {***Image contains an embedded MP3 file. Extract: pdvrdt -x witch_pic.png***} 
 
