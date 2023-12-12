@@ -11,7 +11,7 @@ You can share your *file-embedded* PNG image(s) on the following compatible site
 Image Credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)  
 {***Image contains an embedded MP3 file. Extract: pdvrdt -x pdv_img1.png***} 
 
-Video Demo 1: [**Mastodon**](https://youtu.be/-zFJcljHzZU)   
+Video Demo 1: [**Mastodon**](https://youtu.be/veODZ_xaBDQ)   
 Video Demo 2: [**Reddit**](https://youtu.be/j7BC31nVrMg)  
  
 *Using the **-r** option when embedding a data file increases the **Reddit** upload size limit from **1MB** to **20MB**.*  
