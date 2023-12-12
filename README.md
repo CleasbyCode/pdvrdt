@@ -8,8 +8,8 @@ You can share your *file-embedded* PNG image(s) on the following compatible site
 * ***Mastodon (16MB), \*ImgPile (8MB), Imgur (5MB), \*Reddit (1MB), Twitter (10KB).***
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdv_img1.png)  
-Image Credit: [MΞV.ai / @LittleTinRobot](https://twitter.com/LittleTinRobot/status/1689155758129336320)  
-{***Image contains an embedded MP3 file. Extract: pdvrdt -x witch_pic.png***} 
+Image Credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)  
+{***Image contains an embedded MP3 file. Extract: pdvrdt -x pdv_img1.png***} 
 
 Video Demo 1: [**Mastodon**](https://youtu.be/-zFJcljHzZU)   
 Video Demo 2: [**Reddit**](https://youtu.be/j7BC31nVrMg)  
