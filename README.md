@@ -13,7 +13,7 @@ Image Credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)
 
 Demo Videos: [**Mastodon**](https://youtu.be/veODZ_xaBDQ) / [**Reddit**](https://youtu.be/p34bii_b8n4)  
  
-For **Mastodon** (*requires the -m option*) your data file is encrypted & compressed (zlib deflate) and stored within the ***iCCP chunk***, 
+For **Mastodon** (*requires the -m option*) your data file is encrypted & compressed and stored within the ***iCCP chunk***, 
 of the PNG image file.
 
 ![profile Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/icc_rdt.png)  
