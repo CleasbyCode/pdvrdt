@@ -17,7 +17,7 @@ For all the other compatible sites listed above, your data file is stored within
 
 Your data file is encrypted & compressed.
 
-*Using the -i (imgur) option with the -e (embed mode) option, increases the Imgur PNG upload size limit from 5MB to 20MB.*
+*Using the -i (imgur) option, increases the Imgur PNG upload size limit from 5MB to 20MB.*
 
 *Once the PNG image has been uploaded to your Imgur page, you can grab links of the image for sharing.*
 
