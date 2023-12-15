@@ -13,29 +13,10 @@ Image Credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)
 
 Demo Videos: [**Mastodon**](https://youtu.be/veODZ_xaBDQ) / [**Reddit**](https://youtu.be/p34bii_b8n4)  
  
-*Using the **-r** option when embedding a data file increases the **Reddit** upload size limit from **1MB** to **20MB**.*  
-*The data-embedded PNG image created with the **-r** option can only be shared on Reddit and is incompatible  
-with the other platforms listed above.*
-
-To embed larger files for ***Twitter*** (***5MB max.***), please try **[pdvzip](https://github.com/CleasbyCode/pdvzip)**  
-
-For ***Flickr, ImgBB, PostImage, \*Reddit (with -r option), Mastodon, ImgPile & Imgur***,  
-the size limit is measured by the total size of your *file-embedded* PNG image.  
-
-For ***\*Reddit (without -r option)*** and ***Twitter***, the size limit is measured by the uncompressed size (zlib inflate)  
-of the ***iCCP chunk***, where your data is stored (encrypted & compressed).  
+For **Mastodon** (*requires the -m option*) your data file is encrypted & compressed (zlib deflate) and stored within the ***iCCP chunk***, 
+of the PNG image file.
 
 ![profile Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/icc_rdt.png)  
-
-***\*Reddit (without -r option)***: 1,048,172 bytes is the uncompressed (zlib inflate) size limit for your data file.  
-404 bytes is used for the basic ***iCC Profile***. (404 + 1048172 = 1,048,576 bytes [***1MB***]).
-
-***Twitter***: 9,836 bytes is the uncompressed (zlib inflate) limit for your data file.  
-404 bytes is used for the basic ***iCC Profile*** (404 + 9836 = 10,240 bytes [***10KB***])
-
-To maximise the amount of data you can embed in your image file for ***Reddit (without -r option)*** or ***Twitter***,  
-first compress the data file to a ***ZIP*** or ***RAR*** file. Make sure the compressed ***ZIP*** or ***RAR***  
-file does not exceed 1,048,172 bytes for ***Reddit (without -r option)*** or 9,836 bytes for ***Twitter***. 
 
 You can insert up to ***six*** files at a time (outputs one image per file).  
 You can also extract files from up to ***six*** images at a time.
@@ -50,13 +31,13 @@ user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 user1@linuxbox:~/Desktop$
 user1@linuxbox:~/Desktop$ ./pdvrdt 
 
-Usage: pdvrdt -i [-r] <png_image> <file(s)>  
+Usage: pdvrdt -e [-m] [-i] <png_image> <file(s)>  
        pdvrdt -x <png_image(s)>  
        pdvrdt --info
 
-user1@linuxbox:~/Desktop$ ./pdvrdt -i rabbit.png document.pdf
+user1@linuxbox:~/Desktop$ ./pdvrdt -e rabbit.png document.pdf
   
-Insert mode selected.
+Embed mode selected.
 
 Reading files. Please wait...
 
@@ -64,31 +45,31 @@ Encrypting data file.
 
 Compressing data file.
 
-Embedding data file within the iCCP chunk of the PNG image.
+Embedding data file within the last IDAT chunk of the PNG image.
 
-Writing data-embedded PNG image out to disk.
+Writing file-embedded PNG image out to disk.
 
-Created data-embedded PNG image: "pdv_img1.png" Size: "1245285 Bytes".
+Created file-embedded PNG image: "pdv_img1.png" Size: "1245285 Bytes".
 
 Complete!
 
-You can now post your data-embedded PNG image(s) to the relevant supported platforms.
+You can now post your file-embedded PNG image(s) to the relevant supported platforms.
 
 user1@linuxbox:~/Desktop$ ./pdvrdt
 
-Usage: pdvrdt -i [-r] <png_image> <file(s)>  
+Usage: pdvrdt -e [-m] [-i] <png_image> <file(s)>  
        pdvrdt -x <png_image(s)>  
        pdvrdt --info
         
 user1@linuxbox:~/Desktop$ ./pdvrdt -x pdv_img1.png
 
-Extract mode selected.
+eXtract mode selected.
 
 Reading embedded PNG image file. Please wait...
 
-Found compressed iCCP chunk.
+Found compressed IDAT chunk.
 
-Inflating iCCP chunk.
+Inflating IDAT chunk.
 
 Found pdvrdt embedded data file.
 
