@@ -27,7 +27,7 @@ user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 user1@linuxbox:~/Desktop$
 user1@linuxbox:~/Desktop$ ./pdvrdt 
 
-Usage: pdvrdt -e [-m] [-i] <cover_image> <file>  
+Usage: pdvrdt -e [-m] [-i] <cover_image> <data_file>  
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
 
@@ -53,8 +53,8 @@ You can now post your file-embedded PNG image(s) to the relevant supported platf
 
 user1@linuxbox:~/Desktop$ ./pdvrdt
 
-Usage: pdvrdt -e [-m] [-i] <cover_image> <file(s)>  
-       pdvrdt -x <file_embedded_image(s)>  
+Usage: pdvrdt -e [-m] [-i] <cover_image> <data_file>  
+       pdvrdt -x <file_embedded_image>  
        pdvrdt --info
         
 user1@linuxbox:~/Desktop$ ./pdvrdt -x pdv_img1.png
