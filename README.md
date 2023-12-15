@@ -21,7 +21,7 @@ Your data file is encrypted & compressed.
 
 *Once the PNG image has been uploaded to your Imgur page, you can grab links of the image for sharing.*
 
-*If the file-embedded image is over 5MB (when using the -i (imgur) option) I would avoid posting the image to
+**If the file-embedded image is over 5MB (when using the -i (imgur) option) I would avoid posting the image to
 the "*Imgur Community Page*", as the thumbnail preview fails and shows as a broken icon image.
 (Clicking the "*broken*" preview image will still take you to the correctly displayed full image).*
 
