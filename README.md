@@ -18,9 +18,6 @@ For all the other compatible sites listed above, your data file is stored within
 
 Your data file is encrypted & compressed.
 
-You can insert up to ***six*** files at a time (outputs one image per file).  
-You can also extract files from up to ***six*** images at a time.
-
 Compile and run the program under Windows or **Linux**.
 
 ## Usage (Linux - Insert file into PNG image / Extract file from image)
