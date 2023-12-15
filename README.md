@@ -1,15 +1,14 @@
 # pdvrdt
+Use this command-line tool to embed or extract any file type via a **PNG** image.  
+You can share your image on several *social media sites, which will retain the embedded data. 
 
-A simple command-line tool used to embed or extract any file type via a PNG image.  
+**Image size limits vary across platforms:*
 
-You can share your *file-embedded* PNG image(s) on the following compatible sites.
-
-* ***Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*Reddit (20MB / with -r option)***, 
-* ***Mastodon (16MB), \*ImgPile (8MB), Imgur (5MB), \*Reddit (1MB), Twitter (10KB).***
+* ***Flickr (200MB), ImgBB (32MB), PostImage (24MB), *Reddit (20MB), Imgur (20MB / With -i option)***
+* ***Mastodon (16MB / Requires -m option), *ImgPile (8MB), Imgur (5MB), Twitter (5MB).***
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdv_img1.png)  
 Image Credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)  
-{***Image contains an embedded MP3 file. Extract: pdvrdt -x pdv_img1.png***} 
 
 Demo Videos: [**Mastodon**](https://youtu.be/veODZ_xaBDQ) / [**Reddit**](https://youtu.be/p34bii_b8n4)  
  
