@@ -17,6 +17,18 @@ For all the other compatible sites listed above, your data file is stored within
 
 Your data file is encrypted & compressed.
 
+*Using the -i (imgur) option with the -e (embed mode) option of pdvrdt,  
+increases the Imgur PNG upload size limit from 5MB to 20MB.*
+
+*Once the PNG image has been uploaded to your Imgur page, you can grab links of the image for sharing.*
+
+*If the file-embedded image is over 5MB (when using the -i (imgur) option) I would avoid posting the image to
+the "*Imgur Community Page*", as the thumbnail preview fails and shows as a broken icon image.
+(Clicking the "*broken*" preview image will still take you to the correctly displayed full image).*
+
+*Only use this option for posting file-embedded images over 5MB on Imgur, as the image with the -i (imgur) option
+is not compatible with the other listed sites.*
+
 Compile and run the program under Windows or **Linux**.
 
 ## Usage (Linux - Insert file into PNG image / Extract file from image)
