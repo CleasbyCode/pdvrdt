@@ -31,8 +31,8 @@ user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 user1@linuxbox:~/Desktop$
 user1@linuxbox:~/Desktop$ ./pdvrdt 
 
-Usage: pdvrdt -e [-m] [-i] <png_image> <file(s)>  
-       pdvrdt -x <png_image(s)>  
+Usage: pdvrdt -e [-m] [-i] <cover_image> <file>  
+       pdvrdt -x <file_embedded_image>  
        pdvrdt --info
 
 user1@linuxbox:~/Desktop$ ./pdvrdt -e rabbit.png document.pdf
@@ -57,8 +57,8 @@ You can now post your file-embedded PNG image(s) to the relevant supported platf
 
 user1@linuxbox:~/Desktop$ ./pdvrdt
 
-Usage: pdvrdt -e [-m] [-i] <png_image> <file(s)>  
-       pdvrdt -x <png_image(s)>  
+Usage: pdvrdt -e [-m] [-i] <cover_image> <file(s)>  
+       pdvrdt -x <file_embedded_image(s)>  
        pdvrdt --info
         
 user1@linuxbox:~/Desktop$ ./pdvrdt -x pdv_img1.png
@@ -73,7 +73,7 @@ Inflating IDAT chunk.
 
 Found pdvrdt embedded data file.
 
-Extracting encrypted data file from the iCCP chunk.
+Extracting encrypted data file from the IDAT chunk.
 
 Decrypting extracted data file.
 
