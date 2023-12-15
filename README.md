@@ -23,6 +23,7 @@ Your data file is encrypted & compressed.
 
 **If the file-embedded image is over 5MB (when using the -i (imgur) option) I would avoid posting the image to
 the "*Imgur Community Page*", as the thumbnail preview fails and shows as a broken icon image.
+
 (Clicking the "*broken*" preview image will still take you to the correctly displayed full image).*
 
 *Only use this option for posting file-embedded images over 5MB on Imgur, as the image with the -i (imgur) option
