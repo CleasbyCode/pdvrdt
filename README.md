@@ -14,9 +14,7 @@ Image Credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)
 Demo Videos: [**Mastodon**](https://youtu.be/veODZ_xaBDQ) / [**Reddit**](https://youtu.be/p34bii_b8n4)  
  
 For **Mastodon** (*requires the -m option*) your data file is encrypted & compressed and stored within the ***iCCP chunk***, 
-of the PNG image file.
-
-![profile Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/icc_rdt.png)  
+of the PNG image file. For all the other compatible sites listed above, your data file is stored within an IDAT chunk, of the PNG image.
 
 You can insert up to ***six*** files at a time (outputs one image per file).  
 You can also extract files from up to ***six*** images at a time.
