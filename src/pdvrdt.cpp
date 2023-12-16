@@ -342,9 +342,9 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 	const size_t
 		// Get ICCP chunk length (if -m mastodon option) or last IDAT chunk length.
 		CHUNK_SIZE = ((static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX]) << 24) 
-				| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16) 
-				| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 2]) << 8)
-				| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 3]))),
+		| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16) 
+		| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 2]) << 8)
+		| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 3]))),
 
 		DEFLATE_CHUNK_SIZE = pdv.mastodon_opt ? CHUNK_SIZE - 9 : CHUNK_SIZE;
 
@@ -747,7 +747,7 @@ void Write_Out_File(PDV_STRUCT& pdv) {
 			IMG_PILE_SIZE = 8388608,		// 8MB
 			MASTODON_OPTION_SIZE = 16777216,	// 16MB (Only with the -m option).
 			REDDIT_SIZE = 20971520,  		// 20MB
-			IMGUR_OPTION_SIZE =	REDDIT_SIZE,  	// 20MB (Only with the -i option).
+			IMGUR_OPTION_SIZE = REDDIT_SIZE,  	// 20MB (Only with the -i option).
 			POST_IMG_SIZE = 25165824,		// 24MB
 			IMGBB_SIZE = 33554432;			// 32MB
 			// Flickr is 200MB, max size for this program, no need to make a variable for it.
