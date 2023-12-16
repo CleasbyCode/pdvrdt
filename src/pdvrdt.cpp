@@ -148,7 +148,7 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 		// Image size is too small or larger than the set size limits. Display relevant error message and exit program.
 
 		std::cerr << "\nImage File Error: "  << (pdv.PNG_MIN_SIZE > pdv.image_size ? "Size of image is too small to be a valid PNG image" 
-				: "Size of image exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) 
+				: "Size of image exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON)  + " Bytes"
 				: (pdv.imgur_opt ? std::to_string(pdv.MAX_FILE_SIZE_IMGUR)
 				: std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes")) << ".\n\n";
 		std::exit(EXIT_FAILURE);
@@ -322,7 +322,7 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 		ICCP_POS = std::search(pdv.Image_Vec.begin(), pdv.Image_Vec.end(), sig.begin(), sig.end() - 6 ) - pdv.Image_Vec.begin() - 4,
 		IDAT_POS = std::search(pdv.Image_Vec.begin(), pdv.Image_Vec.end(), sig.begin() + 7, sig.end()) - pdv.Image_Vec.begin() - 4;
 
-	if (ICCP_POS != iccp_chunk_index && IDAT_POS == pdv.Image_Vec.size()) { 
+	if (ICCP_POS != iccp_chunk_index && IDAT_POS == pdv.Image_Vec.size() - 4) { 
 		// ICCP chunk not found or not found in the correct location. / IDAT chunk not found.
 		// Requirement checks failure, display relevant error message and exit program.
 		std::cerr << "\nImage File Error: This is not a pdvrdt file-embedded image.\n\n";
