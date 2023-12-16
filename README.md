@@ -4,8 +4,8 @@ You can share your image on several *social media sites, which will retain the e
 
 **Image size limits vary across platforms:*
 
-* ***Flickr (200MB), ImgBB (32MB), PostImage (24MB), *Reddit (20MB), Imgur (20MB / with -i option)***
-* ***Mastodon (16MB / requires -m option), *ImgPile (8MB), Imgur (5MB), Twitter (5MB).***
+* **Flickr (200MB), ImgBB (32MB), PostImage (24MB), *Reddit (20MB), Imgur (20MB / with -i option)***
+* **Mastodon (16MB / requires -m option), *ImgPile (8MB), Imgur (5MB), Twitter (5MB).***
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/witch.png)  
 Image Credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)  
