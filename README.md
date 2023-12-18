@@ -57,7 +57,7 @@ Embedding data file within the last IDAT chunk of the PNG image.
 
 Writing file-embedded PNG image out to disk.
 
-Created file-embedded PNG image: "pdv_img1.png" Size: "1245285 Bytes".
+Created file-embedded PNG image: "pdv_17627_rdt.png" Size: "1245285 Bytes".
 
 Complete!
 
@@ -69,7 +69,7 @@ Usage: pdvrdt -e [-m] [-i] <cover_image> <data_file>
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
         
-user1@linuxbox:~/Desktop$ ./pdvrdt -x pdv_img1.png
+user1@linuxbox:~/Desktop$ ./pdvrdt -x pdv_17627_rdt.png
 
 eXtract mode selected.
 
