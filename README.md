@@ -79,7 +79,7 @@ Found compressed IDAT chunk.
 
 Inflating IDAT chunk.
 
-Found pdvrdt embedded data file.
+Found pdvrdt signature.
 
 Extracting encrypted data file from the IDAT chunk.
 
