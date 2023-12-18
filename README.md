@@ -10,7 +10,7 @@ You can share your image on several *social media sites, which will retain the e
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdv_13421_img.png)  
 ***{Image credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)}***  
 
-Demo Videos: [**Mastodon**](https://youtu.be/veODZ_xaBDQ) / [**Reddit**](https://youtu.be/p34bii_b8n4)  
+Demo Videos: [**Twitter**](https://youtu.be/rVsZxWgmurE) / [**Reddit**](https://youtu.be/p34bii_b8n4)  
  
 For **Mastodon** (*-m option required*) your data file is stored within the ***iCCP chunk*** of the PNG image.  
 For all the other compatible sites listed above, your data file is stored within an ***IDAT chunk***, of the PNG image.
