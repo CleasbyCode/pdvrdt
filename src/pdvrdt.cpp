@@ -141,9 +141,9 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 	
 	// Display Start message. Different depending on mode and options selected.
 	std::cout << (pdv.embed_file_mode && pdv.mastodon_opt ? "\nEmbed mode selected with -m option.\n\nReading files"
-				: (pdv.embed_file_mode && pdv.imgur_opt ? "\nEmbed mode selected with -i option.\n\nReading files"
-				: (pdv.embed_file_mode ? "\nEmbed mode selected.\n\nReading files"
-				: "\neXtract mode selected.\n\nReading embedded PNG image file"))) << ". Please wait...\n";
+			: (pdv.embed_file_mode && pdv.imgur_opt ? "\nEmbed mode selected with -i option.\n\nReading files"
+			: (pdv.embed_file_mode ? "\nEmbed mode selected.\n\nReading files"
+			: "\neXtract mode selected.\n\nReading embedded PNG image file"))) << ". Please wait...\n";
 
 	// Read PNG image (embedded or non-embedded) into vector "Image_Vec".
 	pdv.Image_Vec.assign(std::istreambuf_iterator<char>(read_image_fs), std::istreambuf_iterator<char>());
@@ -208,10 +208,10 @@ void Check_Data_File(PDV_STRUCT& pdv) {
 		|| FILE_NAME_LENGTH > MAX_FILENAME_LENGTH) {
 		// File name too long, or image size is too small or larger than size limit. Display relevant error message and exit program.
 		std::cerr << "\nData File Error: " << (FILE_NAME_LENGTH > MAX_FILENAME_LENGTH ? "Length of file name is too long.\n\nFor compatibility requirements, length of file name must be under 24 characters"
-					: (FILE_NAME_LENGTH > pdv.data_size ? "Size of file is too small.\n\nFor compatibility requirements, file size must be greater than the length of the file name"
-					: "Size of file exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) + " Bytes"
-					: (pdv.imgur_opt ? std::to_string(pdv.MAX_FILE_SIZE_IMGUR)
-					: std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes"))) << ".\n\n";
+				: (FILE_NAME_LENGTH > pdv.data_size ? "Size of file is too small.\n\nFor compatibility requirements, file size must be greater than the length of the file name"
+				: "Size of file exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) + " Bytes"
+				: (pdv.imgur_opt ? std::to_string(pdv.MAX_FILE_SIZE_IMGUR)
+				: std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes"))) << ".\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -333,9 +333,9 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 	const size_t
 		// Get ICCP chunk length (if -m mastodon option) or last IDAT chunk length.
 		CHUNK_SIZE = ((static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX]) << 24) 
-			| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16) 
-			| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 2]) << 8)
-			| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 3]))),
+		| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16) 
+		| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 2]) << 8)
+		| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 3]))),
 
 		DEFLATE_CHUNK_SIZE = pdv.mastodon_opt ? CHUNK_SIZE - 9 : CHUNK_SIZE;
 
