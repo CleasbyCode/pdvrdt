@@ -4,8 +4,8 @@ You can share your image on several *social media sites, which will retain the e
 
 **Image size limits vary across platforms:*
 
-* *Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*Reddit (20MB / Requires -r option), Imgur (20MB / with -i option)*
-* *Mastodon (16MB / requires -m option), ImgPile (8MB), Imgur (5MB), \*Twitter (5MB & Dimension limits).*
+* *Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*Reddit (20MB / -r option), Imgur (20MB / -i option)*
+* *Mastodon (16MB / -m option), ImgPile (8MB), Imgur (5MB), \*Twitter (5MB / Dimension limits).*
 
 *Status update: \*Reddit (currently) no longer working with pdvrdt.*
 
