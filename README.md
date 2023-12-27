@@ -12,7 +12,7 @@ You can share your image on several *social media sites, which will retain the e
 
 Demo Videos: [**Twitter**](https://youtu.be/rVsZxWgmurE) / [**Reddit**](https://youtu.be/p34bii_b8n4)  
 
-Your data file is encrypted & compressed.
+Your embedded data file is encrypted & compressed.
 
 *To post/share file-embedded PNG images on **Reddit**, you need to use the **-r** option.*  
 *To post/share file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
