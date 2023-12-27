@@ -463,7 +463,9 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 
 		// Call function to deflate the contents of vector "Profile_Data_Vec" (profile with user's encrypted file).
 		Inflate_Deflate(pdv.Profile_Data_Vec, pdv.deflate_data);
-		
+
+		// Prevent Reddit from partially removing our embedded data file. 
+		// Insert ~15KB of 0's just before our data file. This gets removed instead of our file.
 		if (pdv.reddit_opt) {
 			std::fill_n(std::back_inserter(pdv.Image_Vec), 15707, 0);
 		}
