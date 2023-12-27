@@ -131,11 +131,11 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 		|| pdv.PNG_MIN_SIZE > pdv.image_size) {
 		// Image size is too small or larger than the set size limits. Display relevant error message and exit program.
 
-		std::cerr << "\nImage File Error: "  << (pdv.PNG_MIN_SIZE > pdv.image_size ? "Size of image is too small to be a valid PNG image" 
-				: "Size of image exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) + " Bytes"
-				: (pdv.imgur_opt ? std::to_string(pdv.MAX_FILE_SIZE_IMGUR) 
-				: (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT)
-				: std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes"))) << ".\n\n";
+		std::cerr << 	"\nImage File Error: "  << (pdv.PNG_MIN_SIZE > pdv.image_size ? "Size of image is too small to be a valid PNG image" 
+			: "Size of image exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) + " Bytes"
+			: (pdv.imgur_opt ? std::to_string(pdv.MAX_FILE_SIZE_IMGUR) 
+			: (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT)
+			: std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes"))) << ".\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 	 
@@ -335,10 +335,10 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 
 	const size_t
 		// Get ICCP chunk length (if -m mastodon option) or last IDAT chunk length.
-		CHUNK_SIZE = ((static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX]) << 24) 
-				| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16) 
-				| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 2]) << 8)
-				| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 3]))),
+		CHUNK_SIZE = 	((static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX]) << 24) 
+			| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16) 
+			| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 2]) << 8)
+			| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 3]))),
 
 		DEFLATE_CHUNK_SIZE = pdv.mastodon_opt ? CHUNK_SIZE - 9 : CHUNK_SIZE;
 
