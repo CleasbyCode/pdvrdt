@@ -32,9 +32,6 @@ the "*Imgur Community Page*", as the thumbnail preview fails and shows as a brok
 
 *(Clicking the "*broken*" preview image will still take you to the correctly displayed full image).*
 
-*Only use this option for posting file-embedded images over 5MB on Imgur, as the image with the -i (imgur) option
-is not compatible with the other listed sites.*
-
 Compile and run the program under Windows or **Linux**.
 
 ## Usage (Linux - Insert file into PNG image / Extract file from image)
