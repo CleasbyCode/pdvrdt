@@ -17,7 +17,7 @@ Your embedded data file is encrypted & compressed.
 *To post/share file-embedded PNG images on **Reddit**, you need to use the **-r** option.*  
 *To post/share file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
 
-**Twitter** - As well as the 5MB image size limit, **Twitter** also has dimension size limits.  
+As well as the 5MB image size limit, **Twitter** also has dimension size limits.  
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
 *PNG-8 (Indexed color) 4096x4096 Max. 68x68 Min.*
 
