@@ -4,8 +4,8 @@ You can share your image on several *social media sites, which will retain the e
 
 **Image size limits vary across platforms:*
 
-* *Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*~~Reddit (20MB)~~, Imgur (20MB / with -i option)*
-* *Mastodon (16MB / requires -m option), ImgPile (8MB), Imgur (5MB), Twitter (5MB).*
+* *Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*Reddit (20MB / Requires -r option), Imgur (20MB / with -i option)*
+* *Mastodon (16MB / requires -m option), ImgPile (8MB), Imgur (5MB), \*Twitter (5MB & Dimension limits).*
 
 *Status update: \*Reddit (currently) no longer working with pdvrdt.*
 
@@ -13,13 +13,17 @@ You can share your image on several *social media sites, which will retain the e
 ***{Image credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)}***  
 
 Demo Videos: [**Twitter**](https://youtu.be/rVsZxWgmurE) / [**Reddit**](https://youtu.be/p34bii_b8n4)  
- 
-For **Mastodon** (*-m option required*) your data file is stored within the ***iCCP chunk*** of the PNG image.  
-For all the other compatible sites listed above, your data file is stored within an ***IDAT chunk*** of the PNG image.
 
 Your data file is encrypted & compressed.
 
-*Using the -i (imgur) option, increases the Imgur PNG upload size limit from 5MB to 20MB.*
+To post/share file-embedded PNG images on Reddit, you need to use the -r option.
+To post/share file-embedded PNG images on Mastodon, you need to use the -m option.
+
+Twitter - As well as the 5MB PNG image size limit, Twitter also has dimension size limits.
+*PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*
+*PNG-8 (Indexed color) 4096x4096 Max. 68x68 Min.*
+
+*Using the -i (imgur) option, increases the Imgur PNG default size limit from 5MB to 20MB.*
 
 *Once the PNG image has been uploaded to your Imgur page, you can grab links of the image for sharing.*
 
