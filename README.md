@@ -96,7 +96,7 @@ user1@linuxbox:~/Desktop$
 
 ```
 **Issues:**
-* **Reddit -** *Does not work with Reddit's mobile app. Desktop/browser only.*
+* **Reddit -** *Post/share embedded images on Reddit via the Desktop/browser only. Mobile app not supported.*
 * **ImgPile -** *You must sign in to an account before sharing your data-embedded PNG image on ImgPile*.  
 		*Sharing your image without logging in, your embedded data will not be preserved.*
 
