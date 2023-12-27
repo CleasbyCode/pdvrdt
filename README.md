@@ -70,7 +70,7 @@ Usage: pdvrdt -e [-i] [-m] [-r] <cover_image> <data_file>
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
         
-user1@linuxbox:~/Desktop$ ./pdvrdt -x pdv_17627_rdt.png
+user1@linuxbox:~/Desktop$ ./pdvrdt -x prdt_17627.png
 
 eXtract mode selected.
 
