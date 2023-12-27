@@ -62,7 +62,7 @@ Created PNG image: prdt_17627.png 1245285 Bytes.
 
 Complete!
 
-You can now post your file-embedded PNG image(s) to the relevant supported platforms.
+You can now post your file-embedded PNG image to the relevant supported platforms.
 
 user1@linuxbox:~/Desktop$ ./pdvrdt
 
@@ -74,23 +74,23 @@ user1@linuxbox:~/Desktop$ ./pdvrdt -x pdv_17627_rdt.png
 
 eXtract mode selected.
 
-Reading embedded PNG image file. Please wait...
+Reading PNG image file. Please wait...
 
-Found compressed IDAT chunk.
+Found compressed data chunk.
 
-Inflating IDAT chunk.
+Inflating data.
 
 Found pdvrdt signature.
 
-Extracting encrypted data file from the IDAT chunk.
+Extracting encrypted data file from the PNG image.
 
-Decrypting extracted data file.
+Decrypting data file.
 
-Writing decrypted data file out to disk.
+Writing data file out to disk.
 
-Saved file: "document.pdf" Size: "1016540 Bytes"
+Saved file: document.pdf 1016540 Bytes.
 
-Complete! Please check your extracted file(s).
+Complete! Please check your extracted file.
   
 user1@linuxbox:~/Desktop$ 
 
