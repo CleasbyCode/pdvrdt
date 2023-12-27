@@ -7,8 +7,6 @@ You can share your image on several *social media sites, which will retain the e
 * *Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*Reddit (20MB / -r option), Imgur (20MB / -i option)*
 * *Mastodon (16MB / -m option), ImgPile (8MB), Imgur (5MB), \*Twitter (5MB / Dimension limits).*
 
-*Status update: \*Reddit (currently) no longer working with pdvrdt.*
-
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdv_13421_img.png)  
 ***{Image credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)}***  
 
