@@ -19,8 +19,8 @@ Your data file is encrypted & compressed.
 *To post/share file-embedded PNG images on **Reddit**, you need to use the **-r** option.*  
 *To post/share file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
 
-**Twitter** - As well as the 5MB PNG image size limit, **Twitter** also has dimension size limits.  
-*PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*
+**Twitter** - As well as the 5MB PNG size limit, **Twitter** also has dimension size limits.  
+*PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
 *PNG-8 (Indexed color) 4096x4096 Max. 68x68 Min.*
 
 *Using the **-i** option, increases the **Imgur** PNG default size limit from 5MB to 20MB.*
