@@ -41,7 +41,7 @@ user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 user1@linuxbox:~/Desktop$
 user1@linuxbox:~/Desktop$ ./pdvrdt 
 
-Usage: pdvrdt -e [-m] [-i] <cover_image> <data_file>  
+Usage: pdvrdt -e [-i] [-m] [-r] <cover_image> <data_file>  
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
 
@@ -55,11 +55,11 @@ Encrypting data file.
 
 Compressing data file.
 
-Embedding data file within the last IDAT chunk of the PNG image.
+Embedding data file within the PNG image.
 
 Writing file-embedded PNG image out to disk.
 
-Created file-embedded PNG image: "pdv_17627_rdt.png" Size: "1245285 Bytes".
+Created PNG image: prdt_17627.png 1245285 Bytes.
 
 Complete!
 
@@ -67,7 +67,7 @@ You can now post your file-embedded PNG image(s) to the relevant supported platf
 
 user1@linuxbox:~/Desktop$ ./pdvrdt
 
-Usage: pdvrdt -e [-m] [-i] <cover_image> <data_file>  
+Usage: pdvrdt -e [-i] [-m] [-r] <cover_image> <data_file>  
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
         
