@@ -21,7 +21,7 @@ As well as the 5MB image size limit, **Twitter** also has dimension size limits.
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
 *PNG-8 (Indexed color) 4096x4096 Max. 68x68 Min.*  
 
-*When posting file-embedded images on **Reddit**, always the select the "Images & Video" box.*
+*When posting file-embedded images on **Reddit**, always the select the "Images & Video" box.*  
 *When saving file-embedded images from **Reddit**, click the image in the post to expand it, then save it.
 You should see the filename with a .png extension in the address bar of your browser.*  
 
