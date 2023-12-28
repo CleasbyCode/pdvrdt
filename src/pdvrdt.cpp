@@ -739,7 +739,7 @@ void Write_Out_File(PDV_STRUCT& pdv) {
 		// Write out to disk the PNG image embedded with the user's encrypted/compressed data file.
 		write_file_fs.write((char*)&pdv.Image_Vec[0], pdv.Image_Vec.size());
 
-		if (pdv.Image_Vec[pdv.image_size - 9] == 0x0d || pdv.mastodon_opt || pdv.reddit_opt) {
+		if (pdv.Image_Vec[pdv.image_size - 9] == 0x0D || pdv.mastodon_opt || pdv.reddit_opt) {
 			std::string option = pdv.mastodon_opt ? "Mastodon" : pdv.reddit_opt ? "Reddit" : "Imgur";
 			std::cout << "\n**Warning**\n\nDue to your option selection, for compatibility reasons\nyou should only post this file-embedded PNG image on "+ option +".\n";
 		}
