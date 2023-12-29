@@ -4,26 +4,21 @@ You can share your image on several *social media sites, which will retain the e
 
 **Image size limits vary across platforms:*
 
-* *Flickr (200MB), ImgBB (32MB), PostImage (24MB), \*Reddit (20MB / -r option), Imgur (20MB / -i option)*
+* *Flickr (200MB), ImgBB (32MB), PostImage (24MB), Imgur (20MB / -i option)*
 * *Mastodon (16MB / -m option), ImgPile (8MB), Imgur (5MB), \*Twitter (5MB / Dimension limits).*
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdv_13421_img.png)  
 ***{Image credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)}***  
 
-Demo Videos: [**Twitter**](https://youtu.be/wSkP7LU7woQ) / [**Reddit**](https://youtu.be/7-ZbXv8NqA0) / [**Mastodon**](https://youtu.be/2giS6rP8dvI) / [**Imgur**](https://youtu.be/RUHlQUm14iM)
+Demo Videos: [**Twitter**](https://youtu.be/wSkP7LU7woQ) / [**Mastodon**](https://youtu.be/2giS6rP8dvI) / [**Imgur**](https://youtu.be/RUHlQUm14iM)
 
 Your embedded data file is encrypted & compressed.
 
-*To post/share file-embedded PNG images on **Reddit**, you need to use the **-r** option.*  
 *To post/share file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
 
 As well as the 5MB image size limit, **Twitter** also has dimension size limits.  
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
 *PNG-8 (Indexed color) 4096x4096 Max. 68x68 Min.*  
-
-*When posting file-embedded images on **Reddit**, always the select the "**Images & Video**" tab.*  
-*When saving file-embedded images from **Reddit**, click the image in the post to expand it, then save it.
-You should see the filename with a .png extension in the address bar of your browser.*  
 
 *When saving file-embedded images from **Twitter**, always click the image first to fully expand it, before saving.*
 
@@ -46,7 +41,7 @@ user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 user1@linuxbox:~/Desktop$
 user1@linuxbox:~/Desktop$ ./pdvrdt 
 
-Usage: pdvrdt -e [-i] [-m] [-r] <cover_image> <data_file>  
+Usage: pdvrdt -e [-i] [-m] <cover_image> <data_file>  
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
 
@@ -72,7 +67,7 @@ You can now post your file-embedded PNG image to the relevant supported platform
 
 user1@linuxbox:~/Desktop$ ./pdvrdt
 
-Usage: pdvrdt -e [-i] [-m] [-r] <cover_image> <data_file>  
+Usage: pdvrdt -e [-i] [-m] <cover_image> <data_file>  
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
         
@@ -102,7 +97,6 @@ user1@linuxbox:~/Desktop$
 
 ```
 **Issues:**
-* **Reddit -** *Post/share embedded images on Reddit via the Desktop/browser only. Mobile app not supported.*
 * **ImgPile -** *You must sign in to an account before sharing your data-embedded PNG image on ImgPile*.  
 		*Sharing your image without logging in, your embedded data will not be preserved.*
 
