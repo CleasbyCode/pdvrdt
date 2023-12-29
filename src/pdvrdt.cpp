@@ -19,11 +19,11 @@
 typedef unsigned char BYTE;
 
 struct PDV_STRUCT {
-	const size_t MAX_FILE_SIZE = 209715200, MAX_FILE_SIZE_IMGUR = 20971520, MAX_FILE_SIZE_REDDIT = 20955813, MAX_FILE_SIZE_MASTODON = 16777216, PNG_MIN_SIZE = 68;
+	const size_t MAX_FILE_SIZE = 209715200, MAX_FILE_SIZE_IMGUR = 20971520, MAX_FILE_SIZE_MASTODON = 16777216, PNG_MIN_SIZE = 68;
 	std::vector<BYTE> Image_Vec, File_Vec, Profile_Data_Vec, Iccp_Chunk_Vec, Idat_Chunk_Vec, Decrypted_Vec;
 	std::string image_file_name, data_file_name;
 	size_t image_size{}, data_size{};
-	bool embed_file_mode = false, extract_file_mode = false, imgur_opt = false, mastodon_opt = false, reddit_opt = false, inflate_data = false, deflate_data = false;
+	bool embed_file_mode = false, extract_file_mode = false, imgur_opt = false, mastodon_opt = false, inflate_data = false, deflate_data = false;
 };
 	
 void
@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
 		
 		// Embed file mode.
 
-		if (argc == 4 && (std::string(argv[2]) == "-i" || std::string(argv[2]) == "-m" || std::string(argv[2]) == "-r")) {
+		if (argc == 4 && (std::string(argv[2]) == "-i" || std::string(argv[2]) == "-m")) {
 			std::cerr << "\nFile Error: Missing argument.\n\n";
 			std::exit(EXIT_FAILURE);
 		}
@@ -90,18 +90,15 @@ int main(int argc, char** argv) {
 		if (argc == 5 && std::string(argv[2]) == "-m") {
 			pdv.mastodon_opt = true;
 		}
-		if (argc == 5 && std::string(argv[2]) == "-r") {
-			pdv.reddit_opt = true;
-		}
 
-		pdv.image_file_name = pdv.mastodon_opt || pdv.imgur_opt || pdv.reddit_opt ? argv[3] : argv[2];
-		pdv.data_file_name = pdv.mastodon_opt || pdv.imgur_opt || pdv.reddit_opt ? argv[4] : argv[3];
+		pdv.image_file_name = pdv.mastodon_opt || pdv.imgur_opt ? argv[3] : argv[2];
+		pdv.data_file_name = pdv.mastodon_opt || pdv.imgur_opt ? argv[4] : argv[3];
 
 		Check_Image_File(pdv);
 	
 	} else {
 
-		std::cout << "\nUsage:\tpdvrdt -e [-i] [-m] [-r] <cover_image> <data_file>\n\tpdvrdt -x <file_embedded_image>\n\tpdvrdt --info\n\n";
+		std::cout << "\nUsage:\tpdvrdt -e [-i] [-m] <cover_image> <data_file>\n\tpdvrdt -x <file_embedded_image>\n\tpdvrdt --info\n\n";
 
 	}
 	return 0;
@@ -117,7 +114,7 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 
 	if (GET_IMAGE_EXTENSION != "png" || !read_image_fs) {
 		std::cerr << (GET_IMAGE_EXTENSION != "png" ? "\nImage File Error: Invalid file extension. Only expecting 'png' for image file" 
-							:"\nRead File Error: Unable to open image file") << ".\n\n";
+									:"\nRead File Error: Unable to open image file") << ".\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 	
@@ -127,22 +124,20 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 	if (pdv.image_size > pdv.MAX_FILE_SIZE 
 		|| pdv.mastodon_opt && pdv.image_size > pdv.MAX_FILE_SIZE_MASTODON 
 		|| pdv.imgur_opt && pdv.image_size > pdv.MAX_FILE_SIZE_IMGUR 
-		|| pdv.reddit_opt && pdv.image_size > pdv.MAX_FILE_SIZE_REDDIT
 		|| pdv.PNG_MIN_SIZE > pdv.image_size) {
 		// Image size is too small or larger than the set size limits. Display relevant error message and exit program.
 
-		std::cerr << 	"\nImage File Error: "  << (pdv.PNG_MIN_SIZE > pdv.image_size ? "Size of image is too small to be a valid PNG image" 
-			: "Size of image exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) + " Bytes"
-			: (pdv.imgur_opt ? std::to_string(pdv.MAX_FILE_SIZE_IMGUR) 
-			: (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT)
-			: std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes"))) << ".\n\n";
+		std::cerr << "\nImage File Error: "  << (pdv.PNG_MIN_SIZE > pdv.image_size ? "Size of image is too small to be a valid PNG image" 
+				: "Size of image exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) + " Bytes"
+				: (pdv.imgur_opt ? std::to_string(pdv.MAX_FILE_SIZE_IMGUR) 
+				: std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes")) << ".\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 	 
-	std::string option = pdv.imgur_opt ? "-i" : pdv.mastodon_opt ? "-m" : "-r";
+	std::string option = pdv.imgur_opt ? "-i" : "-m";
 
 	// Display Start message. Different depending on mode and options selected.
-	std::cout << (pdv.imgur_opt || pdv.mastodon_opt || pdv.reddit_opt ? "\nEmbed mode selected with " + option + " option.\n\nReading files"
+	std::cout << (pdv.imgur_opt || pdv.mastodon_opt ? "\nEmbed mode selected with " + option + " option.\n\nReading files"
 				: (pdv.embed_file_mode ? "\nEmbed mode selected.\n\nReading files"
 				: "\neXtract mode selected.\n\nReading PNG image file")) << ". Please wait...\n";
 
@@ -205,7 +200,6 @@ void Check_Data_File(PDV_STRUCT& pdv) {
 	if (pdv.data_size > pdv.MAX_FILE_SIZE 
 		|| pdv.mastodon_opt && pdv.data_size > pdv.MAX_FILE_SIZE_MASTODON 
 		|| pdv.imgur_opt && pdv.data_size > pdv.MAX_FILE_SIZE_IMGUR 
-		|| pdv.reddit_opt && pdv.data_size > pdv.MAX_FILE_SIZE_REDDIT
 		|| FILE_NAME_LENGTH > pdv.data_size 
 		|| FILE_NAME_LENGTH > MAX_FILENAME_LENGTH) {
 		// File name too long, or image size is too small or larger than size limit. Display relevant error message and exit program.
@@ -213,8 +207,7 @@ void Check_Data_File(PDV_STRUCT& pdv) {
 				: (FILE_NAME_LENGTH > pdv.data_size ? "Size of file is too small.\n\nFor compatibility requirements, file size must be greater than the length of the file name"
 				: "Size of file exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) + " Bytes"
 				: (pdv.imgur_opt ? std::to_string(pdv.MAX_FILE_SIZE_IMGUR)
-				: (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT)
-				: std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes")))) << ".\n\n";
+				: std::to_string(pdv.MAX_FILE_SIZE)) + " Bytes"))) << ".\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -227,15 +220,13 @@ void Check_Data_File(PDV_STRUCT& pdv) {
 	// Combined file size check.
 	if (pdv.image_size + pdv.data_size > pdv.MAX_FILE_SIZE 
 		|| pdv.mastodon_opt && pdv.image_size + pdv.data_size > pdv.MAX_FILE_SIZE_MASTODON 
-		|| pdv.imgur_opt && pdv.image_size + pdv.data_size > pdv.MAX_FILE_SIZE_IMGUR
-		|| pdv.reddit_opt && pdv.image_size + pdv.data_size > pdv.MAX_FILE_SIZE_REDDIT) {
+		|| pdv.imgur_opt && pdv.image_size + pdv.data_size > pdv.MAX_FILE_SIZE_IMGUR) {
 		// File size check failure, display relevant error message and exit program.
 
 		std::cerr << "\nFile Size Error: The combined file size of the PNG image & data file, must not exceed " 
 				<< (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) 
 				: (pdv.imgur_opt ? std::to_string(pdv.MAX_FILE_SIZE_IMGUR)
-				: (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT)
-				: std::to_string(pdv.MAX_FILE_SIZE)))) << " Bytes.\n\n";
+				: std::to_string(pdv.MAX_FILE_SIZE))) << " Bytes.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -291,10 +282,6 @@ void Fill_Profile_Vec(PDV_STRUCT& pdv) {
 			0x00, 0x00, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54, 0x5F, 0x00, 0x00, 0x00, 0x00
 		};
 	
-	if (pdv.reddit_opt) {
-		pdv.Idat_Chunk_Vec.insert((pdv.Idat_Chunk_Vec.begin() + 13), pdv.Image_Vec.end() - 12, pdv.Image_Vec.end());
-	}
-
 	std::cout << "\nEncrypting data file.\n";
 
 	// Encrypt the user's data file and its file name.
@@ -335,7 +322,7 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 
 	const size_t
 		// Get ICCP chunk length (if -m mastodon option) or last IDAT chunk length.
-		CHUNK_SIZE = 	((static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX]) << 24) 
+		CHUNK_SIZE = ((static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX]) << 24) 
 			| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16) 
 			| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 2]) << 8)
 			| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 3]))),
@@ -364,8 +351,8 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 		FILENAME_START_INDEX = 101;		// Vector index start location of the embedded file name of user's data file.
 
 	const uint_fast16_t
-		PDV_SIG_START_INDEX = 401,	// Vector index for this program's embedded signature.
-		DATA_FILE_START_INDEX = 404;	// Vector index start location for user's embedded data file.
+		PDV_SIG_START_INDEX = 401,		// Vector index for this program's embedded signature.
+		DATA_FILE_START_INDEX = 404;		// Vector index start location for user's embedded data file.
 
 	// Get encrypted embedded file name from vector "Image_Vec".
 	pdv.data_file_name = { pdv.Image_Vec.begin() + FILENAME_START_INDEX, pdv.Image_Vec.begin() + FILENAME_START_INDEX + FILENAME_LENGTH };
@@ -436,7 +423,6 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 
 		// Write the extracted (inflated / decrypted) data file out to disk.
 		Write_Out_File(pdv);
-
 	} 
 	else {
 		
@@ -463,21 +449,16 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 
 		// Call function to deflate the contents of vector "Profile_Data_Vec" (profile with user's encrypted file).
 		Inflate_Deflate(pdv.Profile_Data_Vec, pdv.deflate_data);
-
-		// Prevent Reddit from partially removing our embedded data file. 
-		// Insert ~15KB (Truecolor) or ~18KB (Indexed color) of 0's just before our data file.
-		if (pdv.reddit_opt) {
-		pdv.Image_Vec[0x19] == 0x03 ? std::fill_n(std::back_inserter(pdv.Image_Vec), 18110, 0) : std::fill_n(std::back_inserter(pdv.Image_Vec), 15707, 0);
-		}
+		std::cout << '\n' << pdv.Profile_Data_Vec.size() << '\n';
 
 		const size_t
 			PROFILE_DEFLATE_SIZE = pdv.Profile_Data_Vec.size(),
 			CHUNK_SIZE = pdv.mastodon_opt ? PROFILE_DEFLATE_SIZE + 9 : PROFILE_DEFLATE_SIZE + 5, // IDAT chunk (+ 4 bytes) or, if -m mastodon option used, "iCCPicc\x00\x00" (+ 9 bytes).
-			CHUNK_INSERT_INDEX = pdv.mastodon_opt ? 33 : pdv.reddit_opt ? pdv.Image_Vec.size(): pdv.Image_Vec.size() - 12;  // Index location within Image_Vec to insert IDAT chunk or (if -m mastodon option used) insert Profile_Chunk_Vec (iCCP chunk).
+			CHUNK_INSERT_INDEX = pdv.mastodon_opt ? 33 : pdv.Image_Vec.size() - 12;  // Index location within Image_Vec to insert IDAT chunk or (if -m mastodon option used) insert Profile_Chunk_Vec (iCCP chunk).
 
 		const uint_fast8_t
 			PROFILE_DATA_INSERT_INDEX = pdv.mastodon_opt ? 13: 9,   // If -m mastodon option used, index pos within Iccp_Chunk_Vec (13) to insert deflate contents of Profile_Data_Vec, else use Idat_Chunk_Vec (8) where we insert Profile_Data_Vec.
-			CHUNK_START_INDEX = 4; 	// Start index location of chunk is where the name type begins (IDAT or iCCP). This start location is required when we get the CRC value.
+			CHUNK_START_INDEX = 4; 					// Start index location of chunk is where the name type begins (IDAT or iCCP). This start location is required when we get the CRC value.
 
 		std::cout << "\nEmbedding data file within the PNG image.\n";
 
@@ -647,8 +628,8 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 
 		if (idat_index > PLTE_CHUNK_INDEX) {
 			const size_t CHUNK_SIZE = ((static_cast<size_t>(pdv.Image_Vec[PLTE_CHUNK_INDEX + 1]) << 16)
-						| (static_cast<size_t>(pdv.Image_Vec[PLTE_CHUNK_INDEX + 2]) << 8)
-						| (static_cast<size_t>(pdv.Image_Vec[PLTE_CHUNK_INDEX + 3])));
+				| (static_cast<size_t>(pdv.Image_Vec[PLTE_CHUNK_INDEX + 2]) << 8)
+				| (static_cast<size_t>(pdv.Image_Vec[PLTE_CHUNK_INDEX + 3])));
 
 			Temp_Vec.insert(Temp_Vec.end(), pdv.Image_Vec.begin() + PLTE_CHUNK_INDEX, pdv.Image_Vec.begin() + PLTE_CHUNK_INDEX + (CHUNK_SIZE + 12));
 		}
@@ -739,8 +720,8 @@ void Write_Out_File(PDV_STRUCT& pdv) {
 		// Write out to disk the PNG image embedded with the user's encrypted/compressed data file.
 		write_file_fs.write((char*)&pdv.Image_Vec[0], pdv.Image_Vec.size());
 
-		if (pdv.Image_Vec[pdv.image_size - 9] == 0x0D || pdv.mastodon_opt || pdv.reddit_opt) {
-			std::string option = pdv.mastodon_opt ? "Mastodon" : pdv.reddit_opt ? "Reddit" : "Imgur";
+		if (pdv.Image_Vec[pdv.image_size - 9] == 0x0d || pdv.mastodon_opt) {
+			std::string option = pdv.mastodon_opt ? "Mastodon" : "Imgur";
 			std::cout << "\n**Warning**\n\nDue to your option selection, for compatibility reasons\nyou should only post this file-embedded PNG image on "+ option +".\n";
 		}
 
@@ -788,7 +769,7 @@ Share your file-embedded image on the following compatible sites.
 
 Image size limit is platform dependant:-  
 
-  Flickr (200MB), ImgBB (32MB), PostImage (24MB), Imgur (20MB / -i option), *Reddit (~20MB / -r option), 
+  Flickr (200MB), ImgBB (32MB), PostImage (24MB), Imgur (20MB / -i option), 
   *Mastodon (16MB / -m option), *ImgPile (8MB), Imgur (5MB), *Twitter (5MB).
 
 Argument options:	
@@ -797,15 +778,11 @@ Argument options:
  -x = eXtract File Mode,
  -i = Imgur option, used with -e Embed mode (pdvrdt -e -i image.png file.pdf).
  -m = Mastodon option, used with -e Embed mode (pdvrdt -e -m image.png file.mp3).
- -r = Reddit option, used with -e Embed mode (pdvrdt -e -r image.png file.doc).
 
-To post/share file-embedded PNG images on Reddit, you need to use the -r option.
 To post/share file-embedded PNG images on Mastodon, you need to use the -m opion.
 	
 Using the -i option (Imgur) when embedding a data file, will increase the Imgur PNG upload size from 5MB to 20MB.
 The file-embedded PNG image created with the -i option (over 5MB), should only be posted on Imgur.
-
-*Reddit - Post images via the Desktop / browser only. 
 
 *Twitter - As well as the 5MB PNG image size limit, Twitter also has dimension size limits.
 PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min. 
