@@ -15,7 +15,12 @@ Demo Videos: [**Twitter**](https://youtu.be/wSkP7LU7woQ) / [**Mastodon**](https:
 Your embedded data file is encrypted & compressed.
 
 *To post/share file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
-*To post/share file-embedded PNG images on **Reddit**, you need to use the **-r** option.*
+
+*To post/share file-embedded PNG images on **Reddit**, you need to use the **-r** option.*  
+Always select the "Images & Video" tab to post these images on Reddit
+
+When saving images from Reddit, click the image in the post to expand it, then save it.
+You should see the filename with a .jpeg extension in the address bar of your browser.
 
 As well as the 5MB image size limit, **Twitter** also has dimension size limits.  
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
