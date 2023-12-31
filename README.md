@@ -4,8 +4,8 @@ You can share your image on several *social media sites, which will retain the e
 
 **Image size limits vary across platforms:*
 
-* *Flickr (200MB), ImgBB (32MB), PostImage (24MB), Imgur (20MB / -i option)*
-* *Mastodon (16MB / -m option), ImgPile (8MB), Imgur (5MB), \*Twitter (5MB / Dimension limits).*
+* *Flickr (200MB), ImgBB (32MB), PostImage (24MB), Imgur (20MB / -i option), Reddit (19MB / -r option)*
+* *Mastodon (16MB / -m option), ImgPile (8MB), Imgur (5MB), \*Twitter (5MB / Dimension limits)*
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdv_13421_img.png)  
 ***{Image credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)}***  
@@ -15,6 +15,7 @@ Demo Videos: [**Twitter**](https://youtu.be/wSkP7LU7woQ) / [**Mastodon**](https:
 Your embedded data file is encrypted & compressed.
 
 *To post/share file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
+*To post/share file-embedded PNG images on **Reddit**, you need to use the **-r** option.*
 
 As well as the 5MB image size limit, **Twitter** also has dimension size limits.  
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
@@ -41,7 +42,7 @@ user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 user1@linuxbox:~/Desktop$
 user1@linuxbox:~/Desktop$ ./pdvrdt 
 
-Usage: pdvrdt -e [-i] [-m] <cover_image> <data_file>  
+Usage: pdvrdt -e [-i] [-m] [-r] <cover_image> <data_file>  
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
 
@@ -67,7 +68,7 @@ You can now post your file-embedded PNG image to the relevant supported platform
 
 user1@linuxbox:~/Desktop$ ./pdvrdt
 
-Usage: pdvrdt -e [-i] [-m] <cover_image> <data_file>  
+Usage: pdvrdt -e [-i] [-m] [-r] <cover_image> <data_file>  
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
         
