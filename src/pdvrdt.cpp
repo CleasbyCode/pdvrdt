@@ -331,7 +331,7 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 
 	uint_fast8_t iccp_chunk_index = 33;	// ICCP chunk location within the embedded PNG image file (Only exists if -m (mastodon) option was used when image was embedded). 
 
-	// Vector contains signature for ICCP (iCCPicc) and IDAT (IDAT0x780x9C) chunks.
+	// Vector contains signature for ICCP and IDAT chunks.
 	std::vector<BYTE> sig = { 0x69,0x43,0x43,0x50,0x69,0x63,0x63,0x49,0x44,0x41,0x54,0x5F,0x78,0x9c };
 
 	// Search image file for these signatures, to make sure a valid file-embedded chunk exists. 
