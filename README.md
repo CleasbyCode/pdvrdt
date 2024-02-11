@@ -4,13 +4,13 @@ You can share your image on several *social media sites, which will retain the e
 
 **Image size limits vary across platforms:*
 
-* *Flickr (200MB), ImgBB (32MB), PostImage (24MB), Imgur (20MB / -i option), Reddit (19MB / -r option)*
-* *Mastodon (16MB / -m option), ImgPile (8MB), Imgur (5MB), \*Twitter (5MB / Dimension limits)*
+* *Flickr (200MB), ImgBB (32MB), PostImage (24MB), Reddit (19MB / -r option)*
+* *Mastodon (16MB / -m option), ImgPile (8MB), \*Twitter (5MB / Dimension limits)*
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdv_13421_img.png)  
 ***{Image credit: [MΞV.ai / @aest_artificial](https://twitter.com/aest_artificial)}***  
 
-Demo Videos: [**Twitter**](https://youtu.be/wSkP7LU7woQ) / [**Mastodon**](https://youtu.be/2giS6rP8dvI) / [**Imgur**](https://youtu.be/RUHlQUm14iM) / [**Reddit**](https://youtu.be/7-ZbXv8NqA0)
+Demo Videos: [**Twitter**](https://youtu.be/wSkP7LU7woQ) / [**Mastodon**](https://youtu.be/2giS6rP8dvI) / [**Reddit**](https://youtu.be/7-ZbXv8NqA0)
 
 Your embedded data file is encrypted & compressed.
 
@@ -27,16 +27,7 @@ As well as the 5MB image size limit, **Twitter** also has dimension size limits.
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
 *PNG-8 (Indexed color) 4096x4096 Max. 68x68 Min.*  
 
-*When saving a file-embedded image from **Twitter**, always click the image first to fully expand it, before saving.*
-
-*Using the **-i** option, increases the **Imgur** PNG default size limit from 5MB to 20MB.*
-
-*Once the PNG image has been uploaded to your **Imgur** page, you can grab links of the image for sharing.*
-
-*If the file-embedded image is over 5MB (when using the **-i** option), avoid posting the image to
-the "*Imgur Community Page*", as the thumbnail preview fails and shows as a broken icon image.*
-
-*(Clicking the "*broken*" preview image will still take you to the correctly displayed full image).*
+*When saving a file-embedded image from **Twitter**, always click the image first to fully expand it, before saving.*  
 
 Compile and run the program under Windows or **Linux**.
 
@@ -48,7 +39,7 @@ user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
 user1@linuxbox:~/Desktop$
 user1@linuxbox:~/Desktop$ ./pdvrdt 
 
-Usage: pdvrdt -e [-i] [-m] [-r] <cover_image> <data_file>  
+Usage: pdvrdt -e [-m] [-r] <cover_image> <data_file>  
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
 
@@ -74,7 +65,7 @@ You can now post your file-embedded PNG image to the relevant supported platform
 
 user1@linuxbox:~/Desktop$ ./pdvrdt
 
-Usage: pdvrdt -e [-i] [-m] [-r] <cover_image> <data_file>  
+Usage: pdvrdt -e [-m] [-r] <cover_image> <data_file>  
        pdvrdt -x <file_embedded_image>  
        pdvrdt --info
         
