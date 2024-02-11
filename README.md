@@ -14,9 +14,9 @@ Demo Videos: [**Twitter**](https://youtu.be/wSkP7LU7woQ) / [**Mastodon**](https:
 
 Your embedded data file is encrypted & compressed.
 
-*To post/share file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
+*To post file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
 
-*To post/share file-embedded PNG images on **Reddit**, you need to use the **-r** option.*  
+*To post file-embedded PNG images on **Reddit**, you need to use the **-r** option.*  
 
 From the **Reddit** site, always select the "***Images & Video***" tab/box to post your image.
 
