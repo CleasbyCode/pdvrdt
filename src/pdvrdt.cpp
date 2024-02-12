@@ -14,7 +14,7 @@
 #include <string>
 #include <cstdint>
 #include <vector>
-#include <C:\Users\Nick\source\zlib\zlib-1.2.13\zlib.h>
+#include <zlib.h>
 
 typedef unsigned char BYTE;
 
@@ -141,7 +141,7 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 	// Update image size variable with vector size storing user's image file.
 	pdv.image_size = pdv.Image_Vec.size();
 
-	constexpr std::string
+	const std::string
 		PNG_HEADER_SIG = "\x89\x50\x4E\x47", // PNG image header signature. 
 		PNG_END_SIG = "\x49\x45\x4E\x44\xAE\x42\x60\x82"; // PNG image end signature.
 
@@ -359,7 +359,7 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 	// Get encrypted embedded file name from vector "Image_Vec".
 	pdv.data_file_name = { pdv.Image_Vec.begin() + FILENAME_START_INDEX, pdv.Image_Vec.begin() + FILENAME_START_INDEX + FILENAME_LENGTH };
 
-	constexpr std::string PDV_SIG = "PDV";	// pdvrdt signature.
+	const std::string PDV_SIG = "PDV";	// pdvrdt signature.
 
 	// Attempt to get the pdvrdt signature from vector "Image_Vec".
 	const std::string GET_PDV_SIG{ pdv.Image_Vec.begin() + PDV_SIG_START_INDEX, pdv.Image_Vec.begin() + PDV_SIG_START_INDEX + PDV_SIG.length() };
@@ -383,8 +383,9 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 
 void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 
-	constexpr std::string XOR_KEY = "\xFC\xD8\xF9\xE2\x9F\x7E";	// String used to XOR encrypt/decrypt the file name of user's data file.
-	const std::string INPUT_NAME = pdv.data_file_name;
+	const std::string 
+		XOR_KEY = "\xFC\xD8\xF9\xE2\x9F\x7E",	// String used to XOR encrypt/decrypt the file name of user's data file.
+		INPUT_NAME = pdv.data_file_name;
 
 	std::string output_name;
 
@@ -587,7 +588,7 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 	// Copy the first 33 bytes of Image_Vec into Temp_Vec (PNG header + IHDR).
 	Temp_Vec.insert(Temp_Vec.begin(), pdv.Image_Vec.begin(), pdv.Image_Vec.begin() + 33);
 
-	constexpr std::string IDAT_SIG = "IDAT";
+	const std::string IDAT_SIG = "IDAT";
 
 	// Get first IDAT chunk index.
 	size_t idat_index = std::search(pdv.Image_Vec.begin(), pdv.Image_Vec.end(), IDAT_SIG.begin(), IDAT_SIG.end()) - pdv.Image_Vec.begin() - 4;  // -4 is to position the index at the start of the IDAT chunk's length field.
@@ -619,7 +620,7 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 	// *For PNG-8 Indexed color (3) we need to keep the PLTE chunk.
 	if (Temp_Vec[25] == 3) {
 
-		constexpr std::string PLTE_SIG = "PLTE";
+		const std::string PLTE_SIG = "PLTE";
 
 		// Find PLTE chunk index and copy its contents into Temp_Vec.
 		const size_t PLTE_CHUNK_INDEX = std::search(pdv.Image_Vec.begin(), pdv.Image_Vec.end(), PLTE_SIG.begin(), PLTE_SIG.end()) - pdv.Image_Vec.begin() - 4;
