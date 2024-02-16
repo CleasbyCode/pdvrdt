@@ -18,10 +18,10 @@ Your embedded data file is encrypted & compressed.
 
 *To post file-embedded PNG images on **Reddit**, you need to use the **-r** option.*  
 
-From the **Reddit** site (new.reddit.com), always select the "***Images & Video***" tab/box to post your image.
+From the **Reddit** site (*new.reddit.com*), always select the "***Images & Video***" tab/box to post your image.
 
 When saving an image from **Reddit**, click the image in the post to expand it, then save it.  
-You should see the filename with a *.png* extension in the address bar of your browser.
+(*Make sure you see the filename with a *.png* extension in the address bar of your browser, before saving.*)
 
 As well as the 5MB image size limit, **Twitter** also has dimension size limits.  
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
