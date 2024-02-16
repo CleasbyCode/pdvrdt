@@ -48,8 +48,8 @@ void
 	// Display program information.
 	Display_Info();
 
-// Code to compute CRC32 (for iCCP/IDAT/PLTE chunks within this program).  https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
-uint_fast64_t
+	// Code to compute CRC32 (for iCCP/IDAT/PLTE chunks within this program).  https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
+	uint_fast64_t
 	Crc_Update(const uint_fast64_t&, unsigned char*, const uint_fast64_t&),
 	Crc(unsigned char*, const uint_fast64_t&);
 
@@ -780,7 +780,7 @@ Argument options:
 To post/share file-embedded PNG images on Reddit, you need to use the -r option.
 To post/share file-embedded PNG images on Mastodon, you need to use the -m opion.
 	
-*Reddit - Post images via the Reddit Desktop / browser site only. Use the "Images & Video" tab/box.
+*Reddit - Post images via the new.reddit.com desktop / browser site only. Use the "Images & Video" tab/box.
 
 *Twitter - As well as the 5MB PNG image size limit, Twitter also has dimension size limits.
 PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min. 
