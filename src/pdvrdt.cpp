@@ -48,8 +48,8 @@ void
 	// Display program information.
 	Display_Info();
 
-	// Code to compute CRC32 (for iCCP/IDAT/PLTE chunks within this program).  https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
-	uint_fast64_t
+// Code to compute CRC32 (for iCCP/IDAT/PLTE chunks within this program).  https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
+uint_fast64_t
 	Crc_Update(const uint_fast64_t&, unsigned char*, const uint_fast64_t&),
 	Crc(unsigned char*, const uint_fast64_t&);
 
@@ -141,9 +141,7 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 
 	const std::string
 		PNG_HEADER_SIG = "\x89\x50\x4E\x47", // PNG image header signature. 
-		PNG_END_SIG = "\x49\x45\x4E\x44\xAE\x42\x60\x82"; // PNG image end signature.
-
-	const std::string
+		PNG_END_SIG = "\x49\x45\x4E\x44\xAE\x42\x60\x82", // PNG image end signature.
 		GET_PNG_HEADER_SIG{ pdv.Image_Vec.begin(), pdv.Image_Vec.begin() + PNG_HEADER_SIG.length() },	// Attempt to get both image signatures from file stored in vector. 
 		GET_PNG_END_SIG{ pdv.Image_Vec.end() - PNG_END_SIG.length(), pdv.Image_Vec.end() };
 
@@ -230,7 +228,11 @@ void Check_Data_File(PDV_STRUCT& pdv) {
 
 void Fill_Profile_Vec(PDV_STRUCT& pdv) {
 
-	constexpr unsigned char Profile_Data[404]{
+	// The first 401 bytes of the vector "Profile_Data_Vec" contains the basic ICC profile, followed by a 3-byte signature "PDV". 404 bytes total.
+	// The length value of the user's data file name and the file name (encrypted) will also be stored within this profile.
+	// After the user's data file has been encrypted and compressed, it will be inserted and stored at the end of this profile.
+
+	pdv.Profile_Data_Vec={
 		0x00, 0x00, 0x00, 0x00, 0x6c, 0x63, 0x6d, 0x73, 0x02, 0x10, 0x00, 0x00, 0x6D, 0x6E, 0x74,
 		0x72, 0x52, 0x47, 0x42, 0x20, 0x58, 0x59, 0x5A, 0x20, 0x07, 0xE2, 0x00, 0x03, 0x00, 0x14,
 		0x00, 0x09, 0x00, 0x0E, 0x00, 0x1D, 0x61, 0x63, 0x73, 0x70, 0x4D, 0x53, 0x46, 0x54, 0x00,
@@ -260,12 +262,6 @@ void Fill_Profile_Vec(PDV_STRUCT& pdv) {
 		0x95, 0xE3, 0xAD, 0x50, 0xC6, 0xC2, 0xE2, 0x31, 0xFF, 0xFF, 0x00, 0x50, 0x44, 0x56
 	};
 
-	// The first 401 bytes of the vector "Profile_Data_Vec" contains the basic ICC profile, followed by a 3-byte signature "PDV". 404 bytes total.
-	// The length value of the user's data file name and the file name (encrypted) will also be stored within this profile.
-	// After the user's data file has been encrypted and compressed, it will be inserted and stored at the end of this profile.
-
-	pdv.Profile_Data_Vec.insert(pdv.Profile_Data_Vec.begin(), &Profile_Data[0], &Profile_Data[404]);
-
 	if (pdv.reddit_opt) {
 
 		// There are two IDAT chunks when the Reddit option (-r) is selected.
@@ -277,11 +273,11 @@ void Fill_Profile_Vec(PDV_STRUCT& pdv) {
 
 		std::vector<unsigned char>Idat_Reddit_Vec = { 0x00, 0x08, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54 };
 
-		constexpr unsigned char Idat_Reddit_Crc_Vec[4]{ 0xA3, 0x1A, 0x50, 0xFA };
+		constexpr unsigned char Idat_Reddit_Crc[4]{ 0xA3, 0x1A, 0x50, 0xFA };
 
 		std::fill_n(std::back_inserter(Idat_Reddit_Vec), 0x80000, 0);
 
-		Idat_Reddit_Vec.insert(Idat_Reddit_Vec.end(), &Idat_Reddit_Crc_Vec[0], &Idat_Reddit_Crc_Vec[4]);
+		Idat_Reddit_Vec.insert(Idat_Reddit_Vec.end(), &Idat_Reddit_Crc[0], &Idat_Reddit_Crc[4]);
 		pdv.Image_Vec.insert(pdv.Image_Vec.end() - 12, Idat_Reddit_Vec.begin(), Idat_Reddit_Vec.end());
 	}
 	std::cout << "\nEncrypting data file.\n";
@@ -319,9 +315,7 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 
 	const size_t
 		CHUNK_SIZE_INDEX = pdv.mastodon_opt ? ICCP_POS : IDAT_POS,		// If -m Mastodon option. Start index location of 4 byte iCCP Profile chunk length field, else index location of (last) IDAT chunk length field.
-		DEFLATE_DATA_INDEX = pdv.mastodon_opt ? ICCP_POS + 13 : IDAT_POS + 9;	// Start index location of deflate data (0x78,0x9C...) within iCCP chunk (if -m mastodon option) or last IDAT chunk.
-
-	const size_t
+		DEFLATE_DATA_INDEX = pdv.mastodon_opt ? ICCP_POS + 13 : IDAT_POS + 9,	// Start index location of deflate data (0x78,0x9C...) within iCCP chunk (if -m mastodon option) or last IDAT chunk.
 		// Get ICCP chunk length (if -m mastodon option) or last IDAT chunk length.
 		CHUNK_SIZE = ((static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX]) << 24)
 			| (static_cast<size_t>(pdv.Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16)
@@ -348,19 +342,18 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 	}
 
 	const uint_fast8_t FILENAME_LENGTH = pdv.Image_Vec[100];	// From vector index location, get stored length value of the embedded file name of user's data file.
-	constexpr uint_fast8_t FILENAME_START_INDEX = 101;		// Vector index start location of the embedded file name of user's data file.
-
+	
 	constexpr uint_fast16_t
+		FILENAME_START_INDEX = 101,		// Vector index start location of the embedded file name of user's data file.
 		PDV_SIG_START_INDEX = 401,	// Vector index for this program's embedded signature.
 		DATA_FILE_START_INDEX = 404;	// Vector index start location for user's embedded data file.
 
 	// Get encrypted embedded file name from vector "Image_Vec".
 	pdv.data_file_name = { pdv.Image_Vec.begin() + FILENAME_START_INDEX, pdv.Image_Vec.begin() + FILENAME_START_INDEX + FILENAME_LENGTH };
 
-	const std::string PDV_SIG = "PDV";	// pdvrdt signature.
-
-	// Attempt to get the pdvrdt signature from vector "Image_Vec".
-	const std::string GET_PDV_SIG{ pdv.Image_Vec.begin() + PDV_SIG_START_INDEX, pdv.Image_Vec.begin() + PDV_SIG_START_INDEX + PDV_SIG.length() };
+	const std::string 
+		PDV_SIG = "PDV",	// pdvrdt signature.
+		GET_PDV_SIG{ pdv.Image_Vec.begin() + PDV_SIG_START_INDEX, pdv.Image_Vec.begin() + PDV_SIG_START_INDEX + PDV_SIG.length() }; // Attempt to get the pdvrdt signature from vector "Image_Vec".
 
 	// Make sure this is a pdvrdt file-embedded image.
 	if (GET_PDV_SIG != PDV_SIG) {
@@ -441,7 +434,7 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 
 		// Call function to deflate the contents of vector "Profile_Data_Vec" (profile with user's encrypted file).
 		Inflate_Deflate(pdv.Profile_Data_Vec, pdv.embed_file_mode);
-	
+
 		const size_t
 			PROFILE_DEFLATE_SIZE = pdv.Profile_Data_Vec.size(),
 			CHUNK_SIZE = pdv.mastodon_opt ? PROFILE_DEFLATE_SIZE + 9 : PROFILE_DEFLATE_SIZE + 5, // IDAT chunk (+ 4 bytes) or, if -m mastodon option used, "iCCPicc\x00\x00" (+ 9 bytes).
@@ -608,12 +601,13 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 	// Get first IDAT chunk's CRC index
 	size_t first_idat_crc_index = idat_index + FIRST_IDAT_LENGTH + 8;
 
-	const size_t FIRST_IDAT_CRC = ((static_cast<size_t>(pdv.Image_Vec[first_idat_crc_index]) << 24)
+	const size_t 
+		FIRST_IDAT_CRC = ((static_cast<size_t>(pdv.Image_Vec[first_idat_crc_index]) << 24)
 		| (static_cast<size_t>(pdv.Image_Vec[first_idat_crc_index + 1]) << 16)
 		| (static_cast<size_t>(pdv.Image_Vec[first_idat_crc_index + 2]) << 8)
-		| (static_cast<size_t>(pdv.Image_Vec[first_idat_crc_index + 3])));
-
-	const size_t CALC_FIRST_IDAT_CRC = Crc(&pdv.Image_Vec[idat_index + 4], FIRST_IDAT_LENGTH + 4);
+		| (static_cast<size_t>(pdv.Image_Vec[first_idat_crc_index + 3]))),
+		
+		CALC_FIRST_IDAT_CRC = Crc(&pdv.Image_Vec[idat_index + 4], FIRST_IDAT_LENGTH + 4);
 
 	// Make sure values match.
 	if (FIRST_IDAT_CRC != CALC_FIRST_IDAT_CRC) {
