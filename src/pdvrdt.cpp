@@ -102,12 +102,13 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 	constexpr uint_fast8_t PNG_MIN_SIZE = 68;
 
 	std::ifstream read_image_fs(pdv.image_file_name, std::ios::binary);
-
+/*
 	if (IMG_EXTENSION !="png" || IMG_EXTENSION !="jpg" || !read_image_fs) {
 		std::cerr << (IMG_EXTENSION != "png" ? "\nImage File Error: Invalid file extension. Only expecting 'png' for image file"
 		: "\nRead File Error: Unable to open image file") << ".\n\n";
 		std::exit(EXIT_FAILURE);
 	}	
+*/
 
 	// Check PNG image for valid file size requirements.
 	pdv.image_size = std::filesystem::file_size(pdv.image_file_name);
