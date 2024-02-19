@@ -102,9 +102,10 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 
         std::ifstream read_image_fs(pdv.image_file_name, std::ios::binary);
 
-        if (!read_image_fs || (IMG_EXTENSION !="png" && IMG_EXTENSION !="jpg")) {
-                std::cerr << (IMG_EXTENSION != "png" ? "\nImage File Error: Invalid file extension. Only expecting 'png' for image file"
-                : "\nRead File Error: Unable to open image file") << ".\n\n";
+	// Even though pdvrdt only supports PNG images, we allow images with "jpg" extension to be accepted and further processed. 
+	// This is because the Twitter (X) mobile app will save PNG images with a .jpg extension, with the file contents remaining PNG format.
+        if (!read_image_fs || IMG_EXTENSION !="png" && IMG_EXTENSION !="jpg") {
+                std::cerr << (!read_image_fs ? "\nRead File Error: Unable to open image file.\n\n" : "\nImage File Error: Image file does not contain a valid extension.\n\n");
                 std::exit(EXIT_FAILURE);
         }
 
