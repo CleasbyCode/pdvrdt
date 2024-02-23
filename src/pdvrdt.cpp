@@ -606,9 +606,8 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 		| (static_cast<size_t>(pdv.Image_Vec[idat_index + 2]) << 8)
 		| (static_cast<size_t>(pdv.Image_Vec[idat_index + 3]))),
 
-		FIRST_IDAT_CRC_INDEX = idat_index + FIRST_IDAT_LENGTH + 8; // Get first IDAT chunk's CRC index
-
-	const size_t
+		FIRST_IDAT_CRC_INDEX = idat_index + FIRST_IDAT_LENGTH + 8, // Get first IDAT chunk's CRC index
+	
 		FIRST_IDAT_CRC = ((static_cast<size_t>(pdv.Image_Vec[FIRST_IDAT_CRC_INDEX]) << 24)
 			| (static_cast<size_t>(pdv.Image_Vec[FIRST_IDAT_CRC_INDEX + 1]) << 16)
 			| (static_cast<size_t>(pdv.Image_Vec[FIRST_IDAT_CRC_INDEX + 2]) << 8)
