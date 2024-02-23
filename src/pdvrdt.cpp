@@ -382,12 +382,15 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 
 void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 
-	constexpr Byte XOR_KEY[6]{0xFC, 0xD8, 0xF9, 0xE2, 0x9F, 0x7E };	// Use this key to XOR encrypt/decrypt the file name of user's data file.
+	const std::string
+                XOR_KEY = "\xFC\xD8\xF9\xE2\x9F\x7E",   // Use this key to XOR encrypt/decrypt the file name of user's data file.
+                INPUT_NAME = pdv.data_file_name;
 
-	const std::string INPUT_NAME = pdv.data_file_name;
+        std::string output_name;
 
-	std::string output_name;
-
+        const size_t
+                XOR_KEY_LEN = XOR_KEY.length(),
+                INPUT_NAME_LEN = INPUT_NAME.length();
 	size_t
 		file_size = pdv.embed_file_mode ? pdv.File_Vec.size() : pdv.Image_Vec.size(),	 // File size of user's data file.
 		index_pos = 0;		// When encrypting/decrypting the file name, this variable stores the index character position of the file name,
@@ -401,11 +404,11 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 	// XOR encrypt or decrypt file name and data file.
 	while (file_size > index_pos) {
 
-		if (index_pos >= INPUT_NAME.length()) {
-			name_key_pos = name_key_pos > INPUT_NAME.length() ? 0 : name_key_pos;	 // Reset file name character position to the start if it has reached last character.
+		if (index_pos >= INPUT_NAME_LEN) {
+			name_key_pos = name_key_pos > INPUT_NAME_LEN ? 0 : name_key_pos;	 // Reset file name character position to the start if it has reached last character.
 		}
 		else {
-			xor_key_pos = xor_key_pos > xor_key_len ? 0 : xor_key_pos;		// Reset XOR_KEY position to the start if it has reached the last character.
+			xor_key_pos = xor_key_pos > XOR_KEY_LEN ? 0 : xor_key_pos;		// Reset XOR_KEY position to the start if it has reached the last character.
 			output_name += INPUT_NAME[index_pos] ^ XOR_KEY[xor_key_pos++];		// XOR each character of the file name against characters of XOR_KEY string. Store output characters in "output_name".
 												// Depending on mode, file name is either encrypted or decrypted.
 		}
@@ -426,7 +429,7 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 
 		// Insert the character length value of the file name into the profile.
 		// We need to know how many characters to read when we later retrieve the file name from the profile, during file extraction.
-		pdv.Profile_Data_Vec[PROFILE_NAME_LENGTH_INDEX] = static_cast<Byte>(INPUT_NAME.length());
+		pdv.Profile_Data_Vec[PROFILE_NAME_LENGTH_INDEX] = static_cast<Byte>(INPUT_NAME_LEN);
 
 		// Insert the encrypted filename into the profile.
 		std::copy(output_name.begin(), output_name.end(), pdv.Profile_Data_Vec.begin() + PROFILE_NAME_INDEX);
