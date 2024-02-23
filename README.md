@@ -29,7 +29,9 @@ As well as the 5MB image size limit, **Twitter** also has dimension size limits.
 
 *When saving a file-embedded image from **Twitter**, always click the image first to fully expand it, before saving.*  
 
-Compile and run the program under Windows or **Linux**.
+Compile and run the program under Windows or **Linux**.  
+
+*(You can try **pdvrdt** from this [**site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download & compile the source code.)*
 
 ## Usage (Linux - Insert file into PNG image / Extract file from image)
 
@@ -94,7 +96,6 @@ Complete! Please check your extracted file.
 user1@linuxbox:~/Desktop$ 
 
 ```
-You can try **pdvrdt** from this [**Web Page**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download / compile the source code.
 
 **Issues:**
 * **ImgPile -** *You must sign in to an account before sharing your data-embedded PNG image on ImgPile*.  
