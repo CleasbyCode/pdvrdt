@@ -24,6 +24,7 @@ When saving an image from **Reddit**, click the image in the post to expand it, 
 (*Make sure you see the filename with a **.png** extension in the address bar of your browser, before saving.*)
 
 As well as the 5MB image size limit, **Twitter** also has dimension size limits.  
+
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
 *PNG-8 (Indexed color) 4096x4096 Max. 68x68 Min.*  
 
