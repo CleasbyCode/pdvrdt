@@ -21,7 +21,7 @@ Your embedded data file is encrypted & compressed.
 From the **Reddit** site (*new.reddit.com*), always select the "***Images & Video***" tab/box to post your image.
 
 When saving an image from **Reddit**, click the image in the post to expand it, then save it.  
-(*Make sure you see the filename with a *.png* extension in the address bar of your browser, before saving.*)
+(*Make sure you see the filename with a **.png** extension in the address bar of your browser, before saving.*)
 
 As well as the 5MB image size limit, **Twitter** also has dimension size limits.  
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
@@ -98,6 +98,7 @@ user1@linuxbox:~/Desktop$
 ```
 
 **Issues:**
+* **Reddit -** *While you can upload PNG images via the mobile app, you need to use the Desktop/browser to download them (new.reddit.com).*
 * **ImgPile -** *You must sign in to an account before sharing your data-embedded PNG image on ImgPile*.  
 		*Sharing your image without logging in, your embedded data will not be preserved.*
 
