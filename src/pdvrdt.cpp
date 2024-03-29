@@ -371,8 +371,7 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 					// insert each byte of the data file into the relevant vectors.
 	int
 		xor_key_pos = 0,	
-		name_key_pos = 0,	
-		xor_key_len = 5;
+		name_key_pos = 0;
 
 	// XOR encrypt or decrypt file name and data file.
 	while (file_size > index_pos) {
@@ -416,8 +415,6 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 		Value_Updater(pdv.Profile_Data_Vec, profile_data_vec_size_index, pdv.Profile_Data_Vec.size(), bits);
 
 		std::cout << "\nCompressing data file.\n";
-
-		// Call function to deflate the contents of vector "Profile_Data_Vec" (profile with user's encrypted file).
 		Inflate_Deflate(pdv.Profile_Data_Vec, pdv.embed_file_mode);
 
 		constexpr int CHUNK_START_INDEX = 4; 	// Start index location of chunk is where the name type begins (IDAT or iCCP). This start location is required when we get the CRC value.
@@ -429,7 +426,6 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 
 		const int PROFILE_DATA_INSERT_INDEX = pdv.mastodon_opt ? 13 : 9;   // If -m mastodon option used, index pos within Iccp_Chunk_Vec (13) to insert deflate contents of Profile_Data_Vec, else use Idat_Chunk_Vec (8) where we insert Profile_Data_Vec.
 		
-
 		std::cout << "\nEmbedding data file within the PNG image.\n";
 
 		if (pdv.mastodon_opt) {	// For -m Mastodon option, we embed the profile and data file within the iCCP chunk. This is for compatibility reasons. This is the only chunk that works for mastodon.
@@ -570,7 +566,6 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 
 	const std::string IDAT_SIG = "IDAT";
 
-	// Get first IDAT chunk index.
 	size_t idat_index = std::search(pdv.Image_Vec.begin(), pdv.Image_Vec.end(), IDAT_SIG.begin(), IDAT_SIG.end()) - pdv.Image_Vec.begin() - 4;  // -4 is to position the index at the start of the IDAT chunk's length field.
 
 	// Make sure this is a valid IDAT chunk. Check CRC value.
@@ -591,7 +586,6 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 
 		CALC_FIRST_IDAT_CRC = Crc(&pdv.Image_Vec[idat_index + 4], FIRST_IDAT_LENGTH + 4);
 
-	// Make sure values match.
 	if (FIRST_IDAT_CRC != CALC_FIRST_IDAT_CRC) {
 		std::cerr << "\nImage File Error: CRC value for first IDAT chunk is invalid.\n\n";
 		std::exit(EXIT_FAILURE);
@@ -634,7 +628,6 @@ void Erase_Chunks(PDV_STRUCT& pdv) {
 
 	Temp_Vec.swap(pdv.Image_Vec);
 
-	// Update image size variable.
 	pdv.image_size = pdv.Image_Vec.size();
 
 	Check_Data_File(pdv);
