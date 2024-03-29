@@ -101,13 +101,12 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 	std::ifstream image_ifs(pdv.image_file_name, std::ios::binary);
 
 	// Even though pdvrdt only supports PNG images, we allow images with "jpg" extension to be accepted and further processed. 
-	// This is because the Twitter (X) mobile app will save PNG images with a .jpg extension, with the file contents remaining PNG format.
+	// This is because the X (Twitter) mobile app will save PNG images with a .jpg extension.
 	if (!image_ifs || IMG_EXTENSION != "png" && IMG_EXTENSION != "jpg") {
 		std::cerr << (!image_ifs ? "\nRead File Error: Unable to open image file.\n\n" : "\nImage File Error: Image file does not contain a valid extension.\n\n");
 		std::exit(EXIT_FAILURE);
 	}
 
-	// Get image file size.
 	image_ifs.seekg(0, image_ifs.end); 
 	pdv.image_size = image_ifs.tellg(); 
 	image_ifs.seekg(0, image_ifs.beg);
@@ -120,8 +119,7 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 		|| pdv.mastodon_opt && pdv.image_size > pdv.MAX_FILE_SIZE_MASTODON
 		|| pdv.reddit_opt && pdv.image_size > pdv.MAX_FILE_SIZE_REDDIT
 		|| PNG_MIN_SIZE > pdv.image_size) {
-		// Image size is too small or larger than the set size limits. Display relevant error message and exit program.
-
+		
 		std::cerr << "\nImage File Error: " << (PNG_MIN_SIZE > pdv.image_size ? "Size of image is too small to be a valid PNG image"
 			: "Size of image exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) + " Bytes"
 				: (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT)
@@ -131,33 +129,27 @@ void Check_Image_File(PDV_STRUCT& pdv) {
 
 	std::string option = pdv.mastodon_opt ? "-m" : "-r";
 
-	// Display Start message. Different depending on mode and options selected.
+	// Display Start message. Different, depending on mode and options selected.
 	std::cout << (pdv.mastodon_opt || pdv.reddit_opt ? "\nEmbed mode selected with " + option + " option.\n\nReading files"
 		: (pdv.embed_file_mode ? "\nEmbed mode selected.\n\nReading files"
 			: "\neXtract mode selected.\n\nReading PNG image file")) << ". Please wait...\n";
 
-	// Read PNG image (embedded or non-embedded) into vector "Image_Vec".
 	pdv.Image_Vec.assign(std::istreambuf_iterator<char>(image_ifs), std::istreambuf_iterator<char>());
 
-	// Update image size variable with vector size storing user's image file.
 	pdv.image_size = pdv.Image_Vec.size();
 
 	const std::string
-		PNG_TOP_SIG = "\x89PNG", // PNG image header signature. 
-		PNG_END_SIG = "IEND\xAE\x42\x60\x82", // PNG image end signature.
-		GET_PNG_TOP_SIG{ pdv.Image_Vec.begin(), pdv.Image_Vec.begin() + PNG_TOP_SIG.length() },	// Attempt to get both image signatures from file stored in vector. 
+		PNG_TOP_SIG = "\x89PNG", 
+		PNG_END_SIG = "IEND\xAE\x42\x60\x82", 
+		GET_PNG_TOP_SIG{ pdv.Image_Vec.begin(), pdv.Image_Vec.begin() + PNG_TOP_SIG.length() },	
 		GET_PNG_END_SIG{ pdv.Image_Vec.end() - PNG_END_SIG.length(), pdv.Image_Vec.end() };
 
-	// Make sure image has valid PNG signatures.
 	if (GET_PNG_TOP_SIG != PNG_TOP_SIG || GET_PNG_END_SIG != PNG_END_SIG) {
-
-		// File requirements check failure, display relevant error message and exit program.
 		std::cerr << "\nImage File Error: File does not appear to be a valid PNG image.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
 	if (pdv.embed_file_mode) {
-		// Remove unwanted PNG chunks.
 		Erase_Chunks(pdv);
 	}
 	else {
@@ -170,10 +162,8 @@ void Check_Data_File(PDV_STRUCT& pdv) {
 	Check_Arguments_Input(pdv.data_file_name);
 
 	std::ifstream file_ifs(pdv.data_file_name, std::ios::binary);
-
-	// Make sure data file opened successfully.
+	
 	if (!file_ifs) {
-		// Open file failure, display relevant error message and exit program.
 		std::cerr << "\nRead File Error: Unable to open data file.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
@@ -186,12 +176,9 @@ void Check_Data_File(PDV_STRUCT& pdv) {
 		pdv.data_file_name = NO_SLASH_NAME;
 	}
 
-	// Get data file size.
 	file_ifs.seekg(0, file_ifs.end);
 	pdv.data_size = file_ifs.tellg();
 	file_ifs.seekg(0, file_ifs.beg);
-
-	// Check file size and length of file name.
 
 	constexpr int MAX_FILENAME_LENGTH = 23;
 
@@ -202,7 +189,6 @@ void Check_Data_File(PDV_STRUCT& pdv) {
 		|| pdv.reddit_opt && pdv.data_size > pdv.MAX_FILE_SIZE_REDDIT
 		|| FILE_NAME_LENGTH > pdv.data_size
 		|| FILE_NAME_LENGTH > MAX_FILENAME_LENGTH) {
-		// File name too long, or image size is too small or larger than size limit. Display relevant error message and exit program.
 		std::cerr << "\nData File Error: " << (FILE_NAME_LENGTH > MAX_FILENAME_LENGTH ? "Length of file name is too long.\n\nFor compatibility requirements, length of file name must be under 24 characters"
 			: (FILE_NAME_LENGTH > pdv.data_size ? "Size of file is too small.\n\nFor compatibility requirements, file size must be greater than the length of the file name"
 				: "Size of file exceeds the maximum limit of " + (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON) + " Bytes"
@@ -211,18 +197,14 @@ void Check_Data_File(PDV_STRUCT& pdv) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	// Read-in user's data file and store it in vector "File_Vec".
 	pdv.File_Vec.assign(std::istreambuf_iterator<char>(file_ifs), std::istreambuf_iterator<char>());
 
-	// Update size variable of the user's data file stored in vector.
 	pdv.data_size = pdv.File_Vec.size();
 
-	// Combined file size check.
 	if (pdv.image_size + pdv.data_size > pdv.MAX_FILE_SIZE
 		|| pdv.mastodon_opt && pdv.image_size + pdv.data_size > pdv.MAX_FILE_SIZE_MASTODON
 		|| pdv.reddit_opt && pdv.image_size + pdv.data_size > pdv.MAX_FILE_SIZE_REDDIT) {
-		// File size check failure, display relevant error message and exit program.
-
+		
 		std::cerr << "\nFile Size Error: The combined file size of the PNG image & data file, must not exceed "
 			<< (pdv.mastodon_opt ? std::to_string(pdv.MAX_FILE_SIZE_MASTODON)
 				: (pdv.reddit_opt ? std::to_string(pdv.MAX_FILE_SIZE_REDDIT)
@@ -288,8 +270,6 @@ void Fill_Profile_Vec(PDV_STRUCT& pdv) {
 		pdv.Image_Vec.insert(pdv.Image_Vec.end() - 12, Idat_Reddit_Vec.begin(), Idat_Reddit_Vec.end());
 	}
 	std::cout << "\nEncrypting data file.\n";
-
-	// Encrypt the user's data file and its file name.
 	Encrypt_Decrypt(pdv);
 }
 
@@ -309,7 +289,6 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 
 	if (ICCP_POS != ICCP_CHUNK_INDEX && IDAT_POS == pdv.Image_Vec.size() - 4) {
 		// ICCP chunk not found or not found in the correct location. / IDAT chunk not found.
-		// Requirement checks failure, display relevant error message and exit program.
 		std::cerr << "\nImage File Error: This is not a pdvrdt file-embedded image.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
@@ -339,11 +318,8 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 	pdv.Image_Vec.erase(pdv.Image_Vec.begin() + DEFLATE_CHUNK_SIZE, pdv.Image_Vec.end());
 
 	std::cout << "\nInflating data.\n";
-
-	// Call function to inflate the data chunk, which includes user's encrypted data file. 
 	Inflate_Deflate(pdv.Image_Vec, pdv.embed_file_mode);
-
-	// A zero byte "Image_Vec" vector indicates that the zlib inflate function failed.
+	
 	if (!pdv.Image_Vec.size()) {
 		std::cerr << "\nImage File Error: Inflating data chunk failed. Not a pdvrdt file-embedded-image or image file is corrupt.\n\n";
 		std::exit(EXIT_FAILURE);
@@ -360,10 +336,9 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 	pdv.data_file_name = { pdv.Image_Vec.begin() + FILENAME_START_INDEX, pdv.Image_Vec.begin() + FILENAME_START_INDEX + FILENAME_LENGTH };
 
 	const std::string
-		PDV_SIG = "PDV",	// pdvrdt signature.
-		GET_PDV_SIG{ pdv.Image_Vec.begin() + PDV_SIG_START_INDEX, pdv.Image_Vec.begin() + PDV_SIG_START_INDEX + PDV_SIG.length() }; // Attempt to get the pdvrdt signature from vector "Image_Vec".
+		PDV_SIG = "PDV",
+		GET_PDV_SIG{ pdv.Image_Vec.begin() + PDV_SIG_START_INDEX, pdv.Image_Vec.begin() + PDV_SIG_START_INDEX + PDV_SIG.length() }; 
 
-	// Make sure this is a pdvrdt file-embedded image.
 	if (GET_PDV_SIG != PDV_SIG) {
 		std::cerr << "\nImage File Error: Signature match failure. This is not a pdvrdt file-embedded image.\n\n";
 		std::exit(EXIT_FAILURE);
@@ -375,8 +350,6 @@ void Extract_Data_File(PDV_STRUCT& pdv) {
 	pdv.Image_Vec.erase(pdv.Image_Vec.begin(), pdv.Image_Vec.begin() + DATA_FILE_START_INDEX);
 
 	std::cout << "\nDecrypting data file.\n";
-
-	// Decrypt the contents of vector "Image_Vec".
 	Encrypt_Decrypt(pdv);
 }
 
@@ -392,13 +365,13 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
                 XOR_KEY_LEN = XOR_KEY.length(),
                 INPUT_NAME_LEN = INPUT_NAME.length();
 	size_t
-		file_size = pdv.embed_file_mode ? pdv.File_Vec.size() : pdv.Image_Vec.size(),	 // File size of user's data file.
+		file_size = pdv.embed_file_mode ? pdv.File_Vec.size() : pdv.Image_Vec.size(),	 
 		index_pos = 0;		// When encrypting/decrypting the file name, this variable stores the index character position of the file name,
 					// When encrypting/decrypting the user's data file, this variable is used as the index position of where to 
 					// insert each byte of the data file into the relevant vectors.
 	int
-		xor_key_pos = 0,	// Character position variable for XOR_KEY string.
-		name_key_pos = 0,	// Character position variable for file name string (output_name / INPUT_NAME).
+		xor_key_pos = 0,	
+		name_key_pos = 0,	
 		xor_key_len = 5;
 
 	// XOR encrypt or decrypt file name and data file.
