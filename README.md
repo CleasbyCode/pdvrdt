@@ -20,7 +20,7 @@ Your embedded data file is encrypted & compressed.
 
 From the **Reddit** site, always select the "***Images & Video***" tab/box to post your image.
 
-When saving an image from **Reddit**, (make sure it is *new.reddit.com*), click the image in the post to expand it, then save it.  
+When saving an image from **Reddit**, (*new.reddit.com*), click the image in the post to expand it, then save it.  
 (*Make sure you see the filename with a **.png** extension in the address bar of your browser, before saving.*)
 
 As well as the 5MB image size limit, **Twitter** also has dimension size limits.  
