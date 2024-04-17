@@ -416,6 +416,9 @@ void Encrypt_Decrypt(PDV_STRUCT& pdv) {
 
 		std::cout << "\nCompressing data file.\n";
 		Inflate_Deflate(pdv.Profile_Data_Vec, pdv.embed_file_mode);
+		
+ 		// Even though mastodon option was not selected, default to it anyway if data file size is under ~10KB, as this small size is supported under X/Twitter.
+                if (pdv.Profile_Data_Vec.size() <= 9700 && !pdv.reddit_opt) pdv.mastodon_opt = true;
 
 		constexpr int CHUNK_START_INDEX = 4; 	// Start index location of chunk is where the name type begins (IDAT or iCCP). This start location is required when we get the CRC value.
 
