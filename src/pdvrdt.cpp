@@ -23,30 +23,23 @@ struct PDV_STRUCT {
 };
 
 void
-	// Attempt to open image file, followed by some basic checks to make sure user's image file meets program requirements.
 	Check_Image_File(PDV_STRUCT&),
-	// Attempt to open data file, followed by some basic checks to make sure user's data file meets program requirements.
 	Check_Data_File(PDV_STRUCT&),
-	// Fill vector with our ICC Profile data & initialise other vectors.
 	Fill_Profile_Vec(PDV_STRUCT&),
-	// Start the data file extraction process.
 	Extract_Data_File(PDV_STRUCT&),
-	// Encrypt or decrypt user's data file, depending on mode.
 	Encrypt_Decrypt(PDV_STRUCT& pdv),
-	// Search and remove all unnecessary PNG chunks.
 	Erase_Chunks(PDV_STRUCT& pdv),
-	// Depending on mode (embed/extract) Inflate or Deflate the IDAT chunk (or iCCP chunk if mastodon option was used), which contains user's encrypted data file.
-	Inflate_Deflate(std::vector<Byte>&, bool),
-	// Write out to file the file-embedded image or the extracted data file.
+	Inflate_Deflate(std::vector<Byte>&, bool),	
 	Write_File(PDV_STRUCT& pdv),
-	// Update values, such as chunk lengths, CRC, file sizes, etc. Writes them into the relevant vector index locations.
-	Value_Updater(std::vector<Byte>&, size_t, const size_t&, int),
-	// Check args input for invalid data.
-	Check_Arguments_Input(const std::string&),
-	// Display program information.
 	Display_Info();
 
-// Code to compute CRC32 (for iCCP/IDAT/PLTE chunks within this program).  https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
+	// Update values, such as chunk lengths, CRC, file sizes, etc. Writes them into the relevant vector index locations.
+	Value_Updater(std::vector<Byte>&, size_t, const size_t&, int),
+
+	// Check args input for invalid data.
+	Check_Arguments_Input(const std::string&),
+
+// Code to compute CRC32 for PNG chunks, taken from https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
 size_t
 	Crc_Update(const size_t&, Byte*, const size_t&),
 	Crc(Byte*, const size_t&);
@@ -66,6 +59,7 @@ int main(int argc, char** argv) {
 		Check_Image_File(pdv);
 	}
 	else if (argc >= 4 && argc < 6 && std::string(argv[1]) == "-e") {
+		
 		// Embed file mode.
 		if (argc == 4 && (std::string(argv[2]) == "-m" || std::string(argv[2]) == "-r")) {
 			std::cerr << "\nFile Error: Missing argument.\n\n";
