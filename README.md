@@ -98,7 +98,7 @@ user1@linuxbox:~/Desktop$
 
 ```
 ![Demo Image2](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/screen.png) 
-![Demo Image3](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdvrdt_screen2.png) 
+![Demo Image3](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/screen2.png) 
 
 **Issues:**
 * **Reddit -** *While you can upload PNG images via the mobile app, you need to use the Desktop/browser to download them (new.reddit.com).*
