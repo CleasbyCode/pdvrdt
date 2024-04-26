@@ -97,7 +97,7 @@ Complete! Please check your extracted file.
 user1@linuxbox:~/Desktop$ 
 
 ```
-![Demo Image2](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdvrdt_screen1.png) 
+![Demo Image2](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/screen.png) 
 ![Demo Image3](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/pdvrdt_screen2.png) 
 
 **Issues:**
