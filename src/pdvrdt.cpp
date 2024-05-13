@@ -31,13 +31,13 @@ void
 	Erase_Chunks(PDV_STRUCT& pdv),
 	Inflate_Deflate(std::vector<Byte>&, bool),	
 	Write_File(PDV_STRUCT& pdv),
-	Display_Info();
+	Display_Info(),
 
 	// Update values, such as chunk lengths, CRC, file sizes, etc. Writes them into the relevant vector index locations.
 	Value_Updater(std::vector<Byte>&, size_t, const size_t&, int),
 
 	// Check args input for invalid data.
-	Check_Arguments_Input(const std::string&),
+	Check_Arguments_Input(const std::string&);
 
 // Code to compute CRC32 for PNG chunks, taken from https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix 
 size_t
