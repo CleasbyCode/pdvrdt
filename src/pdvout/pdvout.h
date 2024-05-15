@@ -6,7 +6,7 @@
 #include <regex>
 #include <string>
 #include <vector>
-#include <C:\Users\Nick\source\zlib\zlib-1.2.13\zlib.h>
+#include <zlib.h>
 
 #include "decrypt.cpp"
 #include "inflate.cpp"
