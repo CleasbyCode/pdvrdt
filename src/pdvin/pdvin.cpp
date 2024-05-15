@@ -160,7 +160,7 @@ void startPdv(std::string& image_file_name, std::string& data_file_name, bool is
 		CHUNK_SIZE = isMastodonOption ? PROFILE_DEFLATE_SIZE + 9 : PROFILE_DEFLATE_SIZE + 5,
 		CHUNK_INSERT_INDEX = isMastodonOption ? 33 : static_cast<uint_fast32_t>(Image_Vec.size() - 12);
 
-	const uint8_t PROFILE_DATA_INSERT_INDEX = isMastodonOption ? 13 : 9;
+	const uint_fast8_t PROFILE_DATA_INSERT_INDEX = isMastodonOption ? 13 : 9;
 
 	uint_fast32_t
 		buf_index{},
