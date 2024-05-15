@@ -1,5 +1,5 @@
-
-//	PNG Data Vehicle (pdvout v1.0.1). A steganography-like CLI tool for extracting hidden files from PNG images. Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle (pdvout v1.0.1). 
+//	A steganography-like CLI tool for extracting (pdvin) hidden files from PNG images. Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
 //	$ g++ main.cpp -O2 -lz -s -o pdvout
