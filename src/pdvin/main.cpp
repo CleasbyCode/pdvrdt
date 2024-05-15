@@ -1,6 +1,5 @@
-
-
-//	PNG Data Vehicle (pdvin v1.0.1). A steganography-like CLI tool for hiding files within PNG images. Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle (pdvin v1.0.1). 
+//	A steganography-like CLI tool for hiding files within PNG images. Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
 //	$ g++ main.cpp -O2 -lz -s -o pdvin
@@ -20,14 +19,12 @@ int main(int argc, char** argv) {
 		displayInfo();
 	}
 	
-	else if (argc > 2 && argc <= 4) {
-		
+	else if (argc > 2 && argc <= 4) {		
 		if (argc == 4 && (std::string(argv[1]) != "-r" && std::string(argv[1]) != "-m")) {
 			std::cerr << "\nInput Error: Invalid arguments: -r or -m only.\n\n";
 			std::exit(EXIT_FAILURE);
 		}
 		else {
-
 			isMastodonOption = (argc == 4 && std::string(argv[1]) == "-m") ? true : false;
 			isRedditOption = (argc == 4 && !isMastodonOption) ? true : false;
 
