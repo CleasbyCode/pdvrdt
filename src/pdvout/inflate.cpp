@@ -1,7 +1,7 @@
+// zlib function, see https://zlib.net/
+
 void inflateFile(std::vector<uchar>& Vec) {
-
-	// zlib function, see https://zlib.net/
-
+	
 	std::vector <Byte>Buffer_Vec;
 
 	constexpr size_t BUFSIZE = 524288;
