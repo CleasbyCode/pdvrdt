@@ -6,7 +6,7 @@ void deflateFile(std::vector<uchar>& Vec) {
 
 	constexpr uint32_t BUFSIZE = 524288;
 
-	uchar* temp_buffer{ new Byte[BUFSIZE] };
+	uchar* temp_buffer{ new uchar[BUFSIZE] };
 
 	z_stream strm;
 	strm.zalloc = 0;
