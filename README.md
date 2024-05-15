@@ -5,13 +5,11 @@ You can post your image with the hidden file on *X/Twitter and a few other socia
 **Image size limits (cover image + data file):*
 
 * *Flickr (200MB), ImgBB (32MB), PostImage (24MB), Reddit (19MB / -r option)*
-* *Mastodon (16MB / -m option), ImgPile (8MB), \*Twitter (5MB / Dimension limits)*
+* *Mastodon (16MB / -m option), ImgPile (8MB), \*X/Twitter (5MB + Dimension limits)*
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_1128.png)  
 
 Demo Videos: [**Twitter**](https://youtu.be/wSkP7LU7woQ) / [**Mastodon**](https://youtu.be/2giS6rP8dvI) / [**Reddit**](https://youtu.be/7-ZbXv8NqA0) / [**PDVRDT Web**](https://youtu.be/KbIilEDF14E)
-
-Your embedded data file is encrypted & compressed.
 
 *To post file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
 
@@ -19,17 +17,17 @@ Your embedded data file is encrypted & compressed.
 
 From the **Reddit** site, always select the "***Images & Video***" tab/box to post your image.
 
-When saving an image from **Reddit**, (*new.reddit.com*), click the image in the post to expand it, then save it.  
+When saving an image from **Reddit**, use *new.reddit.com*. Click the image in the post to expand it, then save it.  
 (*Make sure you see the filename with a **.png** extension in the address bar of your browser, before saving.*)
 
-As well as the 5MB image size limit, **Twitter** also has dimension size limits.  
+As well as the 5MB image size limit, **X/Twitter** also has dimension size limits.  
 
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
-*PNG-8 (Indexed color) 4096x4096 Max. 68x68 Min.*  
+*PNG-8 (Indexed-color) 4096x4096 Max. 68x68 Min.*  
 
-*When saving a file-embedded image from **Twitter**, always click the image first to fully expand it, before saving.*  
+*When saving an image from **X/Twitter**, always click the image first to fully expand it, before saving.*  
 
-Compile and run the program under Windows or **Linux**.  
+Compile and run the programs under Windows or **Linux**.  
 
 *(You can try **pdvrdt** from this [**site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download & compile the source code.)*
 
@@ -37,26 +35,15 @@ Compile and run the program under Windows or **Linux**.
 
 ```console
 
-user1@linuxbox:~/Desktop$ g++ pdvrdt.cpp -O2 -lz -s -o pdvrdt
+user1@linuxbox:~/Desktop$ g++ main.cpp -O2 -lz -s -o pdvin
 user1@linuxbox:~/Desktop$
-user1@linuxbox:~/Desktop$ ./pdvrdt 
+user1@linuxbox:~/Desktop$ pdvrdt 
 
-Usage: pdvrdt -e [-m] [-r] <cover_image> <data_file>  
-       pdvrdt -x <file_embedded_image>  
-       pdvrdt --info
+Usage: pdvin [-m] [-r] <cover_image> <data_file>  
+       pdvin --info
 
-user1@linuxbox:~/Desktop$ ./pdvrdt -e rabbit.png document.pdf
+user1@linuxbox:~/Desktop$ pdvin rabbit.png document.pdf
   
-Embed mode selected.
-
-Reading files. Please wait...
-
-Encrypting data file.
-
-Compressing data file.
-
-Embedding data file within the PNG image.
-
 Writing file-embedded PNG image out to disk.
 
 Created PNG image: prdt_17627.png 1245285 Bytes.
@@ -65,29 +52,12 @@ Complete!
 
 You can now post your file-embedded PNG image to the relevant supported platforms.
 
-user1@linuxbox:~/Desktop$ ./pdvrdt
+user1@linuxbox:~/Desktop$ pdvout
 
-Usage: pdvrdt -e [-m] [-r] <cover_image> <data_file>  
-       pdvrdt -x <file_embedded_image>  
-       pdvrdt --info
+Usage: pdvout <cover_image>
+       pdvout --info
         
-user1@linuxbox:~/Desktop$ ./pdvrdt -x prdt_17627.png
-
-eXtract mode selected.
-
-Reading PNG image file. Please wait...
-
-Found compressed data chunk.
-
-Inflating data.
-
-Found pdvrdt signature.
-
-Extracting encrypted data file from the PNG image.
-
-Decrypting data file.
-
-Writing data file out to disk.
+user1@linuxbox:~/Desktop$ pdvout prdt_17627.png
 
 Saved file: document.pdf 1016540 Bytes.
 
@@ -100,7 +70,7 @@ user1@linuxbox:~/Desktop$
 ![Demo Image3](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/screen2.png) 
 
 **Issues:**
-* **Reddit -** *While you can upload PNG images via the mobile app, you need to use the Desktop/browser to download them (new.reddit.com).*
+* **Reddit -** *While you can upload PNG images via the mobile app, you need to use the Desktop/browser to download them via new.reddit.com.*
 * **ImgPile -** *You must sign in to an account before sharing your data-embedded PNG image on ImgPile*.  
 		*Sharing your image without logging in, your embedded data will not be preserved.*
 
