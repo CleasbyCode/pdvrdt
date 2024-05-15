@@ -29,7 +29,6 @@ void encryptFile(std::vector<uchar>&Profile_Data_Vec, std::vector<uchar>&File_Ve
 		}
 		
 		Profile_Data_Vec.emplace_back(File_Vec[index_pos++] ^ output_name[name_key_pos++]);
-		
 	}
 
 	constexpr uint8_t
