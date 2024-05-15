@@ -31,7 +31,7 @@ Compile and run the programs under Windows or **Linux**.
 
 *(You can try **pdvrdt** from this [**site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download & compile the source code.)*
 
-## Usage (Linux - Insert file into PNG image / Extract file from image)
+## Usage (Linux - pdvin / pdvout)
 
 ```console
 
