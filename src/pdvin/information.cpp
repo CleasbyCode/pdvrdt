@@ -2,6 +2,7 @@ void displayInfo() {
 
 	std::cout << R"(
 PNG Data Vehicle (pdvin v1.0.1). 
+		
 A steganography-like CLI tool for embedding & hiding any file type within a PNG image. 
 Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
@@ -21,7 +22,8 @@ To post file-embedded PNG images on Mastodon, you need to use the -m opion.
  -m = Mastodon option ($ pdvin -m cover_image.png file.mp3).
  -r = Reddit option ($ pdvin -r cover_image.png file.pdf). 
 		
-*Reddit - Post images via the new.reddit.com desktop/browser site only. Use the Reddit "Images & Video" tab/box to upload images.
+*Reddit - Post images via the new.reddit.com desktop/browser site only.
+Use the Reddit "Images & Video" tab/box to upload images.
 
 *X/Twitter - As well as the 5MB PNG image size limit, X/Twitter also has dimension size limits.
 PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min. 
