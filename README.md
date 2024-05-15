@@ -9,7 +9,7 @@ You can post your image with the hidden file on *X/Twitter and a few other socia
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_13482.png)  
 
-Demo Videos: [**Hidden_JPG**](https://youtu.be/wSkP7LU7woQ) / [**PDVRDT Web**](https://youtu.be/KbIilEDF14E)
+Demo Videos: [**Hidden_JPG**](https://youtu.be/EKqDohlGWb0) / [**PDVRDT Web**](https://youtu.be/KbIilEDF14E)
 
 *To post file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
 
