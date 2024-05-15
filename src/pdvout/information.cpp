@@ -2,6 +2,7 @@ void displayInfo() {
 
 	std::cout << R"(
 PNG Data Vehicle (pdvout v1.0.1). 
+		
 A steganography-like CLI tool for extracting (pdvin) hidden files from PNG images. 
 Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 		
