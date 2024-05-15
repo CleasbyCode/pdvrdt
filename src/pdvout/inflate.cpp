@@ -1,6 +1,6 @@
-void inflateFile(std::vector<uint_fast8_t>& Vec) {
+// zlib function, see https://zlib.net/
 
-	// zlib function, see https://zlib.net/
+void inflateFile(std::vector<uint_fast8_t>& Vec) {
 
 	std::vector<uint_fast8_t>Buffer_Vec;
 
