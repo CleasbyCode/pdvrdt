@@ -53,9 +53,9 @@ void startPdv(std::string& image_file_name) {
 		DEFLATE_DATA_INDEX = isMastodonFile ? ICCP_POS + 13 : IDAT_POS + 9,		
 
 		CHUNK_SIZE = (static_cast<uint32_t>(Image_Vec[CHUNK_SIZE_INDEX]) << 24) |
-					 (static_cast<uint32_t>(Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16) |
-					 (static_cast<uint32_t>(Image_Vec[CHUNK_SIZE_INDEX + 2]) << 8) |
-					 static_cast<uint32_t>(Image_Vec[CHUNK_SIZE_INDEX + 3]),
+				(static_cast<uint32_t>(Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16) |
+				(static_cast<uint32_t>(Image_Vec[CHUNK_SIZE_INDEX + 2]) << 8) |
+				static_cast<uint32_t>(Image_Vec[CHUNK_SIZE_INDEX + 3]),
 
 		DEFLATE_CHUNK_SIZE = isMastodonFile ? CHUNK_SIZE - 9 : CHUNK_SIZE;
 
