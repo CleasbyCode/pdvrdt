@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 		}
 	}
 	else {
-		std::cout << "\nUsage:\tpdvin [-m] [-r] <cover_image> <data_file>\n\tpdvin --info\n\n";
+		std::cout << "\nUsage: pdvin [-m] [-r] <cover_image> <data_file>\n\t\bpdvin --info\n\n";
 	}
 	return 0;
 }
