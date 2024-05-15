@@ -35,9 +35,10 @@ Compile and run the programs under Windows or **Linux**.
 
 ```console
 
-user1@linuxbox:~/Desktop$ g++ main.cpp -O2 -lz -s -o pdvin
-user1@linuxbox:~/Desktop$
-user1@linuxbox:~/Desktop$ pdvrdt 
+user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ g++ main.cpp -O2 -lz -s -o pdvin
+user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ sudo cp pdvin /usr/bin
+
+user1@linuxbox:~/Desktop$ pdvin 
 
 Usage: pdvin [-m] [-r] <cover_image> <data_file>  
        pdvin --info
@@ -52,16 +53,19 @@ Complete!
 
 You can now post your file-embedded PNG image to the relevant supported platforms.
 
+user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ g++ main.cpp -O2 -lz -s -o pdvout
+user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ sudo cp pdvout /usr/bin
+
 user1@linuxbox:~/Desktop$ pdvout
 
-Usage: pdvout <cover_image>
+Usage: pdvout <file_embedded_image>
        pdvout --info
         
 user1@linuxbox:~/Desktop$ pdvout prdt_17627.png
 
-Saved file: document.pdf 1016540 Bytes.
+Extracted hidden file: document.pdf 1016540 Bytes.
 
-Complete! Please check your extracted file.
+Complete! Please check your file.
   
 user1@linuxbox:~/Desktop$ 
 
