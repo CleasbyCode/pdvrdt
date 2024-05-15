@@ -21,6 +21,8 @@ void startPdv(std::string& image_file_name) {
 	const std::string
 		PNG_HEADER_SIG = "\x89PNG",
 		PNG_END_SIG = "IEND\xAE\x42\x60\x82",
+		ICCP_SIG = "iCCPicc",
+		IDAT_FILE_SIG = "IDAT^x",
 		GET_PNG_HEADER_SIG{ Image_Vec.begin(), Image_Vec.begin() + PNG_HEADER_SIG.length() },
 		GET_PNG_END_SIG{ Image_Vec.end() - PNG_END_SIG.length(), Image_Vec.end() };
 
@@ -29,16 +31,14 @@ void startPdv(std::string& image_file_name) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	constexpr uint8_t ICCP_CHUNK_INDEX = 33;
-
-	constexpr uchar SIG[14]{ 0x69, 0x43, 0x43, 0x50, 0x69, 0x63, 0x63, 0x49, 0x44, 0x41, 0x54, 0x5F, 0x78, 0x9c }; 
-
+	constexpr uint8_t ICCP_CHUNK_INDEX = 37;
 	const uint32_t
-		ICCP_POS = static_cast<uint32_t>(std::search(Image_Vec.begin(), Image_Vec.end(), &SIG[0], &SIG[6]) - Image_Vec.begin() - 4),
-		IDAT_POS = static_cast<uint32_t>(std::search(Image_Vec.begin(), Image_Vec.end(), &SIG[7], &SIG[13]) - Image_Vec.begin() - 4);
+		ICCP_POS = static_cast<uint32_t>(std::search(Image_Vec.begin(), Image_Vec.end(), ICCP_SIG.begin(), ICCP_SIG.end()) - Image_Vec.begin()),
+		IDAT_POS = static_cast<uint32_t>(std::search(Image_Vec.begin(), Image_Vec.end(), IDAT_FILE_SIG.begin(), IDAT_FILE_SIG.end()) - Image_Vec.begin()),
+		END_OF_IMAGE = static_cast<uint32_t>(Image_Vec.size());
 
-	if (ICCP_POS != ICCP_CHUNK_INDEX && IDAT_POS == static_cast<uint32_t>(Image_Vec.size() - 4)) {
-		std::cerr << "\nImage File Error: This is not a pdvrdt file-embedded image.\n\n";
+	if (ICCP_POS != ICCP_CHUNK_INDEX && IDAT_POS == END_OF_IMAGE) {
+		std::cerr << "\nImage File Error: This is not a pdvin file-embedded image.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -49,8 +49,8 @@ void startPdv(std::string& image_file_name) {
 	}
 
 	const uint32_t
-		CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_POS : IDAT_POS,				
-		DEFLATE_DATA_INDEX = isMastodonFile ? ICCP_POS + 13 : IDAT_POS + 9,		
+		CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_POS - 4 : IDAT_POS - 4,				
+		DEFLATE_DATA_INDEX = isMastodonFile ? ICCP_POS + 9 : IDAT_POS + 5,		
 
 		CHUNK_SIZE = (static_cast<uint32_t>(Image_Vec[CHUNK_SIZE_INDEX]) << 24) |
 				(static_cast<uint32_t>(Image_Vec[CHUNK_SIZE_INDEX + 1]) << 16) |
