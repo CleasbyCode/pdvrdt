@@ -1,6 +1,6 @@
 # pdvrdt
 Use these two command-line tools to embed (*pdvin*) or extract (*pdvout*) any file type via a **PNG** image.  
-You can post your image with the hidden file on X/Twitter and a few other *social media sites.
+You can post your image with the hidden file on *X/Twitter and a few other social media sites.
 
 **Image size limits (cover image + data file):*
 
