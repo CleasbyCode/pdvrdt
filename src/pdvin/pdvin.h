@@ -7,7 +7,7 @@
 #include <string>
 #include <regex>
 #include <fstream>
-#include <C:\Users\Nick\source\zlib\zlib-1.2.13\zlib.h>
+#include <zlib.h>
 
 #include "four_bytes.cpp"
 #include "crc32.cpp"
