@@ -1,8 +1,8 @@
 # pdvrdt
-Use this command-line tool to embed or extract any file type via a **PNG** image.  
-You can share your image on several *social media sites, which will retain the embedded data. 
+Use these two command-line tools to embed or extract any file type via a **PNG** image.  
+You can post your image with the hidden file on X/Twitter and a few other *social media sites.
 
-**Image size limits (cover image + data file) vary across platforms:*
+**Image size limits (cover image + data file):*
 
 * *Flickr (200MB), ImgBB (32MB), PostImage (24MB), Reddit (19MB / -r option)*
 * *Mastodon (16MB / -m option), ImgPile (8MB), \*Twitter (5MB / Dimension limits)*
