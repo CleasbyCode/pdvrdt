@@ -1,6 +1,6 @@
 # pdvrdt
 CLI tools to embed/hide (*pdvin*) or extract (*pdvout*) any file type via a **PNG** image.  
-You can post your image with the hidden file on *X/Twitter and a few other social media sites.
+You can post your image with hidden data on *X/Twitter and a few other social media sites.
 
 **Image size limits (cover image + data file):*
 
