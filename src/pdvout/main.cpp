@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 		startPdv(image_file_name);
 
 	} else {
-		std::cout << "\nUsage:\tpdvout <file_embedded_image>\n\tpdvout --info\n\n";
+		std::cout << "\nUsage: pdvout <file_embedded_image>\n\t\bpdvout --info\n\n";
 	}
 	return 0;
 }
