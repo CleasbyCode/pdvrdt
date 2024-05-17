@@ -1,6 +1,7 @@
 void displayInfo() {
 
 	std::cout << R"(
+		
 PNG Data Vehicle (pdvin v1.0.1). 
 Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
