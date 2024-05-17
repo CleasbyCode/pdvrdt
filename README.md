@@ -66,8 +66,6 @@ user1@linuxbox:~/Desktop$ pdvout prdt_17627.png
 Extracted hidden file: document.pdf 1016540 Bytes.
 
 Complete! Please check your file.
-  
-user1@linuxbox:~/Desktop$ 
 
 ```
 ![Demo Image2](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/screen.png) 
