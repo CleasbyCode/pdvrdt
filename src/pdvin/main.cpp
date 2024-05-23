@@ -1,5 +1,3 @@
-
-
 //	PNG Data Vehicle (pdvin v1.0.2). A steganography-like CLI tool for hiding files within PNG images. Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
