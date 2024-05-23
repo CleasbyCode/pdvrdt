@@ -45,9 +45,7 @@ Usage: pdvin [-m] [-r] <cover_image> <data_file>
 
 user1@linuxbox:~/Desktop$ pdvin rabbit.png document.pdf
   
-Writing file-embedded PNG image out to disk.
-
-Created PNG image: prdt_17627.png 1245285 Bytes.
+Saved PNG image: prdt_17627.png 1245285 Bytes.
 
 Complete!
 
