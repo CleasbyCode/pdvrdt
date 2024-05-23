@@ -1,7 +1,7 @@
+// zlib function, see https://zlib.net/
+
 void deflateFile(std::vector<uint_fast8_t>& Vec) {
-
-	// zlib function, see https://zlib.net/
-
+	
 	std::vector<uint_fast8_t>Buffer_Vec;
 
 	constexpr uint_fast32_t BUFSIZE = 524288;
