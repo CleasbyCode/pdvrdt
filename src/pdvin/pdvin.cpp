@@ -1,4 +1,3 @@
-
 void startPdv(const std::string& IMAGE_FILE_NAME, std::string& data_file_name, bool isMastodonOption, bool isRedditOption) {
 	
 	const size_t 
