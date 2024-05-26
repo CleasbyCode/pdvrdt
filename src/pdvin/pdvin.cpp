@@ -1,3 +1,4 @@
+
 void startPdv(const std::string& IMAGE_FILE_NAME, std::string& data_file_name, bool isMastodonOption, bool isRedditOption) {
 	
 	const size_t 
@@ -183,10 +184,12 @@ void startPdv(const std::string& IMAGE_FILE_NAME, std::string& data_file_name, b
 		valueUpdater(Idat_Chunk_Vec, idat_crc_insert_index, IDAT_CHUNK_CRC, bits);
 		Image_Vec.insert((Image_Vec.begin() + CHUNK_INSERT_INDEX), Idat_Chunk_Vec.begin(), Idat_Chunk_Vec.end());
 	}
-
-	if (Image_Vec.size() > MAX_FILE_SIZE_MASTODON && isMastodonOption ||
-		Image_Vec.size() > MAX_FILE_SIZE_REDDIT && isRedditOption || 
-		Image_Vec.size() > MAX_FILE_SIZE) {
+				 
+	image_file_size = static_cast<uint_fast32_t>(Image_Vec.size());
+				 
+	if (image_file_size > MAX_FILE_SIZE_MASTODON && isMastodonOption ||
+		image_file_size > MAX_FILE_SIZE_REDDIT && isRedditOption || 
+		image_file_size > MAX_FILE_SIZE) {
     
 	    	std::cout << "\nImage Size Error: The file embedded image exceeds the maximum size of " 
 			<< (isMastodonOption ? "16MB (Mastodon)." 
@@ -197,7 +200,6 @@ void startPdv(const std::string& IMAGE_FILE_NAME, std::string& data_file_name, b
 	}
 
 	srand((unsigned)time(NULL));
-
 	const std::string TIME_VALUE = std::to_string(rand());
 
 	data_file_name = "prdt_" + TIME_VALUE.substr(0, 5) + ".png";
@@ -208,9 +210,7 @@ void startPdv(const std::string& IMAGE_FILE_NAME, std::string& data_file_name, b
 		std::cerr << "\nWrite File Error: Unable to write to file.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
-
-	image_file_size = static_cast<uint_fast32_t>(Image_Vec.size());
-
+				 
 	file_ofs.write((char*)&Image_Vec[0], Image_Vec.size());
 
 	if (isMastodonOption && PROFILE_DEFLATE_SIZE > 9700 || isRedditOption) {
