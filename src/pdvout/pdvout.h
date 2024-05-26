@@ -8,7 +8,7 @@
 #include <regex>
 #include <string>
 #include <vector>
-#include <C:\Users\Nick\source\zlib-1.3.1\zlib.h>
+#include <zlib.h>
 
 constexpr uint_fast32_t XOR_KEY_LENGTH = 12;
 
