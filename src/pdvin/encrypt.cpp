@@ -1,3 +1,4 @@
+
 void encryptFile(std::vector<uint_fast8_t>&Profile_Data_Vec, std::vector<uint_fast8_t>&File_Vec, std::string& data_file_name) {
 
 	std::random_device rd;
@@ -35,7 +36,6 @@ void encryptFile(std::vector<uint_fast8_t>&Profile_Data_Vec, std::vector<uint_fa
 		}
 		Profile_Data_Vec.emplace_back(File_Vec[index_pos++] ^ data_file_name[name_key_pos++]);
 	}	
-
 	Profile_Data_Vec[PROFILE_NAME_INDEX - 1] = static_cast<uint_fast8_t>(DATA_FILE_NAME_LENGTH);
 	std::copy(data_file_name.begin(), data_file_name.end(), Profile_Data_Vec.begin() + PROFILE_NAME_INDEX);
 }	
