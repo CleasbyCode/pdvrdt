@@ -1,3 +1,4 @@
+
 //	PNG Data Vehicle (pdvin v1.0.3). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
@@ -9,7 +10,6 @@
 #include "pdvin.h"
 
 int main(int argc, char** argv) {
-
 	if (argc == 2 && std::string(argv[1]) == "--info") {
 		displayInfo();
 	} else if (argc > 2 && argc < 5) {
