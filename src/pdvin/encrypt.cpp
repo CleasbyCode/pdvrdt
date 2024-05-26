@@ -1,4 +1,3 @@
-
 void encryptFile(std::vector<uint_fast8_t>&Profile_Data_Vec, std::vector<uint_fast8_t>&File_Vec, std::string& data_file_name) {
 
 	std::random_device rd;
