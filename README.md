@@ -40,7 +40,7 @@ user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ sudo cp pdvin /usr/bin
 
 user1@linuxbox:~/Desktop$ pdvin 
 
-Usage: pdvin [-m] [-r] <cover_image> <data_file>  
+Usage: pdvin [-m|-r] <cover_image> <data_file>  
        pdvin --info
 
 user1@linuxbox:~/Desktop$ pdvin rabbit.png document.pdf
