@@ -155,7 +155,7 @@ void startPdv(const std::string& IMAGE_FILE_NAME, std::string& data_file_name, b
 
 	if (isMastodonOption) {
 		std::vector<uint_fast8_t>Iccp_Chunk_Vec = { 0x00, 0x00, 0x00, 0x00, 0x69, 0x43, 0x43, 0x50, 0x69, 0x63, 0x63, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-
+		
 		Iccp_Chunk_Vec.reserve(Profile_Data_Vec.size());
 		Iccp_Chunk_Vec.insert((Iccp_Chunk_Vec.begin() + PROFILE_DATA_INSERT_INDEX), Profile_Data_Vec.begin(), Profile_Data_Vec.end());
 
@@ -168,13 +168,12 @@ void startPdv(const std::string& IMAGE_FILE_NAME, std::string& data_file_name, b
 		valueUpdater(Iccp_Chunk_Vec, iccp_crc_insert_index, ICCP_CHUNK_CRC, bits);
 		Image_Vec.insert((Image_Vec.begin() + CHUNK_INSERT_INDEX), Iccp_Chunk_Vec.begin(), Iccp_Chunk_Vec.end());
 	} else {
-	     std::vector<uint_fast8_t>Idat_Chunk_Vec = { 0x00, 0x00, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54, 0x5E, 0x00, 0x00, 0x00, 0x00 };
-
-	     Idat_Chunk_Vec.reserve(Profile_Data_Vec.size());
-	     Idat_Chunk_Vec.insert(Idat_Chunk_Vec.begin() + PROFILE_DATA_INSERT_INDEX, Profile_Data_Vec.begin(), Profile_Data_Vec.end());
+		std::vector<uint_fast8_t>Idat_Chunk_Vec = { 0x00, 0x00, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54, 0x5E, 0x00, 0x00, 0x00, 0x00 };	
+		
+	     	Idat_Chunk_Vec.reserve(Profile_Data_Vec.size());
+	     	Idat_Chunk_Vec.insert(Idat_Chunk_Vec.begin() + PROFILE_DATA_INSERT_INDEX, Profile_Data_Vec.begin(), Profile_Data_Vec.end());
 		
 		Image_Vec.reserve(Idat_Chunk_Vec.size());
-
 		valueUpdater(Idat_Chunk_Vec, chunk_size_index, PROFILE_DEFLATE_SIZE + 1, bits);
 
 		const uint_fast32_t IDAT_CHUNK_CRC = crcUpdate(&Idat_Chunk_Vec[CHUNK_START_INDEX], CHUNK_SIZE, buf_index, initialize_crc_value);
@@ -183,9 +182,9 @@ void startPdv(const std::string& IMAGE_FILE_NAME, std::string& data_file_name, b
 		valueUpdater(Idat_Chunk_Vec, idat_crc_insert_index, IDAT_CHUNK_CRC, bits);
 		Image_Vec.insert((Image_Vec.begin() + CHUNK_INSERT_INDEX), Idat_Chunk_Vec.begin(), Idat_Chunk_Vec.end());
 	}
-				 
+
 	image_file_size = static_cast<uint_fast32_t>(Image_Vec.size());
-				 
+
 	if (image_file_size > MAX_FILE_SIZE_MASTODON && isMastodonOption ||
 		image_file_size > MAX_FILE_SIZE_REDDIT && isRedditOption || 
 		image_file_size > MAX_FILE_SIZE) {
@@ -209,7 +208,7 @@ void startPdv(const std::string& IMAGE_FILE_NAME, std::string& data_file_name, b
 		std::cerr << "\nWrite File Error: Unable to write to file.\n\n";
 		std::exit(EXIT_FAILURE);
 	}
-				 
+
 	file_ofs.write((char*)&Image_Vec[0], Image_Vec.size());
 
 	if (isMastodonOption && PROFILE_DEFLATE_SIZE > 9700 || isRedditOption) {
