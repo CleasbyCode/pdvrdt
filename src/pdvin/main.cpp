@@ -26,13 +26,17 @@ int main(int argc, char** argv) {
 		std::string data_file_name = isMastodonOption || isRedditOption ? argv[3] : argv[2];
 
 		if (IMAGE_FILE_EXTENSION != "png" || (argc > 3 && std::string(argv[1]) != "-r" && std::string(argv[1]) != "-m")) {
-			std::cerr << (IMAGE_FILE_EXTENSION != "png" ? "\nFile Type Error: Invalid file extension. Expecting only \"png\""
-				: "\nInput Error: Invalid arguments. Expecting only -m or -r") << ".\n\n";
+			std::cerr << (IMAGE_FILE_EXTENSION != "png" 
+				? "\nFile Type Error: Invalid file extension. Expecting only \"png\""
+				: "\nInput Error: Invalid arguments. Expecting only -m or -r") 
+			<< ".\n\n";
 		} else if (!regex_match(IMAGE_FILE_NAME, REG_EXP) || !regex_match(data_file_name, REG_EXP)) {
 			std::cerr << "\nInvalid Input Error: Characters not supported by this program found within filename arguments.\n\n";
 		} else if (!std::filesystem::exists(IMAGE_FILE_NAME) || !std::filesystem::exists(data_file_name)) {
-			std::cerr << (!std::filesystem::exists(IMAGE_FILE_NAME) ? "\nImage File Error: "
-				: "\nData File Error: ") << "File not found. Check the filename and try again.\n\n";
+			std::cerr << (!std::filesystem::exists(IMAGE_FILE_NAME) 
+				? "\nImage"
+				: "\nData") 
+			<< " File Error: File not found. Check the filename and try again.\n\n";
 		} else {
 			isFileCheckSuccess = true;
 		}
