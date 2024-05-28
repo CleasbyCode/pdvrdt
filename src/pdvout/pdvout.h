@@ -10,7 +10,7 @@
 #include <vector>
 #include <zlib.h>
 
-constexpr uint_fast32_t XOR_KEY_LENGTH = 12;
+constexpr uint_fast8_t XOR_KEY_LENGTH = 12;
 
 #include "decrypt.cpp"
 #include "inflate.cpp"
