@@ -50,9 +50,7 @@ void startPdv(const std::string& IMAGE_FILE_NAME) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	bool isMastodonFile = false;
-
-	isMastodonFile = ICCP_POS == ICCP_CHUNK_INDEX ? true : false;
+	bool isMastodonFile = ICCP_POS == ICCP_CHUNK_INDEX ? true : false;
 	
 	const uint_fast32_t
 		CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_POS - 4 : IDAT_POS - 4,				
