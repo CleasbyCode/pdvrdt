@@ -23,9 +23,11 @@ int main(int argc, char** argv) {
 		if (IMAGE_FILE_EXTENSION == "png" && regex_match(IMAGE_FILE_NAME, REG_EXP) && std::filesystem::exists(IMAGE_FILE_NAME)) {
 			startPdv(IMAGE_FILE_NAME);
 		} else {
-			std::cerr << (IMAGE_FILE_EXTENSION != "png" ? "\nFile Type Error: Invalid file extension. Expecting only \"png\".\n\n"
-		   		: !regex_match(IMAGE_FILE_NAME, REG_EXP) ? "\nInvalid Input Error: Characters not supported by this program found within filename arguments.n\n"
-				: "\nImage File Error: File not found. Check the filename and try again.\n\n");
+			std::cerr << (IMAGE_FILE_EXTENSION != "png" 
+				? "\nFile Type Error: Invalid file extension. Expecting only \"png\".\n\n"
+		   		: !regex_match(IMAGE_FILE_NAME, REG_EXP) 
+					? "\nInvalid Input Error: Characters not supported by this program found within filename arguments.n\n"
+						: "\nImage File Error: File not found. Check the filename and try again.\n\n");
 		  	std::exit(EXIT_FAILURE);
 		}
 	}
