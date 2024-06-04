@@ -116,7 +116,7 @@ void startPdv(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
 		0x44, 0x54, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 	};
 
-	Profile_Data_Vec.reserve(File_Vec.size());
+	Profile_Data_Vec.reserve(Profile_Data_Vec.size() + File_Vec.size());
 
 	if (isRedditOption) {
 		std::vector<uint_fast8_t>Idat_Reddit_Vec = { 0x00, 0x08, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54 };
@@ -160,7 +160,7 @@ void startPdv(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
 		Iccp_Chunk_Vec.reserve(CHUNK_SIZE);
 		Iccp_Chunk_Vec.insert((Iccp_Chunk_Vec.begin() + PROFILE_DATA_INSERT_INDEX), Profile_Data_Vec.begin(), Profile_Data_Vec.end());
 
-		Image_Vec.reserve(Iccp_Chunk_Vec.size());
+		Image_Vec.reserve(IMAGE_VEC_SIZE + Iccp_Chunk_Vec.size());
 		valueUpdater(Iccp_Chunk_Vec, chunk_size_index, PROFILE_DATA_VEC_DEFLATE_SIZE + 5, bits);
 
 		const uint_fast32_t ICCP_CHUNK_CRC = crcUpdate(&Iccp_Chunk_Vec[CHUNK_START_INDEX], CHUNK_SIZE);
@@ -174,7 +174,7 @@ void startPdv(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
 	     	Idat_Chunk_Vec.reserve(CHUNK_SIZE);
 	     	Idat_Chunk_Vec.insert(Idat_Chunk_Vec.begin() + PROFILE_DATA_INSERT_INDEX, Profile_Data_Vec.begin(), Profile_Data_Vec.end());
 		
-		Image_Vec.reserve(Idat_Chunk_Vec.size());
+		Image_Vec.reserve(IMAGE_VEC_SIZE + Idat_Chunk_Vec.size());
 
 		valueUpdater(Idat_Chunk_Vec, chunk_size_index, PROFILE_DATA_VEC_DEFLATE_SIZE + 1, bits);
 
