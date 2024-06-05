@@ -1,5 +1,4 @@
 // Erase superfluous PNG chunks from the cover image. Just keep the critical PNG chunks/data. (HEADER/IHDR/*PLTE/IDAT/IEND).
-
 void eraseChunks(std::vector<uint_fast8_t>& Image_Vec) {
 	
 	std::vector<uint_fast8_t>Temp_Vec;
@@ -49,8 +48,7 @@ void eraseChunks(std::vector<uint_fast8_t>& Image_Vec) {
 		Temp_Vec.insert(Temp_Vec.end(), Image_Vec.begin() + idat_chunk_index, Image_Vec.begin() + idat_chunk_index + (idat_chunk_length + 12));
 		idat_chunk_index = searchFunc(Image_Vec, idat_chunk_index, 6, IDAT_SIG) - 4;
 	}
-// idat_chunk_index = static_cast<uint_fast32_t>(std::search(Image_Vec.begin() + idat_chunk_index + 6, Image_Vec.end(), std::begin(IDAT_SIG), std::end(IDAT_SIG)) - Image_Vec.begin() - 4);
-
+	
 	Temp_Vec.insert(Temp_Vec.end(), Image_Vec.end() - PNG_IEND_CHUNK_LENGTH, Image_Vec.end());
 	Temp_Vec.swap(Image_Vec);
 }
