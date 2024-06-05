@@ -18,8 +18,7 @@ std::string decryptFile(std::vector<uint_fast8_t>&Image_Vec, uint_fast8_t (&xor_
 		
 		if (index_pos >= ENCRYPTED_DATA_FILENAME_LENGTH) {
 			name_key_pos = name_key_pos >= ENCRYPTED_DATA_FILENAME_LENGTH ? 0 : name_key_pos;
-		}
-		else {
+		} else {
 			std::reverse(std::begin(xor_key), std::end(xor_key));
 			xor_key_pos = xor_key_pos >= XOR_KEY_LENGTH ? 0 : xor_key_pos;
 			decrypted_data_filename += encrypted_data_filename[index_pos] ^ xor_key[xor_key_pos++];
