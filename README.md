@@ -9,7 +9,7 @@ You can post your image with hidden data on *X/Twitter and a few other social me
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_1796.png)  
 
-Demo Videos: [X/Twitter](https://youtu.be/nwqi3WN2lkA) / [**Web Tool**](https://youtu.be/KbIilEDF14E)
+Demo Videos: [X/Twitter (hidden JPG image)](https://youtu.be/nwqi3WN2lkA) / [**Web Tool**](https://youtu.be/KbIilEDF14E)
 
 *To post file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
 
