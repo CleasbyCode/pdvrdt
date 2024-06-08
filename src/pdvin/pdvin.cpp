@@ -218,5 +218,5 @@ void startPdv(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
 		const std::string PLATFORM_OPTION = isMastodonOption ? "Mastodon" : "Reddit";
 		std::cout << "\n**Important**\n\nDue to your option selection, for compatibility reasons\nyou should only post this file-embedded PNG image on " + PLATFORM_OPTION + ".\n";
 	}
-	std::cout << "\nSaved PNG image: " + EMBEDDED_IMAGE_FILENAME + '\x20' + std::to_string(EMBEDDED_IMAGE_FILE_SIZE) + " Bytes.\n\nComplete!\n\nYou can now post your file-embedded PNG image on the relevant supported platforms.\n\n";
+	std::cout << "\nSaved PNG image: " + EMBEDDED_IMAGE_FILENAME + '\x20' + std::to_string(EMBEDDED_IMAGE_FILE_SIZE) + " Bytes.\n\nComplete!\n\n";
 }
