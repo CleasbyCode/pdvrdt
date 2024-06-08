@@ -50,7 +50,7 @@ Saved PNG image: prdt_17627.png 1245285 Bytes.
 
 Complete!
 
-You can now post your file-embedded PNG image to the relevant supported platforms.
+You can now post your file-embedded PNG image on the relevant supported platforms.
 
 user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ g++ main.cpp -O2 -lz -s -o pdvout
 user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ sudo cp pdvout /usr/bin
