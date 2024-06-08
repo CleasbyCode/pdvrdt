@@ -21,7 +21,7 @@ From the **Reddit** site, always select the "***Images & Video***" tab/box to po
 When saving an image from **Reddit**, use *new.reddit.com*. Click the image in the post to expand it, then save it.  
 (*Make sure you see the filename with a **.png** extension in the address bar of your browser, before saving.*)
 
-As well as the 5MB image size limit, **X/Twitter** also has dimension size limits.  
+**X/Twitter** also has dimension size limits.  
 
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
 *PNG-8 (Indexed-color) 4096x4096 Max. 68x68 Min.*  
