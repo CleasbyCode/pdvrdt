@@ -8,7 +8,7 @@ You can post your image with hidden data on *X/Twitter and a few other social me
 * *Mastodon (16MB / -m option), ImgPile (8MB), \*X/Twitter (5MB + Dimension limits)*
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_7355.png)  
-Image credit: [***@carochan_me***](https://x.com/carochan_me)
+*Image credit:* [***@carochan_me***](https://x.com/carochan_me)
 
 Demo Videos: [X/Twitter (hidden JPG image)](https://youtu.be/nwqi3WN2lkA) / [**Web Tool**](https://youtu.be/KbIilEDF14E)
 
