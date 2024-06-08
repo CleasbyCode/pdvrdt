@@ -12,9 +12,9 @@ Image credit: [***@carochan_me***](https://x.com/carochan_me)
 
 Demo Videos: [X/Twitter (hidden JPG image)](https://youtu.be/nwqi3WN2lkA) / [**Web Tool**](https://youtu.be/KbIilEDF14E)
 
-*To post file-embedded PNG images on **Mastodon**, you need to use the **-m** option.*  
+*To post file-embedded PNG images on **Mastodon**, use the **-m** option.*  
 
-*To post file-embedded PNG images on **Reddit**, you need to use the **-r** option.*  
+*To post file-embedded PNG images on **Reddit**, use the **-r** option.*  
 
 From the **Reddit** site, always select the "***Images & Video***" tab/box to post your image.
 
