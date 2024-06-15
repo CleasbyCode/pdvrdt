@@ -12,6 +12,7 @@
 #include <fstream>
 #include <zlib.h>
 
+#include "profileVec.cpp"
 #include "fourBytes.cpp"
 #include "crc32.cpp"
 #include "searchFunc.cpp"
