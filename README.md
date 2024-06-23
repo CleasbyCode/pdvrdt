@@ -16,10 +16,7 @@ Demo Videos: [X/Twitter (hidden JPG image)](https://youtu.be/nwqi3WN2lkA) / [**W
 
 *To post file-embedded PNG images on **Reddit**, use the **-r** option.*  
 
-From the **Reddit** site, always select the "***Images & Video***" tab/box to post your image.
-
-When saving an image from **Reddit**, use *new.reddit.com*. Click the image in the post to expand it, then save it.  
-(*Make sure you see the filename with a **.png** extension in the address bar of your browser, before saving.*)
+From the **Reddit** site, select the "***Images & Video***" tab to post your image.
 
 **X/Twitter** also has dimension size limits.  
 
@@ -69,7 +66,6 @@ Complete! Please check your file.
 ![Demo Image3](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/screen2.png) 
 
 **Issues:**
-* **Reddit -** *While you can upload PNG images via the mobile app, you need to use the Desktop/browser to download them via new.reddit.com.*
 * **ImgPile -** *You must sign in to an account before sharing your data-embedded PNG image on ImgPile*.  
 		*Sharing your image without logging in, your embedded data will not be preserved.*
 
