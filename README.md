@@ -10,7 +10,7 @@ You can post your image with hidden data on *X/Twitter and a few other social me
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_7355.png)  
 *Image credit:* [***@carochan_me***](https://x.com/carochan_me)
 
-Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Web Tool***](https://youtu.be/KbIilEDF14E)
+Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Reddit***](https://youtu.be/pp9-Nk0VslA) / [***Web Tool***](https://youtu.be/KbIilEDF14E)
 
 *To post file-embedded PNG images on **Mastodon**, use the **-m** option.*  
 
