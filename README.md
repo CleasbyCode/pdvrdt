@@ -23,8 +23,7 @@ From the **Reddit** site, select the "***Images & Video***" tab to post your ima
 *PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
 *PNG-8 (Indexed-color) 4096x4096 Max. 68x68 Min.*  
 
-*When saving an image from **X/Twitter**, always click the image first to fully expand it, before saving.*  
-*When saving an image from **Reddit**, always click the image first to fully expand it, before saving.*  
+*When saving an image from ***X/Twitter*** or ***Reddit***, always click the image first to fully expand it, before saving.*
 
 Compile and run the programs under Windows or **Linux**.  
 
