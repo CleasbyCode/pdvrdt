@@ -156,16 +156,15 @@ void startPdv(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
 	
 	const uint_fast32_t EMBEDDED_IMAGE_FILE_SIZE = static_cast<uint_fast32_t>(Image_Vec.size());
 
-	if (EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE_MASTODON && isMastodonOption ||
-		EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE_REDDIT && isRedditOption || 
-			EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE) {
-    
-	    	std::cout << "\nImage Size Error: The file embedded image exceeds the maximum size of " << (isMastodonOption 
-			? "16MB." 
-			: (isRedditOption 
-				? "19MB." 
-				: "200MB.")) 
-			<< "\n\nYour data file has not been compressible and has had the opposite effect of making the file larger than the original. Perhaps try again with a smaller cover image.\n\n";
+	if ((EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE_MASTODON && isMastodonOption) ||
+    		(EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE_REDDIT && isRedditOption) ||
+    		(EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE)) {
+
+    		std::cout << "\nImage Size Error: The file embedded image exceeds the maximum size of " 
+              		<< (isMastodonOption ? "16MB."
+                  		: (isRedditOption ? "19MB."
+                  		: "200MB."))
+              		<< "\n\nYour data file has not been compressible and has had the opposite effect of making the file larger than the original. Perhaps try again with a smaller cover image.\n\n";
     		std::exit(EXIT_FAILURE);
 	}
 
@@ -183,9 +182,9 @@ void startPdv(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
 
 	file_ofs.write((char*)&Image_Vec[0], EMBEDDED_IMAGE_FILE_SIZE);
 
-	if (isMastodonOption && PROFILE_DATA_VEC_DEFLATE_SIZE > TWITTER_ICCP_SIZE_LIMIT || isRedditOption) {
+	if ((isMastodonOption && PROFILE_DATA_VEC_DEFLATE_SIZE > TWITTER_ICCP_SIZE_LIMIT) || isRedditOption) {
 		const std::string PLATFORM_OPTION = isMastodonOption ? "Mastodon" : "Reddit";
-		std::cout << "\n**Important**\n\nDue to your option selection, for compatibility reasons\nyou should only post this file-embedded PNG image on " + PLATFORM_OPTION + ".\n";
+    		std::cout << "\n**Important**\n\nDue to your option selection, for compatibility reasons\nyou should only post this file-embedded PNG image on " << PLATFORM_OPTION << ".\n";
 	}
 	std::cout << "\nSaved PNG image: " + EMBEDDED_IMAGE_FILENAME + '\x20' + std::to_string(EMBEDDED_IMAGE_FILE_SIZE) + " Bytes.\n\nComplete!\n\n";
 }
