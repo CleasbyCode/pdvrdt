@@ -6,10 +6,10 @@ void startPdv(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
 		COMBINED_FILE_SIZE = TMP_DATA_FILE_SIZE + TMP_IMAGE_FILE_SIZE;
 
 	constexpr uint_fast32_t
-		MAX_FILE_SIZE = 209715200, 
+		MAX_FILE_SIZE = 1094713344, 
 		MAX_FILE_SIZE_REDDIT = 19922944, 
 		MAX_FILE_SIZE_MASTODON = 16777216,
-		LARGE_FILE_SIZE = 52428800;
+		LARGE_FILE_SIZE = 104857600;
 
 	constexpr uint_fast8_t PNG_MIN_FILE_SIZE = 68;
 
@@ -26,7 +26,7 @@ void startPdv(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
                 		? "16MB"
 	                	: (isRedditOption 
         	            		? "19MB"
-                	    		: "200MB"))) 
+                	    		: "1GB"))) 
 		<< ".\n\n";
 
     		std::exit(EXIT_FAILURE);
