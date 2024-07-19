@@ -2,8 +2,8 @@
 CLI tools to hide (*pdvin*) or extract (*pdvout*) any file type via a **PNG** image.  
 You can post your image with hidden data on *X/Twitter and a few other social media sites.
 
-**Image size limits (cover image + data file):*
-
+**With ***pdvin***, you can embed a single file of any type up to a maximum size of ~1GB.**  
+**Compatible hosting sites, listed below, have their own (much smaller) size limits (cover image + data file):**
 * *Flickr (200MB), ImgBB (32MB), PostImage (24MB), Reddit (19MB / -r option)*
 * *Mastodon (16MB / -m option), ImgPile (8MB), \*X/Twitter (5MB + Dimension limits)*
 
