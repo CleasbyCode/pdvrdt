@@ -3,8 +3,8 @@ void startPdv(const std::string& IMAGE_FILENAME) {
 	const size_t TMP_IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME);
 	
 	constexpr uint_fast32_t 
-		MAX_FILE_SIZE = 209715200,
-		LARGE_FILE_SIZE = 52428800;
+		MAX_FILE_SIZE = 1094713344,
+		LARGE_FILE_SIZE = 104857600;
 
 	constexpr uint_fast8_t MIN_FILE_SIZE = 68;
 
