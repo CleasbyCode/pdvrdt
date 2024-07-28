@@ -1,5 +1,4 @@
 // zlib function, see https://zlib.net/
-
 uint32_t deflateFile(std::vector<uint8_t>& Vec, const std::string DATA_FILE_EXTENSION) {
 
 	std::vector<uint8_t>Buffer_Vec;
