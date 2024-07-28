@@ -1,5 +1,4 @@
 // Erase superfluous PNG chunks from the cover image. Just keep the critical PNG chunks/data. (HEADER/IHDR/*PLTE/IDAT/IEND).
-
 void eraseChunks(std::vector<uint8_t>& Image_Vec) {
 	
 	std::vector<uint8_t>Temp_Vec;
