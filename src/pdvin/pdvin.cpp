@@ -163,7 +163,7 @@ void startPdv(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
     		std::cout << "\nImage Size Error: The file embedded image exceeds the maximum size of " 
               		<< (isMastodonOption ? "16MB."
                   		: (isRedditOption ? "19MB."
-                  		: "200MB."))
+                  		: "1GB."))
               		<< "\n\nYour data file has not been compressible and has had the opposite effect of making the file larger than the original. Perhaps try again with a smaller cover image.\n\n";
     		std::exit(EXIT_FAILURE);
 	}
