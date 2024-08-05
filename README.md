@@ -12,9 +12,9 @@ You can post your image with hidden data on *X/Twitter and a few other social me
 
 Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Reddit***](https://youtu.be/pp9-Nk0VslA) / [***Web Tool***](https://youtu.be/KbIilEDF14E)
 
-*To post file-embedded PNG images on **Mastodon**, use the **-m** option.*  
+*To post file-embedded PNG images on **Mastodon**, use the **-m** option with pdvin.*  
 
-*To post file-embedded PNG images on **Reddit**, use the **-r** option.*  
+*To post file-embedded PNG images on **Reddit**, use the **-r** option with pdvin.*  
 
 From the **Reddit** site, select the "***Images & Video***" tab to post your image.
 
