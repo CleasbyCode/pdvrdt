@@ -16,9 +16,9 @@ uint32_t deflateFile(std::vector<uint8_t>& Vec, const std::string DATA_FILE_EXTE
 	strm.avail_out = BUFSIZE;
 
 	if (DATA_FILE_EXTENSION == ".zip" || DATA_FILE_EXTENSION == ".rar") {
-		deflateInit(&strm, 1); // No compression.
+		deflateInit(&strm, 1); // Low compression.
 	} else {
-		deflateInit(&strm, 6); // Compression level 6.
+		deflateInit(&strm, 6); // Standard compression level 6.
 	}
 	
 	while (strm.avail_in) {
