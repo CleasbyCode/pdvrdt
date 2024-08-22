@@ -23,7 +23,7 @@ constexpr uint8_t XOR_KEY_LENGTH = 12;
 std::string decryptFile(std::vector<uint8_t>&, uint8_t (&)[XOR_KEY_LENGTH], std::string&);
 
 template <uint8_t N>
-uint32_t searchFunc(std::vector<uint8_t>&, uint32_t, uint8_t, const uint8_t (&)[N]);
+uint32_t searchFunc(std::vector<uint8_t>&, uint32_t, const uint8_t, const uint8_t (&)[N]);
 
 uint32_t 
 	getByteValue(const std::vector<uint8_t>&, const uint32_t),
