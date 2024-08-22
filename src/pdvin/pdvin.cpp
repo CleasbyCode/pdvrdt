@@ -1,5 +1,4 @@
 int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool isMastodonOption, bool isRedditOption) {
-	
 	const size_t 
 		IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME),
 		DATA_FILE_SIZE = std::filesystem::file_size(data_filename),
@@ -28,7 +27,6 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
         	            		? "19MB"
                 	    		: "1GB"))) 
 		<< ".\n\n";
-
     		return 1;
 	}
 
