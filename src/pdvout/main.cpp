@@ -14,18 +14,20 @@ int main(int argc, char** argv) {
 	} else if (std::string(argv[1]) == "--info") {
 		displayInfo();
 	} else {
-		const std::regex REG_EXP("(\\.[a-zA-Z_0-9\\.\\\\\\s\\-\\/]+)?[a-zA-Z_0-9\\.\\\\\\s\\-\\/]+?(\\.[a-zA-Z0-9]+)?");
+		constexpr const char* REG_EXP = ("(\\.[a-zA-Z_0-9\\.\\\\\\s\\-\\/]+)?[a-zA-Z_0-9\\.\\\\\\s\\-\\/]+?(\\.[a-zA-Z0-9]+)?");
+		const std::regex regex_pattern(REG_EXP);
 
-		const std::string 
-			IMAGE_FILENAME = std::string(argv[1]),
-			IMAGE_FILE_EXTENSION = IMAGE_FILENAME.length() > 2 ? IMAGE_FILENAME.substr(IMAGE_FILENAME.length() - 3) : IMAGE_FILENAME;
+		const std::string IMAGE_FILENAME = std::string(argv[1]);
 
-		if (IMAGE_FILE_EXTENSION == "png" && regex_match(IMAGE_FILENAME, REG_EXP) && std::filesystem::exists(IMAGE_FILENAME)) {
+		std::filesystem::path image_path(IMAGE_FILENAME);
+		std::string image_extension = image_path.extension().string();
+
+		if (image_extension == ".png" && regex_match(IMAGE_FILENAME, regex_pattern) && std::filesystem::exists(IMAGE_FILENAME)) {
 			pdvOut(IMAGE_FILENAME);
 		} else {
-			std::cerr << (IMAGE_FILE_EXTENSION != "png" 
+			std::cerr << (image_extension != ".png" 
 				? "\nFile Type Error: Invalid file extension. Expecting only \"png\""
-		   		: !regex_match(IMAGE_FILENAME, REG_EXP) 
+		   		: !regex_match(IMAGE_FILENAME, regex_pattern) 
 					? "\nInvalid Input Error: Characters not supported by this program found within filename arguments"
 						: "\nImage File Error: File not found. Check the filename and try again")
 			<< ".\n\n";
