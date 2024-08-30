@@ -118,7 +118,7 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 	constexpr uint_fast8_t CHUNK_START_INDEX = 4;
 
 	const uint_fast32_t
-		IMAGE_VEC_SIZE = getVecSize(Image_Vec),
+		IMAGE_VEC_SIZE = static_cast<uint_fast32_t>(Image_Vec.size()),
 		CHUNK_SIZE = isMastodonOption ? PROFILE_DATA_VEC_DEFLATE_SIZE + 9 : PROFILE_DATA_VEC_DEFLATE_SIZE + 5,
 		CHUNK_INSERT_INDEX = isMastodonOption ? 0x21 : IMAGE_VEC_SIZE - 12;
 
@@ -150,7 +150,7 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 		Image_Vec.insert((Image_Vec.begin() + CHUNK_INSERT_INDEX), Idat_Chunk_Vec.begin(), Idat_Chunk_Vec.end());
 	}
 	
-	const uint_fast32_t EMBEDDED_IMAGE_FILE_SIZE = getVecSize(Image_Vec);
+	const uint_fast32_t EMBEDDED_IMAGE_FILE_SIZE = static_cast<uint_fast32_t>(Image_Vec.size());
 
 	if ((isMastodonOption && EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE_MASTODON) ||
     		(isRedditOption && EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE_REDDIT) ||
