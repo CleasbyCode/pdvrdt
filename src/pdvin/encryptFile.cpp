@@ -10,7 +10,7 @@ uint_fast32_t encryptFile(std::vector<uint_fast8_t>&Profile_Data_Vec, std::vecto
 		XOR_KEY_LENGTH = 12,
 		PROFILE_NAME_INDEX = 0x65;
 
-	const uint_fast32_t DATA_FILE_SIZE = getVecSize(File_Vec);
+	const uint_fast32_t DATA_FILE_SIZE = static_cast<uint_fast32_t>(File_Vec.size());
 
 	const uint_fast8_t DATA_FILENAME_LENGTH = static_cast<uint_fast8_t>(data_filename.length());
 
