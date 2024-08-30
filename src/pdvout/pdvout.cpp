@@ -45,7 +45,7 @@ uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 		ICCP_POS = searchFunc(Image_Vec, 0, 0, ICCP_SIG),
 		IDAT_POS = searchFunc(Image_Vec, 0, 0, IDAT_FILE_SIG);
 
-	if (ICCP_POS != ICCP_CHUNK_INDEX && IDAT_POS == getVecSize(Image_Vec)) {
+	if (ICCP_POS != ICCP_CHUNK_INDEX && IDAT_POS == static_cast<uint_fast32_t>(Image_Vec.size())) {
 		std::cerr << "\nImage File Error: This is not a pdvrdt file-embedded image.\n\n";
 		return 1;
 	}
@@ -94,7 +94,7 @@ uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 	
 	std::reverse(Image_Vec.begin(), Image_Vec.end());
 
-	uint_fast32_t EMBEDDED_IMAGE_FILE_SIZE = getVecSize(Image_Vec);
+	uint_fast32_t EMBEDDED_IMAGE_FILE_SIZE = static_cast<uint_fast32_t>(Image_Vec.size());
 		
 	std::ofstream file_ofs(DECRYPTED_DATA_FILENAME, std::ios::binary);
 
@@ -107,5 +107,4 @@ uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 
 	std::cout << "\nExtracted hidden file: " + DECRYPTED_DATA_FILENAME + '\x20' + std::to_string(EMBEDDED_IMAGE_FILE_SIZE) + " Bytes.\n\nComplete! Please check your file.\n\n";
 	return 0;
-
 }
