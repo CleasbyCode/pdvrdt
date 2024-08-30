@@ -42,5 +42,5 @@ uint_fast32_t encryptFile(std::vector<uint_fast8_t>&Profile_Data_Vec, std::vecto
 	Profile_Data_Vec[PROFILE_NAME_INDEX - 1] = static_cast<uint_fast8_t>(DATA_FILENAME_LENGTH);
 	std::copy(data_filename.begin(), data_filename.end(), Profile_Data_Vec.begin() + PROFILE_NAME_INDEX);
 
-	return getVecSize(Profile_Data_Vec);
+	return static_cast<uint_fast32_t>(Profile_Data_Vec.size());
 }	
