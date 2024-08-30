@@ -1,6 +1,6 @@
 std::string decryptFile(std::vector<uint_fast8_t>&Image_Vec, uint_fast8_t (&xor_key)[XOR_KEY_LENGTH], std::string& encrypted_data_filename) {
 
-	const uint_fast32_t ENCRYPTED_DATA_FILE_SIZE = getVecSize(Image_Vec);
+	const uint_fast32_t ENCRYPTED_DATA_FILE_SIZE = static_cast<uint_fast32_t>(Image_Vec.size());
 
 	const uint_fast8_t ENCRYPTED_DATA_FILENAME_LENGTH = static_cast<uint_fast8_t>(encrypted_data_filename.length());
 
