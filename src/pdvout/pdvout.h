@@ -13,7 +13,6 @@
 constexpr uint_fast8_t XOR_KEY_LENGTH = 12;
 
 #include "getByteValue.cpp"
-#include "getVecSize.cpp"
 #include "searchFunc.cpp"
 #include "decryptFile.cpp"
 #include "inflateFile.cpp"
@@ -25,9 +24,7 @@ std::string decryptFile(std::vector<uint_fast8_t>&, uint_fast8_t (&)[XOR_KEY_LEN
 template <uint_fast8_t N>
 uint_fast32_t searchFunc(std::vector<uint_fast8_t>&, uint_fast32_t, uint_fast8_t, const uint_fast8_t (&)[N]);
 
-uint_fast32_t 
-	getByteValue(const std::vector<uint_fast8_t>&, const uint_fast32_t),
-	getVecSize(const std::vector<uint_fast8_t>&);
+uint_fast32_t getByteValue(const std::vector<uint_fast8_t>&, const uint_fast32_t);
 
 void
 	inflateFile(std::vector<uint_fast8_t>&),
