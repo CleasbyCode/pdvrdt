@@ -38,5 +38,5 @@ uint_fast32_t deflateFile(std::vector<uint_fast8_t>& Vec, const std::string DATA
 	delete[] buffer;
 	Vec.swap(Deflate_Vec);
 
-	return getVecSize(Vec);
+	return static_cast<uint_fast32_t>(Vec.size());
 }
