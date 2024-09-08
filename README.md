@@ -27,7 +27,7 @@ From the **Reddit** site, select the "***Images & Video***" tab to post your ima
 
 Compile and run the programs under Windows or **Linux**.  
 
-*(You can try **pdvrdt** from this [**site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download & compile the source code.)*
+You can try **pdvrdt** from [**this site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
 
 ## Usage (Linux - pdvin / pdvout)
 
