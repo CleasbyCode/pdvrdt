@@ -96,9 +96,7 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 
 		Image_Vec.insert(Image_Vec.end() - 12, Idat_Reddit_Vec.begin(), Idat_Reddit_Vec.end());
 	}
-
-	const std::string DATA_FILE_EXTENSION = data_filename.length() > 3 ? data_filename.substr(data_filename.length() - 4) : data_filename;
-
+				 
 	uint_fast32_t PROFILE_DATA_VEC_SIZE = encryptFile(Profile_Data_Vec, File_Vec, data_filename);
 
 	uint_fast8_t
@@ -108,7 +106,7 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 
 	valueUpdater(Profile_Data_Vec, profile_data_vec_size_index, PROFILE_DATA_VEC_SIZE, bits);
 	
-	const uint_fast32_t PROFILE_DATA_VEC_DEFLATE_SIZE = deflateFile(Profile_Data_Vec, DATA_FILE_EXTENSION);
+	const uint_fast32_t PROFILE_DATA_VEC_DEFLATE_SIZE = deflateFile(Profile_Data_Vec);
 	
 	constexpr uint_fast16_t TWITTER_ICCP_SIZE_LIMIT = 9700;
 
