@@ -1,5 +1,5 @@
 // zlib function, see https://zlib.net/
-uint_fast32_t deflateFile(std::vector<uint_fast8_t>& Vec, const std::string DATA_FILE_EXTENSION) {
+uint_fast32_t deflateFile(std::vector<uint_fast8_t>& Vec) {
 
 	constexpr uint_fast32_t BUFSIZE = 2097152;
 	uint_fast8_t* buffer{ new uint_fast8_t[BUFSIZE] };
@@ -14,11 +14,7 @@ uint_fast32_t deflateFile(std::vector<uint_fast8_t>& Vec, const std::string DATA
 	strm.next_out = buffer;
 	strm.avail_out = BUFSIZE;
 
-	if (DATA_FILE_EXTENSION == ".zip" || DATA_FILE_EXTENSION == ".rar") {
-		deflateInit(&strm, 1); // Low compression level 1.
-	} else {
-		deflateInit(&strm, 6); // Standard compression level 6.
-	}
+	deflateInit(&strm, Z_DEFAULT_COMPRESSION); 
 	
 	while (strm.avail_in) {
 		deflate(&strm, Z_NO_FLUSH);		
