@@ -21,19 +21,20 @@ int main(int argc, char** argv) {
 	
 	bool
 		isMastodonOption = (argc > 3 && std::string(argv[1]) == "-m"),
-		isRedditOption = (argc > 3 && !isMastodonOption);
+		isRedditOption = (argc > 3 && std::string(argv[1]) == "-r"),
+		isInvalidOption = (argc > 3 && !(isMastodonOption || isRedditOption));
 
+	if (isInvalidOption) {
+		std::cerr << "\nInput Error: Invalid arguments. Expecting only \"-m\" or \"-r\" as the first optional argument.\n\n";
+		return 1;
+	}
+	
 	const std::string IMAGE_FILENAME = isMastodonOption || isRedditOption ? argv[2] : argv[1];
 	std::string data_filename = isMastodonOption || isRedditOption ? argv[3] : argv[2];
 
 	std::filesystem::path image_path(IMAGE_FILENAME);
 	std::string image_extension = image_path.extension().string();
-
-	if (argc > 3 && std::string(argv[1]) != "-r" && std::string(argv[1]) != "-m") {
-		std::cerr << "\nInput Error: Invalid arguments. Expecting only \"-m\" or \"-r\" as the first argument option.\n\n";
-		return 1;
-	}
-
+	
 	if (image_extension != ".png") {
 		std::cerr << "\nFile Type Error: Invalid file extension. Expecting only \".png\" image extension.\n\n";
 		return 1;
