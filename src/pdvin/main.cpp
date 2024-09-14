@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	
-	bool
+	const bool
 		isMastodonOption = (argc > 3 && std::string(argv[1]) == "-m"),
 		isRedditOption = (argc > 3 && std::string(argv[1]) == "-r"),
 		isInvalidOption = (argc > 3 && !(isMastodonOption || isRedditOption));
