@@ -1,7 +1,7 @@
 uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 
 	constexpr uint_fast32_t 
-		MAX_FILE_SIZE = 1094713344,
+		MAX_FILE_SIZE = 2147483648,
 		LARGE_FILE_SIZE = 104857600;
 
 	constexpr uint_fast8_t MIN_FILE_SIZE = 68;
@@ -23,7 +23,9 @@ uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 		return 1;
 	}
 
-	std::cout << (IMAGE_FILE_SIZE > LARGE_FILE_SIZE ? "\nPlease wait. Larger files will take longer to process.\n" : "");
+	if (IMAGE_FILE_SIZE > LARGE_FILE_SIZE) {
+		std::cout << "\nPlease wait. Larger files will take longer to process.\n";
+	}
 
 	std::vector<uint_fast8_t>Image_Vec((std::istreambuf_iterator<char>(image_ifs)), std::istreambuf_iterator<char>());
 
@@ -50,7 +52,7 @@ uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 		return 1;
 	}
 
-	bool isMastodonFile = ICCP_POS == ICCP_CHUNK_INDEX ? true : false;
+	bool isMastodonFile = (ICCP_POS == ICCP_CHUNK_INDEX);
 	
 	const uint_fast32_t
 		CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_POS - 4 : IDAT_POS - 4,				
@@ -63,11 +65,17 @@ uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 	
 	inflateFile(Image_Vec);
 
+	if (Image_Vec.empty()) {
+		std::cerr << "\nFile Size Error: File is zero bytes. Failure uncompressing file.\n\n";
+		return 1;
+	}
+				 
 	constexpr uint_fast16_t
 		PDV_SIG_INDEX = 0x191,		
 		DATA_FILE_INDEX = 0x1A3;
 
 	constexpr uint_fast8_t 
+		ENCRYPTED_FILENAME_LENGTH_INDEX = 0x64,
 		ENCRYPTED_FILENAME_INDEX = 0x65,
 		PDV_SIG[] { 0x50, 0x44, 0x56, 0x52, 0x44, 0x54 };
 
@@ -76,7 +84,7 @@ uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 		return 1;
 	}
 
-	const uint_fast8_t ENCRYPTED_FILENAME_LENGTH = Image_Vec[100];
+	const uint_fast8_t ENCRYPTED_FILENAME_LENGTH = Image_Vec[ENCRYPTED_FILENAME_LENGTH_INDEX];
 	
 	uint_fast16_t xor_key_index = 0x197;
 
