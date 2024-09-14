@@ -79,7 +79,9 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 		return 1;
 	}
 
-	std::cout << (DATA_FILE_SIZE > LARGE_FILE_SIZE ? "\nPlease wait. Larger files will take longer to process.\n" : "");
+	if (DATA_FILE_SIZE > LARGE_FILE_SIZE) {
+		std::cout << "\nPlease wait. Larger files will take longer to process.\n";
+	}
 
 	std::vector<uint_fast8_t>File_Vec((std::istreambuf_iterator<char>(data_file_ifs)), std::istreambuf_iterator<char>());
 
@@ -108,10 +110,18 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 	
 	const uint_fast32_t PROFILE_DATA_VEC_DEFLATE_SIZE = deflateFile(Profile_Data_Vec);
 	
+	if (!PROFILE_DATA_VEC_DEFLATE_SIZE) {
+		std::cerr << "\nFile Size Error: File is zero bytes. Compression failure.\n\n";
+		return 1;
+	}
+
 	constexpr uint_fast16_t TWITTER_ICCP_SIZE_LIMIT = 9700;
 
-	// Even if Mastodon option NOT selected, we default to it anyway if data file size is under ~10KB, as this small size is supported under X/Twitter.
-	isMastodonOption = (PROFILE_DATA_VEC_DEFLATE_SIZE <= TWITTER_ICCP_SIZE_LIMIT && !isRedditOption) ? true : isMastodonOption;
+	// Even if Mastodon option NOT selected, we default to it anyway if Reddit option false & data file size is under ~10KB, as this small size is compatible with X/Twitter.
+	// The small data file is then stored in the ICCP chunk instead of the last IDAT chunk.
+	if (TWITTER_ICCP_SIZE_LIMIT >= PROFILE_DATA_VEC_DEFLATE_SIZE && !isRedditOption) {
+		isMastodonOption = true;
+	}
 
 	constexpr uint_fast8_t CHUNK_START_INDEX = 4;
 
@@ -148,11 +158,13 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 		Image_Vec.insert((Image_Vec.begin() + CHUNK_INSERT_INDEX), Idat_Chunk_Vec.begin(), Idat_Chunk_Vec.end());
 	}
 	
-	const uint_fast32_t EMBEDDED_IMAGE_FILE_SIZE = static_cast<uint_fast32_t>(Image_Vec.size());
+	const uint_fast32_t 
+		EMBEDDED_IMAGE_FILE_SIZE = static_cast<uint_fast32_t>(Image_Vec.size()),
+		ADDITIONAL_ALLOWANCE_SIZE = 2097152;
 
 	if ((isMastodonOption && EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE_MASTODON) ||
     		(isRedditOption && EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE_REDDIT) ||
-    			(EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE)) {
+    			(EMBEDDED_IMAGE_FILE_SIZE > (MAX_FILE_SIZE + ADDITIONAL_ALLOWANCE_SIZE))) {
     
     		std::cout << "\nImage Size Error: The file embedded image exceeds the maximum size of " 
               		<< (isMastodonOption ? "16MB." 
