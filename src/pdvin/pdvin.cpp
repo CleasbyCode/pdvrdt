@@ -1,7 +1,7 @@
 uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool isMastodonOption, bool isRedditOption) {
 	
 	constexpr uint_fast32_t
-		MAX_FILE_SIZE = 1094713344, 
+		MAX_FILE_SIZE = 1078800000, // Slightly over 1GB.
 		MAX_FILE_SIZE_REDDIT = 19922944, 
 		MAX_FILE_SIZE_MASTODON = 16777216,
 		LARGE_FILE_SIZE = 104857600;
