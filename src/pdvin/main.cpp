@@ -39,10 +39,10 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	std::filesystem::path image_path(IMAGE_FILENAME);
-	std::string image_extension = image_path.extension().string();
+	const std::filesystem::path IMAGE_PATH(IMAGE_FILENAME);
+	const std::string IMAGE_EXTENSION = IMAGE_PATH.extension().string();
 
-	if (image_extension != ".png") {
+	if (IMAGE_EXTENSION != ".png") {
 		std::cerr << "\nFile Type Error: Invalid file extension. Expecting only \"png\" image extension.\n\n";
 		return 1;
 	}
