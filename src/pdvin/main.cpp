@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 	std::string image_extension = image_path.extension().string();
 	
 	if (image_extension != ".png") {
-		std::cerr << "\nFile Type Error: Invalid file extension. Expecting only \".png\" image extension.\n\n";
+		std::cerr << "\nFile Type Error: Invalid file extension. Expecting only \"png\" image extension.\n\n";
 		return 1;
 	}
 
@@ -50,10 +50,10 @@ int main(int argc, char** argv) {
 	
 	if (!std::filesystem::exists(IMAGE_FILENAME) || !std::filesystem::exists(data_filename) || !std::filesystem::is_regular_file(data_filename)) {
 		std::cerr << (!std::filesystem::exists(IMAGE_FILENAME)
-			? "\nImage"
-			: "\nData")
-			<< " File Error: File not found or not a regular file. Check the filename and try again.\n\n";
+			? "\nImage File Error: File not found."
+            		: "\nData File Error: File not found or not a regular file.")
+            	<< " Check the filename and try again.\n\n";
 		return 1;
-	}
+    }
 	pdvIn(IMAGE_FILENAME, data_filename, isMastodonOption, isRedditOption);			
 }
