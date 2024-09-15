@@ -20,8 +20,8 @@ Select the "***Images & Video***" tab on ***Reddit*** to post your image.
 
 **X/Twitter** also has dimension size limits:-
 
-	***PNG-32/24*** (*Truecolor*) **900x900** Max. **68x68** Min.  
-	***PNG-8*** (*Indexed-color*) **4096x4096** Max. **68x68** Min.  
+ ***PNG-32/24*** (*Truecolor*) **900x900** Max. **68x68** Min.  
+ ***PNG-8*** (*Indexed-color*) **4096x4096** Max. **68x68** Min.  
 
 *When saving an image from ***X/Twitter*** or ***Reddit***, always click the image first to fully expand it, before saving.*
 
