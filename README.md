@@ -9,20 +9,19 @@ CLI tools ***pdvin*** & ***pdvout***, used to embed or extract any file type, up
 *There are many other image hosting sites on the web that may also be compatible.*  
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_20648.png)  
-****Image credit:*** [***@batmatt_ai***](https://x.com/batmatt_ai)
+***Image credit:*** [***@batmatt_ai***](https://x.com/batmatt_ai)
 
 Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Reddit***](https://youtu.be/pp9-Nk0VslA) / [***Web Tool***](https://youtu.be/KbIilEDF14E)
 
-*To post file-embedded PNG images on **Mastodon**, use the **-m** option with pdvin.*  
+To ***share*** *"file-embedded"* ***PNG*** images on ***Mastodon***, use the ***-m*** option with ***pdvin***.  
 
-*To post file-embedded PNG images on **Reddit**, use the **-r** option with pdvin.*  
+To ***share*** *"file-embedded"* ***PNG*** images on ***Reddit***, use the ***-r*** option with ***pdvin***.  
+Select the "***Images & Video***" tab on ***Reddit*** to post your image.  
 
-From the **Reddit** site, select the "***Images & Video***" tab to post your image.
+**X/Twitter** also has dimension size limits:-
 
-**X/Twitter** also has dimension size limits.  
-
-*PNG-32/24 (Truecolor) 900x900 Max. 68x68 Min.*  
-*PNG-8 (Indexed-color) 4096x4096 Max. 68x68 Min.*  
+	***PNG-32/24*** (*Truecolor*) **900x900** Max. **68x68** Min.  
+	***PNG-8*** (*Indexed-color*) **4096x4096** Max. **68x68** Min.  
 
 *When saving an image from ***X/Twitter*** or ***Reddit***, always click the image first to fully expand it, before saving.*
 
