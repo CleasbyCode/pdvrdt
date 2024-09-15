@@ -6,6 +6,8 @@ CLI tools ***pdvin*** & ***pdvout***, used to embed or extract any file type, up
 * ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** / ***-r option***),
 * ****Mastodon*** (**16MB** / ***-m option***), ***ImgPile*** (**8MB**), \****X/Twitter*** (**5MB** + ***Dimension limits***)
 
+*There are many other image hosting sites on the web that may also be compatible.*  
+
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_20648.png)  
 ****Image credit:*** [***@batmatt_ai***](https://x.com/batmatt_ai)
 
