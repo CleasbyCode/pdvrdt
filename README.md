@@ -23,11 +23,11 @@ Select the "***Images & Video***" tab on ***Reddit*** to post your image.
  ***PNG-32/24*** (*Truecolor*) **900x900** Max. **68x68** Min.  
  ***PNG-8*** (*Indexed-color*) **4096x4096** Max. **68x68** Min.  
 
-*When saving an image from ***X/Twitter*** or ***Reddit***, always click the image first to fully expand it, before saving.*
+To correctly download images from ***X/Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
 
-Compile and run the programs under Windows or **Linux**.  
-
-You can try **pdvrdt** from [**this site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
+To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the site and select ***Original*** for the size of image to download.
+  
+You can try ***pdvrdt*** from [**this site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
 
 ## Usage (Linux - pdvin / pdvout)
 
