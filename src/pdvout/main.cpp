@@ -1,4 +1,4 @@
-//	PNG Data Vehicle (pdvout v1.1.8). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle (pdvout v1.1.9). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
 //	$ g++ main.cpp -O2 -lz -s -o pdvout
@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 	if (!std::regex_match(IMAGE_FILENAME, regex_pattern)) {
 		std::cerr << "\nInvalid Input Error: Characters not supported by this program found within filename arguments.\n\n";
         return 1;
-    }
+	}
 
 	std::filesystem::path image_path(IMAGE_FILENAME);
 	const std::string IMAGE_EXTENSION = image_path.extension().string();
