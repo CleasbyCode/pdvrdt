@@ -1,5 +1,4 @@
 uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool isMastodonOption, bool isRedditOption) {
-	
 	constexpr uint_fast32_t
 		COMBINED_MAX_FILE_SIZE 	= 2147483648,	// 2GB. (image + data file)
 		MAX_FILE_SIZE_REDDIT 	= 19922944, 	// 20MB.
@@ -97,7 +96,6 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 	uint_fast32_t file_vec_size = static_cast<uint_fast32_t>(File_Vec.size());
 
 	if (isRedditOption) {
-
 		constexpr uint_fast8_t IDAT_REDDIT_CRC_BYTES[] { 0xA3, 0x1A, 0x50, 0xFA };
 
 		std::vector<uint_fast8_t>Idat_Reddit_Vec = { 0x00, 0x08, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54 };
