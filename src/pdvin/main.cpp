@@ -1,4 +1,4 @@
-//	PNG Data Vehicle (pdvin v1.1.8). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle (pdvin v1.1.9). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
 //	$ g++ main.cpp -O2 -lz -s -o pdvin
@@ -18,6 +18,7 @@ int main(int argc, char** argv) {
 		std::cout << "\nUsage: pdvin [-m|-r] <cover_image> <data_file>\n\t\bpdvin --info\n\n";
 		return 1;
 	}
+	
 	const bool
 		isMastodonOption = (argc > 3 && std::string(argv[1]) == "-m"),
 		isRedditOption = (argc > 3 && std::string(argv[1]) == "-r"),
