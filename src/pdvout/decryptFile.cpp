@@ -1,9 +1,5 @@
 std::string decryptFile(std::vector<uint_fast8_t>&Image_Vec, uint_fast8_t (&xor_key)[XOR_KEY_LENGTH], uint_fast32_t file_size, uint_fast8_t filename_length, std::string& filename) {
 
-	// const uint_fast32_t ENCRYPTED_DATA_FILE_SIZE = static_cast<uint_fast32_t>(Image_Vec.size());
-
-	// const uint_fast8_t ENCRYPTED_DATA_FILENAME_LENGTH = static_cast<uint_fast8_t>(encrypted_data_filename.length());
-
 	uint_fast8_t
 		xor_key_pos = 0,
 		name_pos = 0;
@@ -22,6 +18,5 @@ std::string decryptFile(std::vector<uint_fast8_t>&Image_Vec, uint_fast8_t (&xor_
 		Image_Vec[decrypt_pos++] = Image_Vec[index_pos++] ^ xor_key[xor_key_pos++];
 		xor_key_pos = xor_key_pos >= XOR_KEY_LENGTH ? 0 : xor_key_pos;	
 	}
-
 	return decrypted_filename;
 } 
