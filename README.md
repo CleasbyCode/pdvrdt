@@ -9,7 +9,7 @@ CLI tools ***pdvin*** & ***pdvout***, used to embed or extract any file type, up
 *There are many other image hosting sites on the web that may also be compatible.*  
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_20648.png)  
-***Image credit:*** [***@batmatt_ai***](https://x.com/batmatt_ai)
+***Image credit:*** [***@z3pio_***](https://x.com/z3pio_)
 
 Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Reddit***](https://youtu.be/pp9-Nk0VslA) / [***Web Tool***](https://youtu.be/KbIilEDF14E)
 
