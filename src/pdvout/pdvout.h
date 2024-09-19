@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include <iterator>
-#include <C:\Users\Nick\source\zlib-1.3.1\zlib.h>
+#include <zlib.h>
 
 constexpr uint_fast8_t XOR_KEY_LENGTH = 24;
 
