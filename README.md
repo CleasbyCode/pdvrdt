@@ -1,6 +1,6 @@
 # pdvrdt
 
-CLI tools ***pdvin*** & ***pdvout***, used to embed or extract any file type, up to ***2GB**, via a ***PNG*** image.
+CLI tools ***pdvin*** & ***pdvout***, used to embed or extract any file type, up to **~2GB** (cover image + data file). 
  
 ****Compatible hosting sites, listed below, have their own, much smaller, size limits (cover image + data file):***
 * ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** / ***-r option***),
