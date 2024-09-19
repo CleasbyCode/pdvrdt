@@ -11,7 +11,7 @@
 #include <string>
 #include <regex>
 #include <fstream>
-#include <C:\Users\Nick\source\zlib-1.3.1\zlib.h>
+#include <zlib.h>
 
 #include "profileVec.cpp"
 #include "getByteValue.cpp"
