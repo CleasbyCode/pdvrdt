@@ -2,7 +2,7 @@
 
 CLI tools ***pdvin*** & ***pdvout***, used to embed or extract any file type, up to **~2GB** (cover image + data file). 
  
-****Compatible hosting sites, listed below, have their own, much smaller, size limits (cover image + data file):***
+****Compatible hosting sites, listed below, have their own much smaller image size limits:***
 * ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** / ***-r option***),
 * ****Mastodon*** (**16MB** / ***-m option***), ***ImgPile*** (**8MB**), \****X/Twitter*** (**5MB** + ***Dimension limits***)
 
