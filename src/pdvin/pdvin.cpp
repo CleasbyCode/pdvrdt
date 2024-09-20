@@ -42,7 +42,7 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 		return 1;
 	}
 
-	std::vector<uint_fast8_t> Image_Vec;
+	std::vector<uint8_t> Image_Vec;
 	Image_Vec.reserve(COMBINED_FILE_SIZE); 
 	
 	std::copy(std::istreambuf_iterator<char>(image_file_ifs), std::istreambuf_iterator<char>(), std::back_inserter(Image_Vec));
@@ -86,7 +86,7 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 		std::cout << "\nPlease wait. Larger files will take longer to complete this process.\n";
 	}
 
-	std::vector<uint_fast8_t> File_Vec;
+	std::vector<uint8_t> File_Vec;
 	File_Vec.reserve(COMBINED_FILE_SIZE); 
 
 	std::copy(std::istreambuf_iterator<char>(data_file_ifs), std::istreambuf_iterator<char>(), std::back_inserter(File_Vec));
@@ -165,7 +165,7 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 		Image_Vec.insert((Image_Vec.begin() + CHUNK_INSERT_INDEX), Idat_Chunk_Vec.begin(), Idat_Chunk_Vec.end());
 	}
 	
-	std::vector<uint_fast8_t>().swap(Profile_Data_Vec);
+	std::vector<uint8_t>().swap(Profile_Data_Vec);
 
 	const uint_fast32_t 
 		EMBEDDED_IMAGE_FILE_SIZE = static_cast<uint_fast32_t>(Image_Vec.size()),
@@ -196,7 +196,7 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 
 	file_ofs.write((char*)&Image_Vec[0], EMBEDDED_IMAGE_FILE_SIZE);
 	
-	std::vector<uint_fast8_t>().swap(Image_Vec);
+	std::vector<uint8_t>().swap(Image_Vec);
 
 	if ((isMastodonOption && PROFILE_DATA_VEC_DEFLATE_SIZE > TWITTER_ICCP_SIZE_LIMIT) || isRedditOption) {
     		const std::string PLATFORM_OPTION = isMastodonOption ? "Mastodon" : "Reddit";
