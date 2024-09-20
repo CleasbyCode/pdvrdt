@@ -1,4 +1,4 @@
-uint_fast32_t encryptFile(std::vector<uint_fast8_t>&Profile_Data_Vec, std::vector<uint_fast8_t>&File_Vec, uint_fast32_t data_file_size, std::string& data_filename) {
+uint_fast32_t encryptFile(std::vector<uint8_t>&Profile_Data_Vec, std::vector<uint8_t>&File_Vec, uint_fast32_t data_file_size, std::string& data_filename) {
 
 	std::random_device rd;
  	std::mt19937 gen(rd());
