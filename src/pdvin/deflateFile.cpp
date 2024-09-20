@@ -1,5 +1,5 @@
 // zlib function, see https://zlib.net/
-uint_fast32_t deflateFile(std::vector<uint_fast8_t>& Vec, bool isMastodonOption) {
+uint_fast32_t deflateFile(std::vector<uint8_t>& Vec, bool isMastodonOption) {
 	constexpr uint_fast32_t
 		BUFSIZE = 2097152,
 		LARGE_FILE_SIZE   = 1073741824, // > 1GB.
@@ -9,7 +9,7 @@ uint_fast32_t deflateFile(std::vector<uint_fast8_t>& Vec, bool isMastodonOption)
 
 	uint_fast8_t* buffer{ new uint_fast8_t[BUFSIZE] };
 	
-	std::vector<uint_fast8_t>Deflate_Vec;
+	std::vector<uint8_t>Deflate_Vec;
 	Deflate_Vec.reserve(VEC_SIZE + BUFSIZE);
 
 	z_stream strm;
