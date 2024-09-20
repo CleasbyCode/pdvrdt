@@ -27,7 +27,7 @@ uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 		std::cout << "\nPlease wait. Larger files will take longer to process.\n";
 	}
 
-	std::vector<uint_fast8_t> Image_Vec;
+	std::vector<uint8_t> Image_Vec;
 	Image_Vec.reserve(IMAGE_FILE_SIZE);
 
 	std::copy(std::istreambuf_iterator<char>(image_ifs), std::istreambuf_iterator<char>(), std::back_inserter(Image_Vec));
@@ -92,7 +92,7 @@ uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 		xor_key[XOR_KEY_LENGTH],
 		encrypted_filename_length = Image_Vec[ENCRYPTED_FILENAME_INDEX - 1];
 	
-	// Get the 60 byte xor_key from the profile.
+	// Get the xor_key from the profile.
 	for (uint_fast8_t i = 0; i < XOR_KEY_LENGTH;) {
 		xor_key[i++] = Image_Vec[xor_key_index++]; 	
     	}
@@ -116,7 +116,7 @@ uint_fast8_t pdvOut(const std::string& IMAGE_FILENAME) {
 
 	file_ofs.write((char*)&Image_Vec[0], file_size);
 
-	std::vector<uint_fast8_t>().swap(Image_Vec);
+	std::vector<uint8_t>().swap(Image_Vec);
 
 	std::cout << "\nExtracted hidden file: " + DECRYPTED_DATA_FILENAME + '\x20' + std::to_string(file_size) + " Bytes.\n\nComplete! Please check your file.\n\n";
 
