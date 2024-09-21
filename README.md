@@ -4,7 +4,7 @@ Use CLI tools ***pdvin*** & ***pdvout*** with a ***PNG*** image, to embed or ext
  
 ****Compatible hosting sites, listed below, have their own much smaller image size limits:***
 * ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** / ***-r option***),
-* ****Mastodon*** (**16MB** / ***-m option***), ***ImgPile*** (**8MB**), \****X/Twitter*** (**5MB** + ***Dimension limits***)
+* ***Mastodon*** (**16MB** / ***-m option***), ***ImgPile*** (**8MB**), \****X/Twitter*** (**5MB** + ***Dimension limits***)
 
 *There are many other image hosting sites on the web that may also be compatible.*  
 
