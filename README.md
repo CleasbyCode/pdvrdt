@@ -41,7 +41,7 @@ user1@linuxbox:~/Desktop$ pdvin
 Usage: pdvin [-m|-r] <cover_image> <data_file>  
        pdvin --info
 
-user1@linuxbox:~/Desktop$ pdvin rabbit.png document.pdf
+user1@linuxbox:~/Desktop$ pdvin my_cover_image.png document.pdf
   
 Saved "file-embedded" PNG image: prdt_17627.png 1245285 Bytes.
 
