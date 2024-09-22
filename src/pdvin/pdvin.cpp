@@ -57,10 +57,8 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 		return 1;
     	}
 
-	if (!eraseChunks(Image_Vec)) {
-		return 1;
-	};
-
+	eraseChunks(Image_Vec);
+		
 	const uint_fast8_t LAST_SLASH_POS = static_cast<uint_fast8_t>(data_filename.find_last_of("\\/"));
 
 	if (LAST_SLASH_POS <= data_filename.length()) {
