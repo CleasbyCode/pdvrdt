@@ -1,4 +1,4 @@
-uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool isMastodonOption, bool isRedditOption) {
+uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool isMastodonOption, bool isRedditOption, isCompressedFile) {
 	constexpr uint_fast32_t
 		COMBINED_MAX_FILE_SIZE 	= 2147483648,	// 2GB. (image + data file)
 		MAX_FILE_SIZE_REDDIT 	= 19922944, 	// 20MB.
@@ -113,7 +113,7 @@ uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename
 
 	valueUpdater(Profile_Data_Vec, profile_data_vec_size_index, PROFILE_DATA_VEC_SIZE, bits);
 	
-	const uint_fast32_t PROFILE_DATA_VEC_DEFLATE_SIZE = deflateFile(Profile_Data_Vec, isMastodonOption);
+	const uint_fast32_t PROFILE_DATA_VEC_DEFLATE_SIZE = deflateFile(Profile_Data_Vec, isMastodonOption, isCompressedFile);
 		
 	if (!PROFILE_DATA_VEC_DEFLATE_SIZE) {
 		std::cerr << "\nFile Size Error: File is zero bytes. Probable compression failure.\n\n";
