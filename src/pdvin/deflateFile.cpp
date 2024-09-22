@@ -1,9 +1,10 @@
 // zlib function, see https://zlib.net/
-uint_fast32_t deflateFile(std::vector<uint8_t>& Vec, bool isMastodonOption) {
+uint_fast32_t deflateFile(std::vector<uint8_t>& Vec, bool isMastodonOption, bool isCompressedFile) {
+	
 	constexpr uint_fast32_t
-		BUFSIZE = 2097152,
-		LARGE_FILE_SIZE   = 1073741824, // > 1GB.
-		MEDIUM_FILE_SIZE  = 104857600; 	// > 100MB
+		BUFSIZE = 2097152,	
+		LARGE_FILE_SIZE	  = 524288000,  //  > 500MB.
+		MEDIUM_FILE_SIZE  = 157286400;  //  > 150MB.
 	
 	const uint_fast32_t VEC_SIZE = static_cast<uint_fast32_t>(Vec.size());
 
@@ -22,12 +23,12 @@ uint_fast32_t deflateFile(std::vector<uint8_t>& Vec, bool isMastodonOption) {
 
 	int_fast8_t compression_level;
 
-	if (VEC_SIZE > LARGE_FILE_SIZE) {
+	if (isCompressedFile) {
 	    compression_level = Z_NO_COMPRESSION;
-	} else if (VEC_SIZE > MEDIUM_FILE_SIZE) {
+	} else if (VEC_SIZE > LARGE_FILE_SIZE) {
 	    compression_level = Z_BEST_SPEED;
-	} else if (isMastodonOption) {
-	    compression_level = Z_DEFAULT_COMPRESSION;			
+	} else if (VEC_SIZE > MEDIUM_FILE_SIZE || isMastodonOption) {
+	    compression_level = Z_DEFAULT_COMPRESSION;
 	} else {
 	    compression_level = Z_BEST_COMPRESSION;
 	}
