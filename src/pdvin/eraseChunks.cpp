@@ -9,7 +9,6 @@ void eraseChunks(std::vector<uint8_t>& Vec) {
 		PNG_IEND_CHUNK_LENGTH 		= 12,
 		LENGTH_NAME_CRC_FIELD_BYTES 	= 12,
 		INCREMENT_SEARCH_INDEX 		= 5,
-		BYTE_LENGTH 			= 4,
 		INDEXED_COLOR 			= 3;
 		
 	std::vector<uint8_t>Temp_Vec;
@@ -33,14 +32,14 @@ void eraseChunks(std::vector<uint8_t>& Vec) {
 		plte_chunk_name_index = searchFunc(Vec, plte_chunk_name_index, INCREMENT_SEARCH_INDEX, PLTE_SIG);
 		const uint_fast32_t 
 			PLTE_CHUNK_LENGTH_INDEX = plte_chunk_name_index - 4,
-			PLTE_CHUNK_LENGTH = getByteValue(Vec, PLTE_CHUNK_LENGTH_INDEX, BYTE_LENGTH, false) + LENGTH_NAME_CRC_FIELD_BYTES;
+			PLTE_CHUNK_LENGTH = getByteValue(Vec, PLTE_CHUNK_LENGTH_INDEX) + LENGTH_NAME_CRC_FIELD_BYTES;
 		Temp_Vec.insert(Temp_Vec.end(), Vec.begin() + PLTE_CHUNK_LENGTH_INDEX, Vec.begin() + PLTE_CHUNK_LENGTH_INDEX + PLTE_CHUNK_LENGTH);
 	}
 	
 	// Search for and copy all IDAT chunks from cover image into Temp_Vec.
 	while (Vec.size() != idat_chunk_name_index) {
 		idat_chunk_length_index = idat_chunk_name_index - 4;
-		idat_chunk_length = getByteValue(Vec, idat_chunk_length_index, BYTE_LENGTH, false) + LENGTH_NAME_CRC_FIELD_BYTES;
+		idat_chunk_length = getByteValue(Vec, idat_chunk_length_index) + LENGTH_NAME_CRC_FIELD_BYTES;
 		Temp_Vec.insert(Temp_Vec.end(), Vec.begin() + idat_chunk_length_index, Vec.begin() + idat_chunk_length_index + idat_chunk_length);
 		idat_chunk_name_index = searchFunc(Vec, idat_chunk_name_index, INCREMENT_SEARCH_INDEX, IDAT_SIG);
 	}
