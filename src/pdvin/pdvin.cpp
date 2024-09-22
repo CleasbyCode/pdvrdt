@@ -1,4 +1,4 @@
-uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool isMastodonOption, bool isRedditOption, isCompressedFile) {
+uint_fast8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool isMastodonOption, bool isRedditOption, bool isCompressedFile) {
 	constexpr uint_fast32_t
 		COMBINED_MAX_FILE_SIZE 	= 2147483648,	// 2GB. (image + data file)
 		MAX_FILE_SIZE_REDDIT 	= 19922944, 	// 20MB.
