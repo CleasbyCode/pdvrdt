@@ -40,10 +40,14 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	std::filesystem::path image_path(IMAGE_FILENAME);
-	std::string image_extension = image_path.extension().string();
+	const std::filesystem::path 
+		IMAGE_PATH(IMAGE_FILENAME),
+		DATA_FILE_PATH(data_filename);
+        const std::string 
+		IMAGE_EXTENSION = IMAGE_PATH.extension().string(),
+		DATA_FILE_EXTENSION = DATA_FILE_PATH.extension().string();
 
-	if (image_extension != ".png") {
+	if (IMAGE_EXTENSION != ".png") {
 		std::cerr << "\nFile Type Error: Invalid file extension. Expecting only \"png\" image extension.\n\n";
 		return 1;
 	}
@@ -55,5 +59,9 @@ int main(int argc, char** argv) {
 			<< " Check the filename and try again.\n\n";
 		return 1;
 	}
-	pdvIn(IMAGE_FILENAME, data_filename, isMastodonOption, isRedditOption);			
+
+	const std::set<std::string> COMPRESSED_FILE_EXTENSIONS = { ".zip", ".rar", ".7z", ".bz2", ".gz", ".xz", ".mp4", ".flac" };
+	const bool isCompressedFile = COMPRESSED_FILE_EXTENSIONS.count(DATA_FILE_EXTENSION) > 0;
+	
+	pdvIn(IMAGE_FILENAME, data_filename, isMastodonOption, isRedditOption, isCompressedFile);			
 }
