@@ -32,11 +32,10 @@ uint_fast32_t
 	encryptFile(std::vector<uint8_t>&, std::vector<uint8_t>&, uint_fast32_t, std::string&),
 	deflateFile(std::vector<uint8_t>&, bool),
 	getByteValue(const std::vector<uint8_t>&, const uint_fast32_t);
-	
-bool eraseChunks(std::vector<uint8_t>&);
 
 void 
 	valueUpdater(std::vector<uint8_t>&, uint_fast32_t, const uint_fast32_t, uint_fast8_t),
+	eraseChunks(std::vector<uint8_t>&),
 	displayInfo();
 
 uint_fast8_t pdvIn(const std::string&, std::string&, bool, bool);
