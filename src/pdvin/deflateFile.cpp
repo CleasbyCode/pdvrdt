@@ -23,7 +23,7 @@ uint_fast32_t deflateFile(std::vector<uint8_t>& Vec, bool isMastodonOption, bool
 
 	int_fast8_t compression_level;
 
-	if (isCompressedFile) {
+	if (isCompressedFile && !isMastodonOption) {
 	    compression_level = Z_NO_COMPRESSION;
 	} else if (VEC_SIZE > LARGE_FILE_SIZE) {
 	    compression_level = Z_BEST_SPEED;
