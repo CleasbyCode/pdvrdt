@@ -29,7 +29,7 @@ To correctly download an image from ***Flickr***, click the download arrow near 
   
 You can try ***pdvrdt*** from [**this site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
 
-## Usage (Linux - pdvin / pdvout)
+## Usage (Linux - pdvin)
 
 ```console
 
@@ -46,6 +46,11 @@ user1@linuxbox:~/Desktop$ pdvin my_cover_image.png document.pdf
 Saved "file-embedded" PNG image: prdt_17627.png 1245285 Bytes.
 
 Complete!
+
+```
+## Usage (Linux - pdvout)
+
+```console
 
 user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ g++ main.cpp -O2 -lz -s -o pdvout
 user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ sudo cp pdvout /usr/bin
