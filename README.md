@@ -11,7 +11,7 @@ Use CLI tools ***pdvin*** & ***pdvout*** with a ***PNG*** image, to embed or ext
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_11298.png)  
 ***Image credit:*** [***@z3pio_***](https://x.com/z3pio_)
 
-Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Reddit***](https://youtu.be/pp9-Nk0VslA) / [***Web Tool***](https://youtu.be/KbIilEDF14E)
+Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Reddit***](https://youtu.be/pp9-Nk0VslA)
 
 To ***share*** *"file-embedded"* ***PNG*** images on ***Mastodon***, use the ***-m*** option with ***pdvin***.  
 
