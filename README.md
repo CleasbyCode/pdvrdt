@@ -27,8 +27,6 @@ To correctly download images from ***X/Twitter*** or ***Reddit***, click the ima
 
 To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the site and select ***Original*** for the size of image to download.
   
-You can try ***pdvrdt*** from [**this site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
-
 ## Usage (Linux - pdvin)
 
 ```console
