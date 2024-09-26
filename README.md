@@ -11,8 +11,6 @@ Compatible hosting sites, ***listed below***, have their own ***much smaller*** 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_11298.png)  
 ***Image credit:*** [***@z3pio_***](https://x.com/z3pio_)
 
-Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Reddit***](https://youtu.be/pp9-Nk0VslA)
-
 Your embedded data file is compressed (depending on file type) and encrypted.  
 ## Usage (Linux - pdvin)
 
@@ -55,19 +53,18 @@ Complete! Please check your file.
 By default (*no options selected*), ***pdvin*** embeds your data file within the last ***IDAT*** chunk of the ***PNG*** image.  
 For ***Mastodon*** (*-m option*), the data file is stored within the ***iCCP chunk*** of the ***PNG*** image.
 
-https://github.com/user-attachments/assets/2ccc0cb7-f308-4df7-8a5a-1f20d453a62a
+https://github.com/user-attachments/assets/2ccc0cb7-f308-4df7-8a5a-1f20d453a62a  
 
-To ***share*** *"file-embedded"* ***PNG*** images on ***Reddit***, use the ***-r*** option with ***pdvin***.  
-Select the "***Images & Video***" tab on ***Reddit*** to post your image.  
+To correctly download images from [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
 
 ***X/Twitter** also has dimension size limits:-
+* ***PNG-32/24*** (*Truecolor*) **900x900** Max. **68x68** Min.  
+* ***PNG-8*** (*Indexed-color*) **4096x4096** Max. **68x68** Min.  
+ 
+To ***share*** *"file-embedded"* ***PNG*** images on [***Reddit***](https://youtu.be/pp9-Nk0VslA), use the ***-r*** option with ***pdvin***.  
+Select the "***Images & Video***" tab on ***Reddit*** to post your image.  
 
- ***PNG-32/24*** (*Truecolor*) **900x900** Max. **68x68** Min.  
- ***PNG-8*** (*Indexed-color*) **4096x4096** Max. **68x68** Min.  
-
-To correctly download images from ***X/Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
-
-To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the site and select ***Original*** for the size of image to download.
+To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the page and select ***Original*** for the size of image to download.
   
 You can try ***pdvrdt*** from [**this site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
  
