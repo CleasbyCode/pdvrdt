@@ -13,6 +13,9 @@ Compatible hosting sites, ***listed below***, have their own ***much smaller*** 
 
 Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Reddit***](https://youtu.be/pp9-Nk0VslA)
 
+Your data file is compressed (depending on file type) and encrypted. With default embedding, your data file is stored within the last ***IDAT*** chunk of the image.
+For ***Mastodon***, the data file is stored within the ***ICCP chunk*** of the ***PNG*** image.
+
 To ***share*** *"file-embedded"* ***PNG*** images on ***Mastodon***, use the ***-m*** option with ***pdvin***.  
 
 To ***share*** *"file-embedded"* ***PNG*** images on ***Reddit***, use the ***-r*** option with ***pdvin***.  
