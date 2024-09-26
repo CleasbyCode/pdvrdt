@@ -13,7 +13,7 @@ Compatible hosting sites, ***listed below***, have their own ***much smaller*** 
 
 Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Reddit***](https://youtu.be/pp9-Nk0VslA)
 
-Your data file is compressed (depending on file type) and encrypted.  
+Your embedded data file is compressed (depending on file type) and encrypted.  
 ## Usage (Linux - pdvin)
 
 ```console
