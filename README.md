@@ -18,7 +18,7 @@ By default (*no options selected*), ***pdvin*** embeds your data file within the
 
 For ***Mastodon*** (*-m option*), the data file is stored within the ***iCCP chunk*** of the ***PNG*** image.
 
-
+https://github.com/user-attachments/assets/2ccc0cb7-f308-4df7-8a5a-1f20d453a62a
 
 
 To ***share*** *"file-embedded"* ***PNG*** images on ***Reddit***, use the ***-r*** option with ***pdvin***.  
