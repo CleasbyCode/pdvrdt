@@ -20,19 +20,6 @@ For ***Mastodon*** (*-m option*), the data file is stored within the ***iCCP chu
 
 https://github.com/user-attachments/assets/2ccc0cb7-f308-4df7-8a5a-1f20d453a62a
 
-
-To ***share*** *"file-embedded"* ***PNG*** images on ***Reddit***, use the ***-r*** option with ***pdvin***.  
-Select the "***Images & Video***" tab on ***Reddit*** to post your image.  
-
-***X/Twitter** also has dimension size limits:-
-
- ***PNG-32/24*** (*Truecolor*) **900x900** Max. **68x68** Min.  
- ***PNG-8*** (*Indexed-color*) **4096x4096** Max. **68x68** Min.  
-
-To correctly download images from ***X/Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
-
-To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the site and select ***Original*** for the size of image to download.
-  
 ## Usage (Linux - pdvin)
 
 ```console
@@ -71,6 +58,18 @@ Extracted hidden file: document.pdf 1016540 Bytes.
 Complete! Please check your file.
 
 ```
+To ***share*** *"file-embedded"* ***PNG*** images on ***Reddit***, use the ***-r*** option with ***pdvin***.  
+Select the "***Images & Video***" tab on ***Reddit*** to post your image.  
+
+***X/Twitter** also has dimension size limits:-
+
+ ***PNG-32/24*** (*Truecolor*) **900x900** Max. **68x68** Min.  
+ ***PNG-8*** (*Indexed-color*) **4096x4096** Max. **68x68** Min.  
+
+To correctly download images from ***X/Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
+
+To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the site and select ***Original*** for the size of image to download.
+  
 You can try ***pdvrdt*** from [**this site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
  
 https://github.com/user-attachments/assets/417975b6-b5e5-49ff-a09e-341ed3e9e94c
