@@ -61,7 +61,7 @@ To correctly download images from [***X/Twitter***](https://youtu.be/nwqi3WN2lkA
 * ***PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
 * ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max. 
  
-To ***share*** *"file-embedded"* ***PNG*** images on [***Reddit***](https://youtu.be/pp9-Nk0VslA), use the ***-r*** option with ***pdvin***.  
+To ***share*** *"file-embedded"* ***PNG*** images on [***Reddit***](https://youtu.be/JAlo0I3hbPY), use the ***-r*** option with ***pdvin***.  
 Select the "***Images & Video***" tab on ***Reddit*** to post your image.  
 
 To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the page and select ***Original*** for the size of image to download.
