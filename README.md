@@ -14,12 +14,6 @@ Compatible hosting sites, ***listed below***, have their own ***much smaller*** 
 Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](https://youtu.be/A7c06xdcLRQ) / [***Reddit***](https://youtu.be/pp9-Nk0VslA)
 
 Your data file is compressed (depending on file type) and encrypted.  
-By default (*no options selected*), ***pdvin*** embeds your data file within the last ***IDAT*** chunk of the image.  
-
-For ***Mastodon*** (*-m option*), the data file is stored within the ***iCCP chunk*** of the ***PNG*** image.
-
-https://github.com/user-attachments/assets/2ccc0cb7-f308-4df7-8a5a-1f20d453a62a
-
 ## Usage (Linux - pdvin)
 
 ```console
@@ -58,6 +52,11 @@ Extracted hidden file: document.pdf 1016540 Bytes.
 Complete! Please check your file.
 
 ```
+By default (*no options selected*), ***pdvin*** embeds your data file within the last ***IDAT*** chunk of the image.  
+For ***Mastodon*** (*-m option*), the data file is stored within the ***iCCP chunk*** of the ***PNG*** image.
+
+https://github.com/user-attachments/assets/2ccc0cb7-f308-4df7-8a5a-1f20d453a62a
+
 To ***share*** *"file-embedded"* ***PNG*** images on ***Reddit***, use the ***-r*** option with ***pdvin***.  
 Select the "***Images & Video***" tab on ***Reddit*** to post your image.  
 
