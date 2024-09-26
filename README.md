@@ -16,7 +16,7 @@ Demo Videos: [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) / [***Mastodon***](
 Your data file is compressed (depending on file type) and encrypted.  
 By default (*no options selected*), ***pdvin*** embeds your data file within the last ***IDAT*** chunk of the image.  
 
-For ***Mastodon*** (*-m option*), the data file is stored within the ***ICCP chunk*** of the ***PNG*** image.
+For ***Mastodon*** (*-m option*), the data file is stored within the ***iCCP chunk*** of the ***PNG*** image.
 
 
 
