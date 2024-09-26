@@ -4,8 +4,9 @@ uint_fast32_t deflateFile(std::vector<uint8_t>& Vec, bool isMastodonOption, bool
 	constexpr uint_fast32_t
 		BUFSIZE = 2097152,	
 		LARGE_FILE_SIZE	  = 524288000,  //  > 500MB.
-		MEDIUM_FILE_SIZE  = 157286400;  //  > 150MB.
-	
+		MEDIUM_FILE_SIZE  = 157286400,  //  > 150MB.
+		COMPRESSED_FILE_TYPE_SIZE_LIMIT = 31457280; // > 30MB. Skip compressing already compressed files over 30MB.
+
 	const uint_fast32_t VEC_SIZE = static_cast<uint_fast32_t>(Vec.size());
 
 	uint_fast8_t* buffer{ new uint_fast8_t[BUFSIZE] };
@@ -23,7 +24,7 @@ uint_fast32_t deflateFile(std::vector<uint8_t>& Vec, bool isMastodonOption, bool
 
 	int_fast8_t compression_level;
 
-	if (isCompressedFile && !isMastodonOption) {
+	if (isCompressedFile && VEC_SIZE > COMPRESSED_FILE_TYPE_SIZE_LIMIT) {
 	    compression_level = Z_NO_COMPRESSION;
 	} else if (VEC_SIZE > LARGE_FILE_SIZE) {
 	    compression_level = Z_BEST_SPEED;
