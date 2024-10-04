@@ -9,7 +9,8 @@ A steganography-like CLI tool to embed & hide any file type within a PNG image.
 Compile & run pdvin (Linux):
 		
 $ g++ main.cpp -O2 -lz -s -o pdvin
-$ ./pdvin
+$ sudo cp pdvin /usr/bin
+$ pdvin
 
 Usage: pdvin [-m] [-r] <cover_image> <data_file>  
        pdvin --info
