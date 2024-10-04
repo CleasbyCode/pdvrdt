@@ -25,18 +25,18 @@
 #include "pdvin.cpp"
 #include "information.cpp"
 
-template <uint_fast8_t N>
-uint_fast32_t searchFunc(std::vector<uint8_t>&, uint_fast32_t, const uint_fast8_t, const uint_fast8_t (&)[N]);
+template <uint8_t N>
+uint32_t searchFunc(std::vector<uint8_t>&, uint32_t, const uint8_t, const uint8_t (&)[N]);
 
-uint_fast32_t
-	crcUpdate(uint_fast8_t*, uint_fast32_t),
-	encryptFile(std::vector<uint8_t>&, std::vector<uint8_t>&, uint_fast32_t, std::string&),
+uint32_t
+	crcUpdate(uint8_t*, uint32_t),
+	encryptFile(std::vector<uint8_t>&, std::vector<uint8_t>&, uint32_t, std::string&),
 	deflateFile(std::vector<uint8_t>&, bool, bool),
-	getByteValue(const std::vector<uint8_t>&, const uint_fast32_t);
+	getByteValue(const std::vector<uint8_t>&, const uint32_t);
 
 void 
-	valueUpdater(std::vector<uint8_t>&, uint_fast32_t, const uint_fast32_t, uint_fast8_t),
+	valueUpdater(std::vector<uint8_t>&, uint32_t, const uint32_t, uint8_t),
 	eraseChunks(std::vector<uint8_t>&),
 	displayInfo();
 
-uint_fast8_t pdvIn(const std::string&, std::string&, bool, bool, bool);
+uint8_t pdvIn(const std::string&, std::string&, bool, bool, bool);
