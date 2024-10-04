@@ -119,7 +119,7 @@ uint8_t pdvOut(const std::string& IMAGE_FILENAME) {
 
 	std::vector<uint8_t>().swap(Image_Vec);
 
-	std::cout << "\nExtracted hidden file: " + DECRYPTED_DATA_FILENAME + '\x20' + std::to_string(FILE_SIZE) + " Bytes.\n\nComplete! Please check your file.\n\n";
+	std::cout << "\nExtracted hidden file: " + DECRYPTED_FILENAME + '\x20' + std::to_string(FILE_SIZE) + " Bytes.\n\nComplete! Please check your file.\n\n";
 
 	return 0;
 }
