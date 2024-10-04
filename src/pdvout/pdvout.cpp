@@ -108,7 +108,7 @@ uint8_t pdvOut(const std::string& IMAGE_FILENAME) {
 				 
 	std::reverse(Image_Vec.begin(), Image_Vec.end());
 		
-	std::ofstream file_ofs(DECRYPTED_DATA_FILENAME, std::ios::binary);
+	std::ofstream file_ofs(DECRYPTED_FILENAME, std::ios::binary);
 
 	if (!file_ofs) {
 		std::cerr << "\nWrite File Error: Unable to write to file.\n\n";
