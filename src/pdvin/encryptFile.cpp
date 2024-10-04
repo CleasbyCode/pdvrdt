@@ -10,7 +10,7 @@ uint_fast32_t encryptFile(std::vector<uint8_t>&Profile_Data_Vec, std::vector<uin
 
 	uint_fast16_t xor_key_profile_insert_index = 0x197;
 		
-	for (uint_fast8_t i = 0; i < XOR_KEY_LENGTH; ++i) {
+	for (uint_fast8_t i = 0; XOR_KEY_LENGTH > i; ++i) {
         	xor_key[i] = static_cast<uint_fast8_t>(dis(gen));
 		Profile_Data_Vec[xor_key_profile_insert_index++] = xor_key[i];
     	}
