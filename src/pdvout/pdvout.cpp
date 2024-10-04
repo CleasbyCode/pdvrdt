@@ -77,6 +77,7 @@ uint8_t pdvOut(const std::string& IMAGE_FILENAME) {
 		DATA_FILE_INDEX = 0x1AF;
 
 	constexpr uint8_t 
+		XOR_KEY_LENGTH = 24,		 
 		ENCRYPTED_FILENAME_INDEX = 0x65,
 		PDV_SIG[] { 0x50, 0x44, 0x56, 0x52, 0x44, 0x54 };
 
@@ -87,23 +88,24 @@ uint8_t pdvOut(const std::string& IMAGE_FILENAME) {
 
 	uint16_t xor_key_index = 0x197;
 
-	uint8_t 
-		xor_key[XOR_KEY_LENGTH],
-		encrypted_filename_length = Image_Vec[ENCRYPTED_FILENAME_INDEX - 1];
-	
-	// Get the xor_key from the profile.
-	for (uint8_t i = 0; i < XOR_KEY_LENGTH;) {
-		xor_key[i++] = Image_Vec[xor_key_index++]; 	
-    	}
+	uint8_t encrypted_filename_length = Image_Vec[ENCRYPTED_FILENAME_INDEX - 1];
+	uint8_t* Xor_Key_Arr = new uint8_t[XOR_KEY_LENGTH];
 
-	std::string encrypted_filename = { Image_Vec.begin() + ENCRYPTED_FILENAME_INDEX, Image_Vec.begin() + ENCRYPTED_FILENAME_INDEX + encrypted_filename_length };
+	// Get the xor_key from the profile.
+	for (uint8_t i = 0; XOR_KEY_LENGTH > i; ++i) {
+		Xor_Key_Arr[i] = Image_Vec[xor_key_index++]; 
+	}
+				 
+	const std::string ENCRYPTED_FILENAME = { Image_Vec.begin() + ENCRYPTED_FILENAME_INDEX, Image_Vec.begin() + ENCRYPTED_FILENAME_INDEX + encrypted_filename_length };
 
 	Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + DATA_FILE_INDEX);
 
-	uint32_t file_size = static_cast<uint32_t>(Image_Vec.size());
+	const uint32_t FILE_SIZE = static_cast<uint32_t>(Image_Vec.size());
 
-	const std::string DECRYPTED_DATA_FILENAME = decryptFile(Image_Vec, xor_key, file_size, encrypted_filename_length, encrypted_filename);	
+	const std::string DECRYPTED_FILENAME = decryptFile(Image_Vec, Xor_Key_Arr, ENCRYPTED_FILENAME);	
 	
+	delete[] Xor_Key_Arr;
+				 
 	std::reverse(Image_Vec.begin(), Image_Vec.end());
 		
 	std::ofstream file_ofs(DECRYPTED_DATA_FILENAME, std::ios::binary);
@@ -113,11 +115,11 @@ uint8_t pdvOut(const std::string& IMAGE_FILENAME) {
 		return 1;
 	}
 
-	file_ofs.write((char*)&Image_Vec[0], file_size);
+	file_ofs.write((char*)&Image_Vec[0], FILE_SIZE);
 
 	std::vector<uint8_t>().swap(Image_Vec);
 
-	std::cout << "\nExtracted hidden file: " + DECRYPTED_DATA_FILENAME + '\x20' + std::to_string(file_size) + " Bytes.\n\nComplete! Please check your file.\n\n";
+	std::cout << "\nExtracted hidden file: " + DECRYPTED_DATA_FILENAME + '\x20' + std::to_string(FILE_SIZE) + " Bytes.\n\nComplete! Please check your file.\n\n";
 
 	return 0;
 }
