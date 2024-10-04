@@ -1,6 +1,5 @@
-std::string decryptFile(std::vector<uint8_t>&Image_Vec, uint_fast8_t (&xor_key)[XOR_KEY_LENGTH], uint_fast32_t file_size, uint_fast8_t filename_length, std::string& filename) {
-
-	uint_fast8_t
+std::string decryptFile(std::vector<uint8_t>&Image_Vec, uint8_t (&xor_key)[XOR_KEY_LENGTH], uint32_t file_size, uint8_t filename_length, std::string& filename) {
+	uint8_t
 		xor_key_pos = 0,
 		name_pos = 0;
 
@@ -10,7 +9,7 @@ std::string decryptFile(std::vector<uint8_t>&Image_Vec, uint_fast8_t (&xor_key)[
 		decrypted_filename += filename[name_pos++] ^ xor_key[xor_key_pos++];
 	}
 
-	uint_fast32_t
+	uint32_t
 		decrypt_pos = 0,
 		index_pos = 0;
 
