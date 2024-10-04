@@ -11,7 +11,7 @@
 #include <iterator>
 #include <zlib.h>
 
-constexpr uint_fast8_t XOR_KEY_LENGTH = 24;
+constexpr uint8_t XOR_KEY_LENGTH = 24;
 
 #include "getByteValue.cpp"
 #include "searchFunc.cpp"
@@ -20,15 +20,15 @@ constexpr uint_fast8_t XOR_KEY_LENGTH = 24;
 #include "pdvout.cpp"
 #include "information.cpp"
 
-std::string decryptFile(std::vector<uint8_t>&, uint_fast8_t (&)[XOR_KEY_LENGTH], uint_fast32_t, uint_fast8_t, std::string&);
+std::string decryptFile(std::vector<uint8_t>&, uint8_t (&)[XOR_KEY_LENGTH], uint32_t, uint8_t, std::string&);
 
-template <uint_fast8_t N>
-uint_fast32_t searchFunc(std::vector<uint8_t>&, uint_fast32_t, uint_fast8_t, const uint_fast8_t (&)[N]);
+template <uint8_t N>
+uint32_t searchFunc(std::vector<uint8_t>&, uint32_t, uint8_t, const uint8_t (&)[N]);
 
-uint_fast32_t getByteValue(const std::vector<uint8_t>&, const uint_fast32_t);
+uint32_t getByteValue(const std::vector<uint8_t>&, const uint32_t);
 
 void
 	inflateFile(std::vector<uint8_t>&),
 	displayInfo();
 
-uint_fast8_t pdvOut(const std::string&);
+uint8_t pdvOut(const std::string&);
