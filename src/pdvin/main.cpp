@@ -44,6 +44,7 @@ int main(int argc, char** argv) {
 	const std::filesystem::path 
 		IMAGE_PATH(IMAGE_FILENAME),
 		DATA_FILE_PATH(data_filename);
+	
         const std::string 
 		IMAGE_EXTENSION = IMAGE_PATH.extension().string(),
 		DATA_FILE_EXTENSION = DATA_FILE_PATH.extension().string();
