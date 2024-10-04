@@ -1,10 +1,11 @@
-//	PNG Data Vehicle (pdvout v1.1). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle (pdvout v1.2). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
 //	$ g++ main.cpp -O2 -lz -s -o pdvout
-// 
+// 	$ sudo cp pdvout /usr/bin
+
 //	Run it
-//	$ ./pdvout
+//	$ pdvout
 
 #include "pdvout.h"
 
