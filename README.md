@@ -59,7 +59,7 @@ https://github.com/user-attachments/assets/2ccc0cb7-f308-4df7-8a5a-1f20d453a62a
 
 To correctly download images from [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
 
-***X/Twitter** also has dimension size limits:-
+In addition to the **5MB** image size limit, ***X/Twitter*** also has the following dimension size limits.
 * ***PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
 * ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max. 
  
