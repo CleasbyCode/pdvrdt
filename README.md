@@ -11,7 +11,7 @@ Compatible hosting sites, ***listed below***, have their own ***much smaller*** 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_11298.png)  
 ***Image credit:*** [***@z3pio_***](https://x.com/z3pio_)
 
-Your embedded data file is compressed (depending on file type) and encrypted.  
+Your embedded data file is ***compressed*** (depending on file type) and ***encrypted***.  
 ## Usage (Linux - pdvin)
 
 ```console
@@ -64,7 +64,7 @@ In addition to the **5MB** image size limit, ***X/Twitter*** also has the follow
 * ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max. 
  
 To create "*file-embedded*" ***PNG*** images ***compatible*** for posting on [***Reddit***](https://youtu.be/JAlo0I3hbPY), use the ***-r*** option with ***pdvin***.  
-From the Reddit site, click "Create Post" then select "Images & Video" tab, to post your PNG image. 
+From the ***Reddit*** site, click "*Create Post*" then select "*Images & Video*" tab, to post your ***PNG*** image. 
 
 To correctly download an image from [***Flickr***](https://youtu.be/uE_cn6sMwK4), click the download arrow near the bottom right-hand corner of the page and select ***Original*** for the size of image to download.
   
