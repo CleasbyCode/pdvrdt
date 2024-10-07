@@ -70,10 +70,9 @@ To correctly download an image from [***Flickr***](https://youtu.be/uE_cn6sMwK4)
   
 You can try ***pdvrdt*** from [**this site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
  
-https://github.com/user-attachments/assets/417975b6-b5e5-49ff-a09e-341ed3e9e94c
+https://github.com/user-attachments/assets/417975b6-b5e5-49ff-a09e-341ed3e9e94c  
 
-**Issues:**
-* **ImgPile -** *You must sign in to an account before sharing your data-embedded PNG image on ImgPile*.  
+**ImgPile -** *You must sign in to an account before sharing your data-embedded PNG image on ImgPile*.  
 		*Sharing your image without logging in, your embedded data will not be preserved.*
 
  My other programs you may find useful:-
@@ -81,7 +80,6 @@ https://github.com/user-attachments/assets/417975b6-b5e5-49ff-a09e-341ed3e9e94c
 * [pdvzip: CLI tool to embed a ZIP file within a tweetable and "executable" PNG-ZIP polyglot image.](https://github.com/CleasbyCode/pdvzip)
 * [jdvrif: CLI tool to encrypt & embed any file type within a JPG image.](https://github.com/CleasbyCode/jdvrif)
 * [imgprmt: CLI tool to embed an image prompt (e.g. "Midjourney") within a tweetable JPG-HTML polyglot image.](https://github.com/CleasbyCode/imgprmt)
-* [jzp: CLI tool to embed small files (e.g. "workflow.json") within a tweetable JPG-ZIP polyglot image.](https://github.com/CleasbyCode/jzp)  
 * [pdvps: PowerShell / C++ CLI tool to encrypt & embed any file type within a tweetable & "executable" PNG image](https://github.com/CleasbyCode/pdvps)
 
 ##
