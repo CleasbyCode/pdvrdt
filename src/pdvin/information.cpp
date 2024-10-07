@@ -4,7 +4,7 @@ void displayInfo() {
 PNG Data Vehicle (pdvin v1.2). 
 Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
-A steganography-like CLI tool to embed & hide any file type within a PNG image. 
+pdvin is a steganography-like CLI tool for embedding & concealing any file type within a PNG image.
 
 Compile & run pdvin (Linux):
 		
