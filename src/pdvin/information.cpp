@@ -18,13 +18,14 @@ Usage: pdvin [-m] [-r] <cover_image> <data_file>
 Post your file-embedded image on the following compatible sites.  
 Image size limits(cover image + data file):
 
-Flickr (200MB), ImgBB (32MB), PostImage (24MB), *Reddit (19MB / -r option), 
+Flickr (200MB), ImgBB (32MB), PostImage (32MB), Reddit (19MB / -r option), 
 Mastodon (16MB / -m option), ImgPile (8MB), X/Twitter (5MB / Dimension limits).
 
 Argument options:	
 		
-To post/share file-embedded PNG images on Reddit use the -r option with pdvin.
-To post/share file-embedded PNG images on Mastodon use the -m option with pdvin.
+To create "file-embedded" PNG images compatible for posting on:
+Reddit. Use the -r option with pdvin.
+Mastodon. Use the -m option with pdvin.
 		
  -m = Mastodon option, (pdvin -m cover_image.png my_hidden_file.mp3).
  -r = Reddit option,   (pdvin -r cover_image.png my_hidden_file.doc).
