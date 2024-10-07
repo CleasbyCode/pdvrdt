@@ -32,8 +32,10 @@ From the Reddit site, click "Create Post" then select "Images & Video" tab, to p
 In addition to the 5MB image size limit, X/Twitter also has the following dimension size limits.
 
 PNG-32/24 (Truecolor) 68x68 Min. - 900x900 Max.
-PNG-8 (Indexed color) 68x68 Min. - 4096x4096 Max.
-
+PNG-8 (Indexed-color) 68x68 Min. - 4096x4096 Max.
+		
+To correctly download images from X/Twitter or Reddit, click the image in the post to fully expand it, before saving.
+		
 ImgPile - You must sign in to an account before sharing your "file-embedded" PNG image on this site.
 Sharing your image without logging in, your embedded data will not be preserved.
 
