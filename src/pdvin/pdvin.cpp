@@ -103,7 +103,7 @@ uint8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
 		Image_Vec.insert(Image_Vec.end() - 12, Idat_Reddit_Vec.begin(), Idat_Reddit_Vec.end());
 	}
 
-	uint32_t PROFILE_DATA_VEC_SIZE = encryptFile(Profile_Data_Vec, File_Vec, file_vec_size, data_filename);
+	const uint32_t PROFILE_DATA_VEC_SIZE = encryptFile(Profile_Data_Vec, File_Vec, file_vec_size, data_filename);
 
 	uint8_t
 		profile_data_vec_size_index{},
@@ -114,7 +114,7 @@ uint8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, boo
 	
 	const uint32_t PROFILE_DATA_VEC_DEFLATE_SIZE = deflateFile(Profile_Data_Vec, isMastodonOption, isCompressedFile);
 		
-	if (!PROFILE_DATA_VEC_DEFLATE_SIZE) {
+	if (Profile_Data_Vec.empty()) {
 		std::cerr << "\nFile Size Error: File is zero bytes. Probable compression failure.\n\n";
 		return 1;
 	}
