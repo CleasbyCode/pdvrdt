@@ -1,7 +1,7 @@
 void displayInfo() {
 	std::cout << R"(
 
-PNG Data Vehicle (pdvin v1.2). 
+PNG Data Vehicle (pdvin v1.3). 
 Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
 pdvin is a steganography-like CLI tool for embedding & concealing any file type within a PNG image.
