@@ -28,12 +28,12 @@
 template <uint8_t N>
 uint32_t searchFunc(std::vector<uint8_t>&, uint32_t, const uint8_t, const uint8_t (&)[N]);
 
+const uint32_t
+	encryptFile(std::vector<uint8_t>&, std::vector<uint8_t>&, uint32_t, std::string&),
+	deflateFile(std::vector<uint8_t>&, bool, bool);
 uint32_t
 	crcUpdate(uint8_t*, uint32_t),
-	encryptFile(std::vector<uint8_t>&, std::vector<uint8_t>&, uint32_t, std::string&),
-	deflateFile(std::vector<uint8_t>&, bool, bool),
 	getByteValue(const std::vector<uint8_t>&, const uint32_t);
-
 void 
 	valueUpdater(std::vector<uint8_t>&, uint32_t, const uint32_t, uint8_t),
 	eraseChunks(std::vector<uint8_t>&),
