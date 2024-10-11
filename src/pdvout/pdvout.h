@@ -18,7 +18,7 @@
 #include "pdvout.cpp"
 #include "information.cpp"
 
-std::string decryptFile(std::vector<uint8_t>&, const uint8_t*, const std::string&);
+const std::string decryptFile(std::vector<uint8_t>&);
 
 template <uint8_t N>
 uint32_t searchFunc(std::vector<uint8_t>&, uint32_t, uint8_t, const uint8_t (&)[N]);
@@ -30,3 +30,4 @@ void
 	displayInfo();
 
 uint8_t pdvOut(const std::string&);
+
