@@ -35,8 +35,7 @@ const std::string decryptFile(std::vector<uint8_t>&Image_Vec) {
 		index_pos = 0;
 
 	while (encrypted_file_size--) {
-		Image_Vec[decrypt_pos++] = Image_Vec[index_pos++] ^ Xor_Key_Arr[xor_key_pos++];
-		xor_key_pos = xor_key_pos >= XOR_KEY_LENGTH ? 0 : xor_key_pos;	
+		Image_Vec[decrypt_pos++] = Image_Vec[index_pos++] ^ Xor_Key_Arr[xor_key_pos++ % XOR_KEY_LENGTH];
 	}
 	return decrypted_filename;
 } 
