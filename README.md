@@ -26,7 +26,7 @@ Usage: pdvin [-m|-r] <cover_image> <data_file>
 
 user1@linuxbox:~/Desktop$ pdvin my_cover_image.png document.pdf
   
-Saved "file-embedded" PNG image: prdt_17627.png 1245285 Bytes.
+Saved "file-embedded" PNG image: prdt_17627.png (1245285 bytes).
 
 Complete!
 
@@ -45,7 +45,7 @@ Usage: pdvout <file_embedded_image>
         
 user1@linuxbox:~/Desktop$ pdvout prdt_17627.png
 
-Extracted hidden file: document.pdf 1016540 Bytes.
+Extracted hidden file: document.pdf (1016540 bytes).
 
 Complete! Please check your file.
 
