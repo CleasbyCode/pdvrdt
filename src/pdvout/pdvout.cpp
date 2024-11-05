@@ -31,6 +31,7 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 	Image_Vec.resize(IMAGE_FILE_SIZE);
 
 	image_file_ifs.read(reinterpret_cast<char*>(Image_Vec.data()), IMAGE_FILE_SIZE);
+   	image_file_ifs.close();
 
 	constexpr uint8_t
 		PNG_SIG[] 	{ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A },
