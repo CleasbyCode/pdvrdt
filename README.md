@@ -11,7 +11,7 @@ Compatible hosting sites, ***listed below***, have their own ***much smaller*** 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_69874.png)  
 ***Image credit:*** [***@z3pio_***](https://x.com/z3pio_) / ***PIN: 2430293547***
 
-Your embedded data file is ***compressed*** (depending on file type) and ***encrypted***.  
+Your embedded data file is ***compressed*** (depending on file type) and ***encrypted*** with PIN protection.  
 ## Usage (Linux - pdvin)
 
 ```console
