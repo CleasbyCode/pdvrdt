@@ -23,67 +23,111 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 		return 1;
 	}
 
-	if (IMAGE_FILE_SIZE > LARGE_FILE_SIZE) {
-		std::cout << "\nPlease wait. Larger files will take longer to process.\n";
-	}
-
 	std::vector<uint8_t> Image_Vec;
 	Image_Vec.resize(IMAGE_FILE_SIZE);
 
 	image_file_ifs.read(reinterpret_cast<char*>(Image_Vec.data()), IMAGE_FILE_SIZE);
-   	image_file_ifs.close();
+	image_file_ifs.close();
 
 	constexpr uint8_t
 		PNG_SIG[] 	{ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A },
-		PNG_IEND_SIG[]	{ 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 },
+		PNG_IEND_SIG[]	{ 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60 },
 		ICCP_SIG[] 	{ 0x69, 0x43, 0x43, 0x50, 0x69, 0x63, 0x63 },
-		IDAT_FILE_SIG[] { 0x49, 0x44, 0x41, 0x54, 0x5E, 0x78 },
-		PDV_SIG[] 	{ 0x50, 0x44, 0x56, 0x52, 0x44, 0x54 };
+		PDV_SIG[] 	{ 0xC6, 0x50, 0x3C, 0xEA, 0x5E, 0x9D, 0xF9 },
+		ICCP_CHUNK_INDEX = 0x25;
 		
 	if (!std::equal(std::begin(PNG_SIG), std::end(PNG_SIG), std::begin(Image_Vec)) || !std::equal(std::begin(PNG_IEND_SIG), std::end(PNG_IEND_SIG), std::end(Image_Vec) - 8)) {
         	std::cerr << "\nImage File Error: Signature check failure. This file is not a valid PNG image.\n\n";
 		return 1;
     	}
 
-	constexpr uint8_t ICCP_CHUNK_INDEX = 0x25;
-
 	const uint32_t
-		ICCP_POS  = static_cast<uint32_t>(std::search(Image_Vec.begin(), Image_Vec.end(), std::begin(ICCP_SIG), std::end(ICCP_SIG)) - Image_Vec.begin()),
-		IDAT_POS = static_cast<uint32_t>(std::search(Image_Vec.begin(), Image_Vec.end(), std::begin(IDAT_FILE_SIG), std::end(IDAT_FILE_SIG)) - Image_Vec.begin());
+		ICCP_SIG_POS  = static_cast<uint32_t>(std::search(Image_Vec.begin(), Image_Vec.end(), std::begin(ICCP_SIG), std::end(ICCP_SIG)) - Image_Vec.begin()),
+		PDV_SIG_POS = static_cast<uint32_t>(std::search(Image_Vec.begin(), Image_Vec.end(), std::begin(PDV_SIG), std::end(PDV_SIG)) - Image_Vec.begin());
 
-	if (ICCP_POS != ICCP_CHUNK_INDEX && IDAT_POS == static_cast<uint32_t>(Image_Vec.size())) {
-		std::cerr << "\nImage File Error: This is not a pdvrdt file-embedded image.\n\n";
+	if (ICCP_SIG_POS != ICCP_CHUNK_INDEX && PDV_SIG_POS == Image_Vec.size()) {
+		std::cerr << "\nImage File Error: This is not a pdvrdt image.\n\n";
 		return 1;
 	}
 
-	bool isMastodonFile = (ICCP_POS == ICCP_CHUNK_INDEX);
+	bool isMastodonFile = (ICCP_SIG_POS == ICCP_CHUNK_INDEX && PDV_SIG_POS == Image_Vec.size());
 	
 	const uint32_t
-		CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_POS - 4 : IDAT_POS - 4,				
-		DEFLATE_DATA_INDEX = isMastodonFile ? ICCP_POS + 9 : IDAT_POS + 5,		
-		CHUNK_SIZE = getByteValue(Image_Vec, CHUNK_SIZE_INDEX),
-		DEFLATE_CHUNK_SIZE = isMastodonFile ? CHUNK_SIZE - 9 : CHUNK_SIZE;
-	
-	Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + DEFLATE_DATA_INDEX);
-	Image_Vec.erase(Image_Vec.begin() + DEFLATE_CHUNK_SIZE, Image_Vec.end());
-	
-	inflateFile(Image_Vec);
+		CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_SIG_POS - 4 : PDV_SIG_POS - 0x10A,				
+		PROFILE_DATA_INDEX = isMastodonFile ? ICCP_SIG_POS + 9 : CHUNK_SIZE_INDEX + 0x0B,		
+		CHUNK_SIZE = isMastodonFile ? getByteValue(Image_Vec, CHUNK_SIZE_INDEX) - 9 : getByteValue(Image_Vec, CHUNK_SIZE_INDEX);
 
-	if (Image_Vec.empty()) {
-		std::cerr << "\nFile Size Error: File is zero bytes. Probable failure uncompressing file.\n\n";
-		return 1;
-	}
+	uint8_t byte = Image_Vec.back();
 
-	constexpr uint16_t PDV_SIG_INDEX = 0x191;
+	Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + PROFILE_DATA_INDEX);
+	Image_Vec.erase(Image_Vec.begin() + ( isMastodonFile ? CHUNK_SIZE + 3 : CHUNK_SIZE - 4), Image_Vec.end());
+	
+	if (isMastodonFile) {
+		const uint32_t TMP_INFLATED_FILE_SIZE = inflateFile(Image_Vec);
+		if (!TMP_INFLATED_FILE_SIZE) {
+			std::cerr << "\nFile Size Error: File is zero bytes. Probable failure inflating file.\n\n";
+			return 1;
+		}
+		const uint32_t PDV_ICCP_SIG_POS = static_cast<uint32_t>(std::search(Image_Vec.begin(), Image_Vec.end(), std::begin(PDV_SIG), std::end(PDV_SIG)) - Image_Vec.begin());
 		
-	if (!std::equal(std::begin(PDV_SIG), std::end(PDV_SIG), std::begin(Image_Vec) + PDV_SIG_INDEX)) {
-		std::cerr << "\nImage File Error: Signature match failure. This is not a pdvrdt file-embedded image.\n\n";
+		if (PDV_ICCP_SIG_POS == Image_Vec.size()) {
+			std::cerr << "\nImage File Error: This is not a pdvrdt image.\n\n";
+			return 1;
+		}
+	}
+
+	std::vector<uint8_t>Decrypted_File_Vec;
+	Decrypted_File_Vec.reserve(IMAGE_FILE_SIZE);
+
+	if (IMAGE_FILE_SIZE > LARGE_FILE_SIZE) {
+		std::cout << "\nPlease wait. Larger files will take longer to process.\n";
+	}
+
+	const std::string DECRYPTED_FILENAME = decryptFile(Image_Vec, Decrypted_File_Vec, isMastodonFile);
+
+	const uint32_t INFLATED_FILE_SIZE = inflateFile(Decrypted_File_Vec);
+
+	if (Decrypted_File_Vec.empty()) {
+		
+		std::fstream file(IMAGE_FILENAME, std::ios::in | std::ios::out | std::ios::binary); 
+   		 
+	    	file.seekg(-1, std::ios::end);
+	    	std::streampos byte_pos = file.tellg();
+
+	    	file.read(reinterpret_cast<char*>(&byte), sizeof(byte));
+
+    	    	byte = byte == 0x82 ? 0 : ++byte;
+
+		if (byte > 3) {
+			file.close();
+			std::ofstream file(IMAGE_FILENAME, std::ios::out | std::ios::trunc | std::ios::binary);
+		} else {
+			file.seekp(byte_pos);
+			file.write(reinterpret_cast<char*>(&byte), sizeof(byte));
+		}
+
+		file.close();
+
+    	    	std::cerr << "\nFile Error: Invalid recovery PIN or file is corrupt.\n\n";
+
 		return 1;
 	}
 
-	const std::string DECRYPTED_FILENAME = decryptFile(Image_Vec);	
-				 
-	std::reverse(Image_Vec.begin(), Image_Vec.end());
+	if (byte != 0x82) {	
+		std::fstream file(IMAGE_FILENAME, std::ios::in | std::ios::out | std::ios::binary); 
+   		 
+		file.seekg(-1, std::ios::end);
+		std::streampos byte_pos = file.tellg();
+
+		byte = 0x82;
+
+		file.seekp(byte_pos);
+		file.write(reinterpret_cast<char*>(&byte), sizeof(byte));
+
+		file.close();
+	}
+
+	std::reverse(Decrypted_File_Vec.begin(), Decrypted_File_Vec.end());
 		
 	std::ofstream file_ofs(DECRYPTED_FILENAME, std::ios::binary);
 
@@ -92,13 +136,11 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 		return 1;
 	}
 
-	const uint32_t FILE_SIZE = static_cast<uint32_t>(Image_Vec.size());
+	file_ofs.write(reinterpret_cast<const char*>(Decrypted_File_Vec.data()), INFLATED_FILE_SIZE);
 
-	file_ofs.write(reinterpret_cast<const char*>(Image_Vec.data()), FILE_SIZE);
+	std::vector<uint8_t>().swap(Decrypted_File_Vec);
 
-	std::vector<uint8_t>().swap(Image_Vec);
-
-	std::cout << "\nExtracted hidden file: " << DECRYPTED_FILENAME << " (" << FILE_SIZE << " bytes).\n\nComplete! Please check your file.\n\n";
+	std::cout << "\nExtracted hidden file: " << DECRYPTED_FILENAME << " (" << INFLATED_FILE_SIZE << " bytes).\n\nComplete! Please check your file.\n\n";
 
 	return 0;
 }
