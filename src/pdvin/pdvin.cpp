@@ -50,7 +50,8 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 
 	constexpr uint8_t
 		PNG_SIG[] 	{ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A },
-		PNG_IEND_SIG[]	{ 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 };
+		PNG_IEND_SIG[]	{ 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 },
+		MAX_FILENAME_LENGTH = 20;
 
 	if (!std::equal(std::begin(PNG_SIG), std::end(PNG_SIG), std::begin(Image_Vec)) || !std::equal(std::begin(PNG_IEND_SIG), std::end(PNG_IEND_SIG), std::end(Image_Vec) - 8)) {
         	std::cerr << "\nImage File Error: Signature check failure. This file is not a valid PNG image.\n\n";
@@ -62,8 +63,6 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 	std::filesystem::path filePath(data_filename);
     	data_filename = filePath.filename().string();
 
-	constexpr uint8_t MAX_FILENAME_LENGTH = 20;
-
 	const uint8_t DATA_FILENAME_LENGTH = static_cast<uint8_t>(data_filename.length());
 
 	if (DATA_FILENAME_LENGTH > MAX_FILENAME_LENGTH) {
@@ -71,7 +70,15 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 		return 1;
 	}
 
-	constexpr uint8_t PROFILE_NAME_LENGTH_INDEX = 0x64;
+	std::vector<uint8_t>Profile_Data_Vec;
+
+	if (isMastodonOption) {
+		Profile_Data_Vec = std::move(Mastodon_Vec);
+	} else {
+		Profile_Data_Vec = std::move(Default_Vec);
+	}
+
+	const uint16_t PROFILE_NAME_LENGTH_INDEX = isMastodonOption ? 0x191: 0x00;
 	Profile_Data_Vec[PROFILE_NAME_LENGTH_INDEX] = DATA_FILENAME_LENGTH;
 
 	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  // 400MB.
@@ -88,7 +95,14 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 
 	std::reverse(File_Vec.begin(), File_Vec.end());
 
-	uint32_t file_vec_size = static_cast<uint32_t>(File_Vec.size());
+	uint32_t file_vec_size = deflateFile(File_Vec, isMastodonOption, isCompressedFile);
+	
+	if (!file_vec_size) {
+		std::cerr << "\nFile Size Error: File is zero bytes. Probable compression failure.\n\n";
+		return 1;
+	}
+
+	const uint32_t PIN = encryptFile(Profile_Data_Vec, File_Vec, file_vec_size, data_filename, isMastodonOption);
 
 	if (isRedditOption) {
 		constexpr uint8_t IDAT_REDDIT_CRC_BYTES[] { 0xA3, 0x1A, 0x50, 0xFA };
@@ -101,45 +115,33 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 		Image_Vec.insert(Image_Vec.end() - 12, Idat_Reddit_Vec.begin(), Idat_Reddit_Vec.end());
 	}
 
-	const uint32_t PROFILE_DATA_VEC_SIZE = encryptFile(Profile_Data_Vec, File_Vec, file_vec_size, data_filename);
+	uint32_t mastodon_deflate_size = 0;
 
-	uint8_t
-		profile_data_vec_size_index{},
-		chunk_size_index{},
-		bits = 32;
-
-	valueUpdater(Profile_Data_Vec, profile_data_vec_size_index, PROFILE_DATA_VEC_SIZE, bits);
-	
-	const uint32_t PROFILE_DATA_VEC_DEFLATE_SIZE = deflateFile(Profile_Data_Vec, isMastodonOption, isCompressedFile);
-		
-	if (Profile_Data_Vec.empty()) {
-		std::cerr << "\nFile Size Error: File is zero bytes. Probable compression failure.\n\n";
-		return 1;
-	}
-
-	constexpr uint16_t TWITTER_ICCP_SIZE_LIMIT = 9700;
-
-	// Even if Mastodon option NOT selected, we default to it anyway if Reddit option false & data file size is under ~10KB, as this small size is compatible with X/Twitter.
-	// The small data file is then stored in the ICCP chunk instead of the last IDAT chunk.
-	if (TWITTER_ICCP_SIZE_LIMIT >= PROFILE_DATA_VEC_DEFLATE_SIZE && !isRedditOption) {
-		isMastodonOption = true;
+	if (isMastodonOption) {
+		// Compresss the data chunk again, this time including the color profile. Requirement for iCCP chunk/Mastodon.
+		mastodon_deflate_size = deflateFile(Profile_Data_Vec, isMastodonOption, isCompressedFile);
 	}
 
 	constexpr uint8_t CHUNK_START_INDEX = 4;
 
+	uint8_t
+		chunk_size_index = 0,
+		bits = 32;
+
 	const uint32_t
+		PROFILE_DATA_VEC_DEFLATE_SIZE = static_cast<uint32_t>(Profile_Data_Vec.size()),
 		IMAGE_VEC_SIZE = static_cast<uint32_t>(Image_Vec.size()),
-		CHUNK_SIZE = isMastodonOption ? PROFILE_DATA_VEC_DEFLATE_SIZE + 9 : PROFILE_DATA_VEC_DEFLATE_SIZE + 5,
+		CHUNK_SIZE = isMastodonOption ? mastodon_deflate_size + 9 : PROFILE_DATA_VEC_DEFLATE_SIZE + 3,
 		CHUNK_INDEX = isMastodonOption ? 0x21 : IMAGE_VEC_SIZE - 12;
 
-	const uint8_t PROFILE_DATA_INDEX = isMastodonOption ? 0x0D : 9;
+	const uint8_t PROFILE_DATA_INDEX = isMastodonOption ? 0x0D : 0x0B;
 
 	if (isMastodonOption) {
 		std::vector<uint8_t>Iccp_Chunk_Vec = { 0x00, 0x00, 0x00, 0x00, 0x69, 0x43, 0x43, 0x50, 0x69, 0x63, 0x63, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 		Iccp_Chunk_Vec.reserve(Iccp_Chunk_Vec.size() + CHUNK_SIZE);
 
 		Iccp_Chunk_Vec.insert((Iccp_Chunk_Vec.begin() + PROFILE_DATA_INDEX), Profile_Data_Vec.begin(), Profile_Data_Vec.end());
-		valueUpdater(Iccp_Chunk_Vec, chunk_size_index, PROFILE_DATA_VEC_DEFLATE_SIZE + 5, bits);
+		valueUpdater(Iccp_Chunk_Vec, chunk_size_index, mastodon_deflate_size + 5, bits);
 
 		const uint32_t ICCP_CHUNK_CRC = crcUpdate(&Iccp_Chunk_Vec[CHUNK_START_INDEX], CHUNK_SIZE);
 		uint32_t iccp_crc_index = CHUNK_START_INDEX + CHUNK_SIZE;
@@ -147,14 +149,14 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 		valueUpdater(Iccp_Chunk_Vec, iccp_crc_index, ICCP_CHUNK_CRC, bits);
 		Image_Vec.insert((Image_Vec.begin() + CHUNK_INDEX), Iccp_Chunk_Vec.begin(), Iccp_Chunk_Vec.end());
 	} else {
-	     	std::vector<uint8_t>Idat_Chunk_Vec = { 0x00, 0x00, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54, 0x5E, 0x00, 0x00, 0x00, 0x00 };
+	     	std::vector<uint8_t>Idat_Chunk_Vec = { 0x00, 0x00, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54, 0x78, 0x5E, 0x5C, 0x00, 0x00, 0x00, 0x00 };
 		Idat_Chunk_Vec.reserve(Idat_Chunk_Vec.size() + CHUNK_SIZE);
 
 	     	Idat_Chunk_Vec.insert(Idat_Chunk_Vec.begin() + PROFILE_DATA_INDEX, Profile_Data_Vec.begin(), Profile_Data_Vec.end());		
-		valueUpdater(Idat_Chunk_Vec, chunk_size_index, PROFILE_DATA_VEC_DEFLATE_SIZE + 1, bits);
+		valueUpdater(Idat_Chunk_Vec, chunk_size_index, CHUNK_SIZE, bits);
 
-		const uint32_t IDAT_CHUNK_CRC = crcUpdate(&Idat_Chunk_Vec[CHUNK_START_INDEX], CHUNK_SIZE);
-		uint32_t idat_crc_index = CHUNK_START_INDEX + CHUNK_SIZE;
+		const uint32_t IDAT_CHUNK_CRC = crcUpdate(&Idat_Chunk_Vec[CHUNK_START_INDEX], CHUNK_SIZE + 4);
+		uint32_t idat_crc_index = CHUNK_SIZE + 8;
 
 		valueUpdater(Idat_Chunk_Vec, idat_crc_index, IDAT_CHUNK_CRC, bits);
 		Image_Vec.insert((Image_Vec.begin() + CHUNK_INDEX), Idat_Chunk_Vec.begin(), Idat_Chunk_Vec.end());
@@ -162,26 +164,13 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 	
 	std::vector<uint8_t>().swap(Profile_Data_Vec);
 
-	const uint32_t 
-		EMBEDDED_IMAGE_FILE_SIZE = static_cast<uint32_t>(Image_Vec.size()),
-		ADDITIONAL_ALLOWANCE_SIZE = 2097152;
-
-	if ((isMastodonOption && EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE_MASTODON) ||
-    		(isRedditOption && EMBEDDED_IMAGE_FILE_SIZE > MAX_FILE_SIZE_REDDIT) ||
-    			(EMBEDDED_IMAGE_FILE_SIZE > (COMBINED_MAX_FILE_SIZE + ADDITIONAL_ALLOWANCE_SIZE))) {
-    
-    		std::cerr << "\nImage Size Warning: The file embedded image exceeds the maximum size of " 
-              			<< (isMastodonOption ? "16MB." 
-              			: (isRedditOption ? "19MB." : "2GB.")) 
-              			<< "\n\nYour data file has not been compressible and has had the opposite effect\n"
-              			<< "of making the file larger than the original. Perhaps try again with a smaller cover image.\n\n"; 
-	}
-
 	if (!writeFile(Image_Vec)) {
 		return 1;
 	}
-				 
-	if ((isMastodonOption && PROFILE_DATA_VEC_DEFLATE_SIZE > TWITTER_ICCP_SIZE_LIMIT) || isRedditOption) {
+
+	std::cout << "\nRecovery PIN: [***" << PIN << "***]\n\nImportant: Please remember to keep your PIN safe, so that you can extract the hidden file.\n";
+			 
+	if (isMastodonOption || isRedditOption) {
     		const std::string PLATFORM_OPTION = isMastodonOption ? "Mastodon" : "Reddit";
     		std::cout << "\n**Important**\n\nDue to your option selection, for compatibility reasons\nyou should only post this file-embedded PNG image on " << PLATFORM_OPTION << ".\n\nComplete!\n\n";
 	} else {
