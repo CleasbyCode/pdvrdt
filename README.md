@@ -49,6 +49,8 @@ Usage: pdvout <file_embedded_image>
         
 user1@linuxbox:~/Desktop$ pdvout prdt_17627.png
 
+PIN: **********
+
 Extracted hidden file: document.pdf (1016540 bytes).
 
 Complete! Please check your file.
