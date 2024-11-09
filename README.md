@@ -28,6 +28,10 @@ user1@linuxbox:~/Desktop$ pdvin my_cover_image.png document.pdf
   
 Saved "file-embedded" PNG image: prdt_17627.png (1245285 bytes).
 
+Recovery PIN: [***3483965536***]
+
+Important: Please remember to keep your PIN safe, so that you can extract the hidden file.
+
 Complete!
 
 ```
