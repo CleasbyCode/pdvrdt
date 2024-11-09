@@ -74,7 +74,7 @@ From the ***Reddit*** site, click "*Create Post*" then select "*Images & Video*"
 
 To correctly download an image from [***Flickr***](https://youtu.be/uE_cn6sMwK4), click the download arrow near the bottom right-hand corner of the page and select ***Original*** for the size of image to download.
   
-You can try ***pdvrdt*** from [**this site**](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
+You can try [***pdvrdt Web App***](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
 
 https://github.com/user-attachments/assets/6cb2f679-559c-49dc-99b6-716de3d7af3c
 
