@@ -46,7 +46,7 @@ const uint32_t encryptFile(std::vector<uint8_t>&Profile_Data_Vec, std::vector<ui
 		
 	while(xor_key_length--) {
 		Profile_Data_Vec[encrypt_xor_pos++] = Profile_Data_Vec[index_xor_pos++] ^ Profile_Data_Vec[pin_index++];
-		pin_index = pin_index >= PIN_LENGTH ? DATA_FILE_START_INDEX : pin_index;
+		pin_index = pin_index >= PIN_LENGTH + DATA_FILE_START_INDEX ? DATA_FILE_START_INDEX : pin_index;
 	}
 
 	pin_index = DATA_FILE_START_INDEX;
