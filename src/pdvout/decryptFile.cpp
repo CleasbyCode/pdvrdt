@@ -29,7 +29,7 @@ const std::string decryptFile(std::vector<uint8_t>&Image_Vec, std::vector<uint8_
 
 	while(xor_key_length--) {
 		Image_Vec[decrypt_xor_pos++] = Image_Vec[index_xor_pos++] ^ Image_Vec[pin_index++];
-		pin_index = pin_index >= PIN_LENGTH ? DATA_FILE_INDEX : pin_index;
+		pin_index = pin_index >= PIN_LENGTH + DATA_FILE_INDEX ? DATA_FILE_INDEX : pin_index;
 	}
 
 	for (int i = 0; XOR_KEY_LENGTH > i; ++i) {
