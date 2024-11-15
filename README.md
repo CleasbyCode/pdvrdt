@@ -57,16 +57,16 @@ To create "*file-embedded*" ***PNG*** images compatible for posting on ***Mastod
 
 https://github.com/user-attachments/assets/33ef3737-4b1f-43de-9d42-2be05a55bd5f
 
-To correctly download images from [***X/Twitter***](https://youtu.be/nwqi3WN2lkA) or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
+To correctly download images from ***X/Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
 
 In addition to the **5MB** image size limit, ***X/Twitter*** also has the following dimension size limits.
 * ***PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
 * ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max. 
  
-To create "*file-embedded*" ***PNG*** images ***compatible*** for posting on [***Reddit***](https://youtu.be/JAlo0I3hbPY), use the ***-r*** option with ***pdvin***.  
+To create "*file-embedded*" ***PNG*** images ***compatible*** for posting on ***Reddit***, use the ***-r*** option with ***pdvin***.  
 From the ***Reddit*** site, click "*Create Post*" then select "*Images & Video*" tab, to post your ***PNG*** image. 
 
-To correctly download an image from [***Flickr***](https://youtu.be/uE_cn6sMwK4), click the download arrow near the bottom right-hand corner of the page and select ***Original*** for the size of image to download.
+To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the page and select ***Original*** for the size of image to download.
   
 You can try [***pdvrdt Web App***](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.
 
