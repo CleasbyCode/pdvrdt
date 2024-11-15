@@ -12,7 +12,7 @@ Compatible hosting sites, ***listed below***, have their own ***much smaller*** 
 ***Image credit:*** [***@z3pio_***](https://x.com/z3pio_) / ***PIN: 3057168152***
 
 Your embedded data file is ***compressed*** (depending on file type) and ***encrypted*** with PIN protection.  
-## Usage (Linux - pdvin)
+## Usage (Linux - pdvin / pdvout)
 
 ```console
 
@@ -34,11 +34,6 @@ Important: Please remember to keep your PIN safe, so that you can extract the hi
 
 Complete!
 
-```
-## Usage (Linux - pdvout)
-
-```console
-
 user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ g++ main.cpp -O2 -lz -s -o pdvout
 user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ sudo cp pdvout /usr/bin
 
@@ -54,7 +49,6 @@ PIN: **********
 Extracted hidden file: document.pdf (1016540 bytes).
 
 Complete! Please check your file.
-
 ```
 By default (*no options selected*), ***pdvin*** embeds your data file within the last ***IDAT*** chunk of the ***PNG*** image.  
 For ***Mastodon***, the data file is stored within the ***iCCP chunk*** of the ***PNG*** image.  
