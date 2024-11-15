@@ -51,7 +51,7 @@ Extracted hidden file: document.pdf (1016540 bytes).
 Complete! Please check your file.
 ```
 By default (*no options selected*), ***pdvin*** embeds your data file within the last ***IDAT*** chunk of the ***PNG*** image.  
-For ***Mastodon***, the data file is stored within the ***iCCP chunk*** of the ***PNG*** image.  
+For ***Mastodon***, the data file is stored within the compressed ***iCCP chunk*** of the ***PNG*** image.  
 
 To create "*file-embedded*" ***PNG*** images compatible for posting on ***Mastodon***, use the ***-m*** option with ***pdvin***.
 
