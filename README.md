@@ -55,7 +55,7 @@ For ***Mastodon***, the data file is stored within the ***iCCP chunk*** of the *
 
 To create "*file-embedded*" ***PNG*** images compatible for posting on ***Mastodon***, use the ***-m*** option with ***pdvin***.
 
-https://github.com/user-attachments/assets/33ef3737-4b1f-43de-9d42-2be05a55bd5f
+https://github.com/user-attachments/assets/b4288b5c-c70e-48d4-a845-32da9b67c2e1
 
 To correctly download images from ***X/Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
 
