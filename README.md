@@ -63,6 +63,8 @@ In addition to the **5MB** image size limit, ***X/Twitter*** also has the follow
 * ***PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
 * ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max. 
  
+https://github.com/user-attachments/assets/781d42a6-5583-4d08-80aa-a78f0d1a837d
+
 To create "*file-embedded*" ***PNG*** images ***compatible*** for posting on ***Reddit***, use the ***-r*** option with ***pdvin***.  
 From the ***Reddit*** site, click "*Create Post*" then select "*Images & Video*" tab, to post your ***PNG*** image. 
 
