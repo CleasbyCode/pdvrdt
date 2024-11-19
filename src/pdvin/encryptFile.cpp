@@ -32,8 +32,7 @@ const uint32_t encryptFile(std::vector<uint8_t>&Profile_Data_Vec, std::vector<ui
     	}
 		
 	while (data_filename_length--) {
-		data_filename[char_pos] = data_filename[char_pos] ^ xor_key[xor_key_pos++];
-		Profile_Data_Vec[data_filename_index++] = data_filename[char_pos++];
+		Profile_Data_Vec[data_filename_index++] = data_filename[char_pos++] ^ xor_key[xor_key_pos++];
 	}	
 	
 	uint32_t index_pos = 0;
