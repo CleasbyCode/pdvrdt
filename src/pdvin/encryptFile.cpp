@@ -17,9 +17,6 @@ const uint32_t encryptFile(std::vector<uint8_t>&Profile_Data_Vec, std::vector<ui
 		char_pos = 0,
 		value_bit_length = 32;
 
-	const uint16_t 
-		DATA_FILE_START_INDEX = isMastodonOption ? 0x298 : 0x107;
-
 	uint16_t 
 		xor_key_index = isMastodonOption ? 0x1A6 : 0x15,
 		data_filename_index = isMastodonOption ? 0x192 : 0x01,
