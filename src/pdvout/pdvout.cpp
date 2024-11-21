@@ -108,7 +108,7 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 
 		file.close();
 
-    	    	std::cerr << "\nFile Error: Invalid recovery PIN or file is corrupt.\n\n";
+    	    	std::cerr << "\nFile Recovery Error: Invalid PIN or file is corrupt.\n\n";
 
 		return 1;
 	}
