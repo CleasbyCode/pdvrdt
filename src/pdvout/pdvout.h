@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include <iterator>
-#include <zlib.h>
+#include <C:\Users\Nick\source\zlib-1.3.1\zlib.h>
 
 #ifdef _WIN32
 #include <conio.h>
@@ -19,6 +19,7 @@
 #endif
 
 #include "valueUpdater.cpp"
+#include "crc32.cpp"
 #include "getPin.cpp"
 #include "getByteValue.cpp"
 #include "decryptFile.cpp"
@@ -29,6 +30,7 @@
 const std::string decryptFile(std::vector<uint8_t>&, std::vector<uint8_t>&, bool);
 
 uint32_t 
+	crcUpdate(uint8_t*, uint32_t),
 	getByteValue(const std::vector<uint8_t>&, const uint32_t),
 	getPin();
 
