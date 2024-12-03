@@ -13,7 +13,7 @@ Compatible hosting sites, ***listed below***, have their own ***much smaller*** 
 
 Your embedded data file is ***compressed*** (depending on file type) and ***encrypted*** with PIN protection.  
 
-(*You can try the [***pdvrdt Web App, here,***](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the source code.*)
+(*You can try the [***pdvrdt Web App, here,***](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the CLI source code.*)
 
 ## Usage (Linux - pdvin / pdvout)
 
