@@ -75,14 +75,12 @@ To correctly download an image from ***Flickr***, click the download arrow near 
   
 https://github.com/user-attachments/assets/e2a16184-7f60-4d1b-afda-3facc8a67269
 
-**ImgPile -** *You must sign in to an account before sharing your data-embedded PNG image on ImgPile*.  
-		*Sharing your image without logging in, your embedded data will not be preserved.*
+## Third-Party Libraries
 
- My other programs you may find useful:-
- 
-* [pdvzip: CLI tool to embed a ZIP file within a tweetable and "executable" PNG-ZIP polyglot image.](https://github.com/CleasbyCode/pdvzip)
-* [jdvrif: CLI tool to encrypt & embed any file type within a JPG image.](https://github.com/CleasbyCode/jdvrif)
-* [imgprmt: CLI tool to embed an image prompt (e.g. "Midjourney") within a tweetable JPG-HTML polyglot image.](https://github.com/CleasbyCode/imgprmt)
-* [pdvps: PowerShell / C++ CLI tool to encrypt & embed any file type within a tweetable & "executable" PNG image](https://github.com/CleasbyCode/pdvps)
+This project makes use of the following third-party library:
+
+- **zlib**: General-purpose compression library
+  - License: zlib/libpng license (see [***LICENSE***](https://github.com/madler/zlib/blob/develop/LICENSE) file)
+  - Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
 
 ##
