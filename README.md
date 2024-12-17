@@ -1,8 +1,8 @@
 # pdvrdt
 
-Use CLI tools ***pdvin*** & ***pdvout*** with a ***PNG*** image, to embed or extract any file, up to **2GB** (cover image + data file).
+Use CLI tools ***pdvin*** & ***pdvout*** with a ***PNG*** image, to hide/extract any file type, up to ***2GB** (cover image + data file).
  
-Compatible hosting sites, ***listed below***, have their own ***much smaller*** image size limits:-
+*Compatible hosting sites, ***listed below***, have their own ***much smaller*** image size limits:-
 * ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** / ***-r option***),
 * ***Mastodon*** (**16MB** / ***-m option***), ***ImgPile*** (**8MB**), \****X/Twitter*** (**5MB** + ***Dimension limits***)
 
