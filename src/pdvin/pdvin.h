@@ -11,7 +11,9 @@
 #include <regex>
 #include <fstream>
 
-#include <C:\Users\Nick\source\zlib-1.3.1\zlib.h>
+// https://github.com/madler/zlib
+#include <zlib.h>
+// Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
 
 #include "profileVec.cpp"
 #include "writeFile.cpp"
