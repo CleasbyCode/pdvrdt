@@ -1,4 +1,4 @@
-//	PNG Data Vehicle (pdvin v2.1). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle (pdvin v2.0). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
 //	$ g++ main.cpp -O2 -lz -s -o pdvin
@@ -6,6 +6,12 @@
 
 //	Run it
 //	$ pdvin
+
+enum class ArgOption {
+	Default,
+	Mastodon,
+	Reddit
+};
 
 #include "pdvin.h"
 
@@ -20,18 +26,20 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	
-	const bool
-		isMastodonOption = (argc > 3 && std::string(argv[1]) == "-m"),
-		isRedditOption = (argc > 3 && std::string(argv[1]) == "-r"),
-		isInvalidOption = (argc > 3 && !(isMastodonOption || isRedditOption));
+	ArgOption platformOption = ArgOption::Default;
+    	uint8_t argIndex = 1;
 
-	if (isInvalidOption) {
-		std::cerr << "\nInput Error: Invalid arguments. Expecting only \"-m\" or \"-r\" as the first argument option.\n\n";
-		return 1;
-	}
+	if (argc == 4) {
+		if (std::string(argv[1]) != "-r" && std::string(argv[1]) != "-m") {
+         		std::cerr << "\nInput Error: Invalid arguments. Only expecting \"-r or -m\" as the optional arguments.\n\n";
+         		return 1;
+    	 	}
+     	 platformOption = std::string(argv[1]) == "-r" ? ArgOption::Reddit : ArgOption::Mastodon;
+     	 argIndex = 2;
+    	}
 
-	const std::string IMAGE_FILENAME = isMastodonOption || isRedditOption ? argv[2] : argv[1];
-	std::string data_filename = isMastodonOption || isRedditOption ? argv[3] : argv[2];
+        const std::string IMAGE_FILENAME = argv[argIndex];
+        std::string data_filename        = argv[++argIndex];
 
 	constexpr const char* REG_EXP = ("(\\.[a-zA-Z_0-9\\.\\\\\\s\\-\\/]+)?[a-zA-Z_0-9\\.\\\\\\s\\-\\/]+?(\\.[a-zA-Z0-9]+)?");
 	const std::regex regex_pattern(REG_EXP);
@@ -45,12 +53,12 @@ int main(int argc, char** argv) {
 		IMAGE_PATH(IMAGE_FILENAME),
 		DATA_FILE_PATH(data_filename);
 
-   const std::string 
+   	const std::string 
 		IMAGE_EXTENSION = IMAGE_PATH.extension().string(),
 		DATA_FILE_EXTENSION = DATA_FILE_PATH.extension().string();
 
 	if (IMAGE_EXTENSION != ".png") {
-		std::cerr << "\nFile Type Error: Invalid file extension. Expecting only \"png\" image extension.\n\n";
+		std::cerr << "\nFile Type Error: Invalid file extension. Only expecting \"png\" image extension.\n\n";
 		return 1;
 	}
 
@@ -61,9 +69,5 @@ int main(int argc, char** argv) {
 			<< " Check the filename and try again.\n\n";
 		return 1;
 	}
-
-	const std::set<std::string> COMPRESSED_FILE_EXTENSIONS = { ".zip", ".rar", ".7z", ".bz2", ".gz", ".xz", ".mp4", ".flac" };
-	const bool isCompressedFile = COMPRESSED_FILE_EXTENSIONS.count(DATA_FILE_EXTENSION) > 0;
-	
-	pdvIn(IMAGE_FILENAME, data_filename, isMastodonOption, isRedditOption, isCompressedFile);			
+	pdvIn(IMAGE_FILENAME, data_filename, platformOption);			
 }

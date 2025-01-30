@@ -9,12 +9,9 @@
 #include <iostream>
 #include <string>
 #include <regex>
-#include <set>
 #include <fstream>
 
-// https://github.com/madler/zlib
-#include <zlib.h>
-// Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
+#include <C:\Users\Nick\source\zlib-1.3.1\zlib.h>
 
 #include "profileVec.cpp"
 #include "writeFile.cpp"
@@ -36,7 +33,7 @@ bool 	writeFile(std::vector<uint8_t>&);
 const uint32_t encryptFile(std::vector<uint8_t>&, std::vector<uint8_t>&, uint32_t, std::string&, bool);
 
 uint32_t
-	deflateFile(std::vector<uint8_t>&, bool, bool),
+	deflateFile(std::vector<uint8_t>&, bool),
 	crcUpdate(uint8_t*, uint32_t),
 	getByteValue(const std::vector<uint8_t>&, const uint32_t);
 
@@ -45,4 +42,4 @@ void
 	eraseChunks(std::vector<uint8_t>&, const size_t),
 	displayInfo();
 
-int pdvIn(const std::string&, std::string&, bool, bool, bool);
+int pdvIn(const std::string&, std::string&, ArgOption);

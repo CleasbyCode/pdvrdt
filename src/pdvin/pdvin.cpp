@@ -1,4 +1,4 @@
-int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool isMastodonOption, bool isRedditOption, bool isCompressedFile) {
+int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOption platformOption) {
 	constexpr uint32_t
 		COMBINED_MAX_FILE_SIZE 	= 2U * 1024U * 1024U * 1024U,	// 2GB. (image + data file)
 		MAX_FILE_SIZE_REDDIT 	= 20 * 1024 * 1024, 		// 20MB. ""
@@ -11,10 +11,14 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 		DATA_FILE_SIZE = std::filesystem::file_size(data_filename),
 		COMBINED_FILE_SIZE = DATA_FILE_SIZE + IMAGE_FILE_SIZE;
 
+       const bool
+		hasMastodonOption = (platformOption == ArgOption::Mastodon),
+		hasRedditOption = (platformOption == ArgOption::Reddit);
+
 	if (COMBINED_FILE_SIZE > COMBINED_MAX_FILE_SIZE
     		|| (DATA_FILE_SIZE == 0)
-    		|| (isMastodonOption && COMBINED_FILE_SIZE > MAX_FILE_SIZE_MASTODON)
-    		|| (isRedditOption && COMBINED_FILE_SIZE > MAX_FILE_SIZE_REDDIT)
+    		|| (hasMastodonOption && COMBINED_FILE_SIZE > MAX_FILE_SIZE_MASTODON)
+    		|| (hasRedditOption && COMBINED_FILE_SIZE > MAX_FILE_SIZE_REDDIT)
     		|| PNG_MIN_FILE_SIZE > IMAGE_FILE_SIZE) {
 			std::cerr << "\nFile Size Error: "
               		<< (PNG_MIN_FILE_SIZE > IMAGE_FILE_SIZE 
@@ -23,7 +27,7 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
                     			? "Data file is empty" 
                     		: COMBINED_FILE_SIZE > COMBINED_MAX_FILE_SIZE 
                       			? "Combined size of image and data file exceeds the maximum limit of 2GB"
-                      		: (isMastodonOption && COMBINED_FILE_SIZE > MAX_FILE_SIZE_MASTODON) 
+                      		: (hasMastodonOption && COMBINED_FILE_SIZE > MAX_FILE_SIZE_MASTODON) 
                         		? "Combined size exceeds Mastodon's 16MB limit"
                         	: "Combined size exceeds Reddit's 19MB limit") 
               		<< ".\n\n";
@@ -72,13 +76,13 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 
 	std::vector<uint8_t>Profile_Data_Vec;
 
-	if (isMastodonOption) {
+	if (hasMastodonOption) {
 		Profile_Data_Vec = std::move(Mastodon_Vec);
 	} else {
 		Profile_Data_Vec = std::move(Default_Vec);
 	}
 
-	const uint16_t PROFILE_NAME_LENGTH_INDEX = isMastodonOption ? 0x191: 0x00;
+	const uint16_t PROFILE_NAME_LENGTH_INDEX = hasMastodonOption ? 0x191: 0x00;
 	Profile_Data_Vec[PROFILE_NAME_LENGTH_INDEX] = DATA_FILENAME_LENGTH;
 
 	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  // 400MB.
@@ -95,16 +99,16 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 
 	std::reverse(File_Vec.begin(), File_Vec.end());
 
-	uint32_t file_vec_size = deflateFile(File_Vec, isMastodonOption, isCompressedFile);
+	uint32_t file_vec_size = deflateFile(File_Vec, hasMastodonOption);
 	
 	if (!file_vec_size) {
 		std::cerr << "\nFile Size Error: File is zero bytes. Probable compression failure.\n\n";
 		return 1;
 	}
 
-	const uint32_t PIN = encryptFile(Profile_Data_Vec, File_Vec, file_vec_size, data_filename, isMastodonOption);
+	const uint32_t PIN = encryptFile(Profile_Data_Vec, File_Vec, file_vec_size, data_filename, hasMastodonOption);
 
-	if (isRedditOption) {
+	if (hasRedditOption) {
 		constexpr uint8_t IDAT_REDDIT_CRC_BYTES[] { 0xA3, 0x1A, 0x50, 0xFA };
 
 		std::vector<uint8_t>Idat_Reddit_Vec = { 0x00, 0x08, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54 };
@@ -117,9 +121,9 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 
 	uint32_t mastodon_deflate_size = 0;
 
-	if (isMastodonOption) {
+	if (hasMastodonOption) {
 		// Compresss the data chunk again, this time including the color profile. Requirement for iCCP chunk/Mastodon.
-		mastodon_deflate_size = deflateFile(Profile_Data_Vec, isMastodonOption, isCompressedFile);
+		mastodon_deflate_size = deflateFile(Profile_Data_Vec, hasMastodonOption);
 	}
 
 	constexpr uint8_t CHUNK_START_INDEX = 4;
@@ -131,12 +135,12 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 	const uint32_t
 		PROFILE_DATA_VEC_DEFLATE_SIZE = static_cast<uint32_t>(Profile_Data_Vec.size()),
 		IMAGE_VEC_SIZE = static_cast<uint32_t>(Image_Vec.size()),
-		CHUNK_SIZE = isMastodonOption ? mastodon_deflate_size + 9 : PROFILE_DATA_VEC_DEFLATE_SIZE + 3,
-		CHUNK_INDEX = isMastodonOption ? 0x21 : IMAGE_VEC_SIZE - 12;
+		CHUNK_SIZE = hasMastodonOption ? mastodon_deflate_size + 9 : PROFILE_DATA_VEC_DEFLATE_SIZE + 3,
+		CHUNK_INDEX = hasMastodonOption ? 0x21 : IMAGE_VEC_SIZE - 12;
 
-	const uint8_t PROFILE_DATA_INDEX = isMastodonOption ? 0x0D : 0x0B;
+	const uint8_t PROFILE_DATA_INDEX = hasMastodonOption ? 0x0D : 0x0B;
 
-	if (isMastodonOption) {
+	if (hasMastodonOption) {
 		std::vector<uint8_t>Iccp_Chunk_Vec = { 0x00, 0x00, 0x00, 0x00, 0x69, 0x43, 0x43, 0x50, 0x69, 0x63, 0x63, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 		Iccp_Chunk_Vec.reserve(Iccp_Chunk_Vec.size() + CHUNK_SIZE);
 
@@ -170,12 +174,11 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, bool is
 
 	std::cout << "\nRecovery PIN: [***" << PIN << "***]\n\nImportant: Please remember to keep your PIN safe, so that you can extract the hidden file.\n";
 			 
-	if (isMastodonOption || isRedditOption) {
-    		const std::string PLATFORM_OPTION = isMastodonOption ? "Mastodon" : "Reddit";
+	if (platformOption != ArgOption::Default) {
+    		const std::string PLATFORM_OPTION = hasMastodonOption ? "Mastodon" : "Reddit";
     		std::cout << "\n**Important**\n\nDue to your option selection, for compatibility reasons\nyou should only post this file-embedded PNG image on " << PLATFORM_OPTION << ".\n\nComplete!\n\n";
 	} else {
 	    std::cout << "\nComplete!\n\n";
-	}
-				 
+	}			 
 	return 0;
 }
