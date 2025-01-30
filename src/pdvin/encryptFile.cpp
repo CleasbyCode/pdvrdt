@@ -1,4 +1,4 @@
-const uint32_t encryptFile(std::vector<uint8_t>&Profile_Data_Vec, std::vector<uint8_t>&File_Vec, uint32_t data_file_size, std::string& data_filename, bool isMastodonOption) {
+const uint32_t encryptFile(std::vector<uint8_t>&Profile_Data_Vec, std::vector<uint8_t>&File_Vec, uint32_t data_file_size, std::string& data_filename, bool hasMastodonOption) {
 	
 	std::random_device rd;
  	std::mt19937 gen(rd());
@@ -17,9 +17,12 @@ const uint32_t encryptFile(std::vector<uint8_t>&Profile_Data_Vec, std::vector<ui
 		char_pos = 0,
 		value_bit_length = 32;
 
+	const uint16_t 
+		DATA_FILE_START_INDEX = hasMastodonOption ? 0x298 : 0x107;
+
 	uint16_t 
-		xor_key_index = isMastodonOption ? 0x1A6 : 0x15,
-		data_filename_index = isMastodonOption ? 0x192 : 0x01,
+		xor_key_index = hasMastodonOption ? 0x1A6 : 0x15,
+		data_filename_index = hasMastodonOption ? 0x192 : 0x01,
 		data_filename_length = Profile_Data_Vec[data_filename_index - 1],
 		pin_index = DEFAULT_PIN_INDEX,
 		pin_xor_index = DEFAULT_PIN_XOR_INDEX,
@@ -54,7 +57,7 @@ const uint32_t encryptFile(std::vector<uint8_t>&Profile_Data_Vec, std::vector<ui
 	
 	valueUpdater(Pin_Vec, pin_xor_index, PIN_XOR_KEY, value_bit_length); // Write the random 4 bytes to vector index location		
 
-	xor_key_index = isMastodonOption ? 0x1A6 : 0x15;
+	xor_key_index = hasMastodonOption ? 0x1A6 : 0x15;
 	const uint32_t PIN = crcUpdate(&Profile_Data_Vec[xor_key_index], XOR_KEY_LENGTH); // Get CRC (PIN) value for the selected data area.
 	
 	valueUpdater(Pin_Vec, pin_index, PIN, value_bit_length); // Write CRC (PIN) value to vector index location.
