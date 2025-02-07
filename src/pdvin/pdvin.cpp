@@ -1,8 +1,8 @@
 int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOption platformOption, bool isCompressedFile) {
 	constexpr uint32_t
-		COMBINED_MAX_FILE_SIZE 	= 2U * 1024U * 1024U * 1024U,	// 2GB. (image + data file)
-		MAX_FILE_SIZE_REDDIT 	= 20 * 1024 * 1024, 		// 20MB. ""
-		MAX_FILE_SIZE_MASTODON 	= 16 * 1024 * 1024;		// 16MB. ""
+		COMBINED_MAX_FILE_SIZE 	= 2U * 1024U * 1024U * 1024U,	
+		MAX_FILE_SIZE_REDDIT 	= 20 * 1024 * 1024, 		
+		MAX_FILE_SIZE_MASTODON 	= 16 * 1024 * 1024;		
 
 	constexpr uint8_t PNG_MIN_FILE_SIZE = 68;
 
@@ -85,7 +85,7 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 	const uint16_t PROFILE_NAME_LENGTH_INDEX = hasMastodonOption ? 0x191: 0x00;
 	Profile_Vec[PROFILE_NAME_LENGTH_INDEX] = DATA_FILENAME_LENGTH;
 
-	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  // 400MB.
+	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  
 
 	if (DATA_FILE_SIZE > LARGE_FILE_SIZE) {
 		std::cout << "\nPlease wait. Larger files will take longer to complete this process.\n";
@@ -99,7 +99,6 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 
 	std::reverse(File_Vec.begin(), File_Vec.end());
 
-	// First, compress the data file.
 	deflateFile(File_Vec, hasMastodonOption, isCompressedFile);
 
 	if (File_Vec.empty()) {
@@ -123,7 +122,6 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 	uint32_t mastodon_deflate_size = 0;
 
 	if (hasMastodonOption) {
-		// Compresss the data chunk again, this time including the color profile. A requirement for iCCP chunk/Mastodon.
 		deflateFile(Profile_Vec, hasMastodonOption, isCompressedFile);
 		mastodon_deflate_size = static_cast<uint32_t>(Profile_Vec.size());
 	}
