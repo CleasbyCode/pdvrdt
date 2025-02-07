@@ -1,8 +1,8 @@
 int pdvOut(const std::string& IMAGE_FILENAME) {
 
 	constexpr uint32_t 
-		MAX_FILE_SIZE 	= 3U * 1024U * 1024U * 1024U, 	// 3GB.
-		LARGE_FILE_SIZE = 400 * 1024 * 1024;  		// 400MB.
+		MAX_FILE_SIZE 	= 3U * 1024U * 1024U * 1024U, 	
+		LARGE_FILE_SIZE = 400 * 1024 * 1024;  		
 
 	constexpr uint8_t MIN_FILE_SIZE = 68;
 
