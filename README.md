@@ -11,7 +11,7 @@ Use CLI tools ***pdvin*** & ***pdvout*** with a ***PNG*** image, to hide/extract
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_86068.png)  
 ***Image credit:*** [***@carochan_me***](https://x.com/carochan_me) / ***PIN: 2512678412***
 
-Your embedded data file is ***compressed*** (depending on file type) and ***encrypted*** with PIN protection.  
+Your data file is compressed (zlib) and encrypted using the libsodium crypto library. 
 
 (*You can try the [***pdvrdt Web App, here,***](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the CLI source code.*)
 
