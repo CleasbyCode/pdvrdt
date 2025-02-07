@@ -1,4 +1,4 @@
-//	PNG Data Vehicle (pdvin v2.0). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+//	PNG Data Vehicle (pdvin v3.2). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
 //	$ g++ main.cpp -O2 -lz -s -o pdvin
@@ -69,5 +69,9 @@ int main(int argc, char** argv) {
 			<< " Check the filename and try again.\n\n";
 		return 1;
 	}
-	pdvIn(IMAGE_FILENAME, data_filename, platformOption);			
+	const std::set<std::string> COMPRESSED_FILE_EXTENSIONS = { ".zip", "jar", ".rar", ".7z", ".bz2", ".gz", ".xz", ".tar", ".lz", ".lz4", ".cab", ".rpm", ".deb", ".mp4", ".mp3", ".jpg", ".png", ".ogg", ".flac" };
+
+    	const bool isCompressedFile = COMPRESSED_FILE_EXTENSIONS.count(DATA_FILE_EXTENSION) > 0;
+
+	pdvIn(IMAGE_FILENAME, data_filename, platformOption, isCompressedFile);			
 }

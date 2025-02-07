@@ -21,7 +21,7 @@ void eraseChunks(std::vector<uint8_t>& Vec, const size_t VEC_SIZE) {
 				break;
 			}
         		uint32_t chunk_length_index = chunk_name_index - 4;
-        		uint32_t chunk_length = getByteValue(Vec, chunk_length_index) + COMBINED_FIELD_LENGTHS;
+        		uint32_t chunk_length = getByteValue<uint32_t>(Vec, chunk_length_index) + COMBINED_FIELD_LENGTHS;
 			std::copy_n(Vec.begin() + chunk_length_index, chunk_length, std::back_inserter(Temp_Vec));
     		}
 	};
