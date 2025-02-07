@@ -1,7 +1,9 @@
 //	PNG Data Vehicle (pdvout v3.2). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
-//	$ g++ main.cpp -O2 -lz -s -o pdvout
+
+//	$ sudo apt-get install libsodium-dev
+//	$ g++ main.cpp -O2 -lz -lsodium -s -o pdvout
 // 	$ sudo cp pdvout /usr/bin
 
 //	Run it
