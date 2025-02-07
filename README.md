@@ -18,8 +18,8 @@ Your embedded data file is ***compressed*** (depending on file type) and ***encr
 ## Usage (Linux - pdvin / pdvout)
 
 ```console
-
-user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ g++ main.cpp -O2 -lz -s -o pdvin
+user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ sudo apt-get install libsodium-dev
+user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ g++ main.cpp -O2 -lz -lsodium -s -o pdvin
 user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ sudo cp pdvin /usr/bin
 
 user1@linuxbox:~/Desktop$ pdvin 
@@ -37,7 +37,7 @@ Important: Please remember to keep your PIN safe, so that you can extract the hi
 
 Complete!
 
-user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ g++ main.cpp -O2 -lz -s -o pdvout
+user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ g++ main.cpp -O2 -lz -lsodium -s -o pdvout
 user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ sudo cp pdvout /usr/bin
 
 user1@linuxbox:~/Desktop$ pdvout
