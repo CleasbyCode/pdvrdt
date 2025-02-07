@@ -53,18 +53,18 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 	bool isMastodonFile = (ICCP_SIG_POS == ICCP_CHUNK_INDEX && PDV_SIG_POS == Image_Vec.size());
 	
 	const uint32_t
-		CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_SIG_POS - 4 : PDV_SIG_POS - 0x10A,				
+		CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_SIG_POS - 4 : PDV_SIG_POS - 0x070,				
 		PROFILE_DATA_INDEX = isMastodonFile ? ICCP_SIG_POS + 9 : CHUNK_SIZE_INDEX + 0x0B,		
-		CHUNK_SIZE = isMastodonFile ? getByteValue(Image_Vec, CHUNK_SIZE_INDEX) - 9 : getByteValue(Image_Vec, CHUNK_SIZE_INDEX);
+		CHUNK_SIZE = isMastodonFile ? getByteValue<uint32_t>(Image_Vec, CHUNK_SIZE_INDEX) - 9 : getByteValue<uint32_t>(Image_Vec, CHUNK_SIZE_INDEX);
 
 	uint8_t byte = Image_Vec.back();
 
 	Image_Vec.erase(Image_Vec.begin(), Image_Vec.begin() + PROFILE_DATA_INDEX);
-	Image_Vec.erase(Image_Vec.begin() + ( isMastodonFile ? CHUNK_SIZE + 3 : CHUNK_SIZE - 4), Image_Vec.end());
+	Image_Vec.erase(Image_Vec.begin() + ( isMastodonFile ? CHUNK_SIZE + 3 : CHUNK_SIZE - 3), Image_Vec.end());
 	
 	if (isMastodonFile) {
-		const uint32_t TMP_INFLATED_FILE_SIZE = inflateFile(Image_Vec);
-		if (!TMP_INFLATED_FILE_SIZE) {
+		inflateFile(Image_Vec);
+		if (Image_Vec.empty()) {
 			std::cerr << "\nFile Size Error: File is zero bytes. Probable failure inflating file.\n\n";
 			return 1;
 		}
@@ -76,18 +76,15 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 		}
 	}
 
-	std::vector<uint8_t>Decrypted_File_Vec;
-	Decrypted_File_Vec.reserve(IMAGE_FILE_SIZE);
-
 	if (IMAGE_FILE_SIZE > LARGE_FILE_SIZE) {
 		std::cout << "\nPlease wait. Larger files will take longer to process.\n";
 	}
 
-	const std::string DECRYPTED_FILENAME = decryptFile(Image_Vec, Decrypted_File_Vec, isMastodonFile);
+	const std::string DECRYPTED_FILENAME = decryptFile(Image_Vec, isMastodonFile);
 
-	const uint32_t INFLATED_FILE_SIZE = inflateFile(Decrypted_File_Vec);
+	const uint32_t INFLATED_FILE_SIZE = inflateFile(Image_Vec);
 
-	if (Decrypted_File_Vec.empty()) {
+	if (Image_Vec.empty()) {
 		
 		std::fstream file(IMAGE_FILENAME, std::ios::in | std::ios::out | std::ios::binary); 
    		 
@@ -98,7 +95,7 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 
     	    	byte = byte == 0x82 ? 0 : ++byte;
 
-		if (byte > 3) {
+		if (byte > 2) {
 			file.close();
 			std::ofstream file(IMAGE_FILENAME, std::ios::out | std::ios::trunc | std::ios::binary);
 		} else {
@@ -127,7 +124,7 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 		file.close();
 	}
 
-	std::reverse(Decrypted_File_Vec.begin(), Decrypted_File_Vec.end());
+	std::reverse(Image_Vec.begin(), Image_Vec.end());
 		
 	std::ofstream file_ofs(DECRYPTED_FILENAME, std::ios::binary);
 
@@ -136,9 +133,9 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 		return 1;
 	}
 
-	file_ofs.write(reinterpret_cast<const char*>(Decrypted_File_Vec.data()), INFLATED_FILE_SIZE);
+	file_ofs.write(reinterpret_cast<const char*>(Image_Vec.data()), INFLATED_FILE_SIZE);
 
-	std::vector<uint8_t>().swap(Decrypted_File_Vec);
+	std::vector<uint8_t>().swap(Image_Vec);
 
 	std::cout << "\nExtracted hidden file: " << DECRYPTED_FILENAME << " (" << INFLATED_FILE_SIZE << " bytes).\n\nComplete! Please check your file.\n\n";
 
