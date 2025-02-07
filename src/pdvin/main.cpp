@@ -1,7 +1,8 @@
 //	PNG Data Vehicle (pdvin v3.2). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 // 
 //	Compile program (Linux)
-//	$ g++ main.cpp -O2 -lz -s -o pdvin
+//	$ sudo apt-get install libsodium-dev
+//	$ g++ main.cpp -O2 -lz -lsodium -s -o pdvin
 //      $ sudo cp pdvin /usr/bin
 
 //	Run it
