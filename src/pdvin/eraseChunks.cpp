@@ -13,7 +13,7 @@ void eraseChunks(std::vector<uint8_t>& Vec, const size_t VEC_SIZE) {
 	Temp_Vec.insert(Temp_Vec.begin(), Vec.begin(), Vec.begin() + PNG_FIRST_BYTES); 
 
 	auto copyChunk = [&](const uint8_t (&SIG)[4]) {
-		uint32_t chunk_name_index = PNG_FIRST_BYTES;
+		uint32_t chunk_name_index = 0;
     		while (true) {
 			chunk_name_index = searchFunc(Vec, chunk_name_index, INC_NEXT_SEARCH_INDEX, SIG);
 			if (chunk_name_index == VEC_SIZE) {
