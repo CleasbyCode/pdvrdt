@@ -72,8 +72,8 @@ To create "*file-embedded*" ***PNG*** images ***compatible*** for posting on ***
 From the ***Reddit*** site, click "*Create Post*" then select "*Images & Video*" tab, to post your ***PNG*** image. 
 
 To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the page and select ***Original*** for the size of image to download.
-  
-https://github.com/user-attachments/assets/e2a16184-7f60-4d1b-afda-3facc8a67269
+
+https://github.com/user-attachments/assets/079a007c-80e4-4514-9504-cd8c427cd69e
 
 ## Third-Party Libraries
 
