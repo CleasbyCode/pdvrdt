@@ -65,15 +65,15 @@ To correctly download images from ***X/Twitter*** or ***Reddit***, click the ima
 In addition to the **5MB** image size limit, ***X/Twitter*** also has the following dimension size limits.
 * ***PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
 * ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max. 
- 
-https://github.com/user-attachments/assets/6cd76e84-5355-45ea-8686-abf52470baed
+
+https://github.com/user-attachments/assets/781d42a6-5583-4d08-80aa-a78f0d1a837d
 
 To create "*file-embedded*" ***PNG*** images ***compatible*** for posting on ***Reddit***, use the ***-r*** option with ***pdvin***.  
 From the ***Reddit*** site, click "*Create Post*" then select "*Images & Video*" tab, to post your ***PNG*** image. 
 
 To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the page and select ***Original*** for the size of image to download.
 
-https://github.com/user-attachments/assets/781d42a6-5583-4d08-80aa-a78f0d1a837d
+https://github.com/user-attachments/assets/2776d34e-e220-4d7c-955f-04c7cf7ecc1f
 
 ## Third-Party Libraries
 
