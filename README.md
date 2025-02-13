@@ -58,7 +58,7 @@ For ***Mastodon***, the data file is stored within the compressed ***iCCP chunk*
 
 To create "*file-embedded*" ***PNG*** images compatible for posting on ***Mastodon***, use the ***-m*** option with ***pdvin***.
 
-https://github.com/user-attachments/assets/b4288b5c-c70e-48d4-a845-32da9b67c2e1
+https://github.com/user-attachments/assets/079a007c-80e4-4514-9504-cd8c427cd69e
 
 To correctly download images from ***X/Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
 
@@ -73,7 +73,7 @@ From the ***Reddit*** site, click "*Create Post*" then select "*Images & Video*"
 
 To correctly download an image from ***Flickr***, click the download arrow near the bottom right-hand corner of the page and select ***Original*** for the size of image to download.
 
-https://github.com/user-attachments/assets/079a007c-80e4-4514-9504-cd8c427cd69e
+https://github.com/user-attachments/assets/b4288b5c-c70e-48d4-a845-32da9b67c2e1
 
 ## Third-Party Libraries
 
