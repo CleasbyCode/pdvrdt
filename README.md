@@ -58,7 +58,7 @@ For ***Mastodon***, the data file is stored within the compressed ***iCCP chunk*
 
 To create "*file-embedded*" ***PNG*** images compatible for posting on ***Mastodon***, use the ***-m*** option with ***pdvin***.
 
-https://github.com/user-attachments/assets/079a007c-80e4-4514-9504-cd8c427cd69e
+https://github.com/user-attachments/assets/b4288b5c-c70e-48d4-a845-32da9b67c2e1
 
 To correctly download images from ***X/Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
 
@@ -66,8 +66,7 @@ In addition to the **5MB** image size limit, ***X/Twitter*** also has the follow
 * ***PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
 * ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max. 
  
-https://github.com/user-attachments/assets/b4288b5c-c70e-48d4-a845-32da9b67c2e1
-
+https://github.com/user-attachments/assets/079a007c-80e4-4514-9504-cd8c427cd69e
 
 To create "*file-embedded*" ***PNG*** images ***compatible*** for posting on ***Reddit***, use the ***-r*** option with ***pdvin***.  
 From the ***Reddit*** site, click "*Create Post*" then select "*Images & Video*" tab, to post your ***PNG*** image. 
