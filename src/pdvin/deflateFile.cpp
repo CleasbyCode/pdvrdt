@@ -24,7 +24,7 @@
 */
 void deflateFile(std::vector<uint8_t>& vec, bool hasMastodonOption, bool isCompressedFile) {
 	constexpr uint32_t 
-		BUFSIZE = 2 * 1024 * 1024, // 2MB	
+		BUFSIZE = 2 * 1024 * 1024, 
 		LARGE_FILE_SIZE	 = 500 * 1024 * 1024,  
 		MEDIUM_FILE_SIZE = 200 * 1024 * 1024,  
 		COMPRESSED_FILE_TYPE_SIZE_LIMIT = 50 * 1024 * 1024; 
