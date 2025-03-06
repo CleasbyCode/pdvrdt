@@ -1,20 +1,4 @@
 int pdvOut(const std::string& IMAGE_FILENAME) {
-	constexpr uint32_t 
-		MAX_FILE_SIZE 	= 3U * 1024U * 1024U * 1024U, 	// 3GB.
-		LARGE_FILE_SIZE = 400 * 1024 * 1024;  		// 400MB.
-
-	constexpr uint8_t MIN_FILE_SIZE = 68;
-
-	const size_t IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME);
-
-	if (IMAGE_FILE_SIZE > MAX_FILE_SIZE || MIN_FILE_SIZE > IMAGE_FILE_SIZE) {
-		std::cerr << "\nImage Size Error: " << (MIN_FILE_SIZE > IMAGE_FILE_SIZE 
-			? "Image is too small to be a valid PNG image" 
-			: "Image exceeds the maximum limit of " + std::to_string(MAX_FILE_SIZE) + " Bytes") 
-		+ ".\n\n";
-		return 1;
-	}
-
 	std::ifstream image_file_ifs(IMAGE_FILENAME, std::ios::binary);
 	
 	if (!image_file_ifs) {
@@ -22,6 +6,8 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 		return 1;
 	}
 
+	const uintmax_t IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME);
+	
 	std::vector<uint8_t> image_vec;
 	image_vec.resize(IMAGE_FILE_SIZE);
 
@@ -76,6 +62,8 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 			return 1;
 		}
 	}
+
+	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  // 400MB.
 
 	if (IMAGE_FILE_SIZE > LARGE_FILE_SIZE) {
 		std::cout << "\nPlease wait. Larger files will take longer to process.\n";
