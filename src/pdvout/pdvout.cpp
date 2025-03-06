@@ -20,7 +20,6 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 		ICCP_SIG 	{ 0x69, 0x43, 0x43, 0x50, 0x69, 0x63, 0x63 },
 		PDV_SIG 	{ 0xC6, 0x50, 0x3C, 0xEA, 0x5E, 0x9D, 0xF9 };
 
-
 	constexpr uint8_t ICCP_CHUNK_INDEX = 0x25;
 		
 	if (!std::equal(PNG_SIG.begin(), PNG_SIG.end(), image_vec.begin()) || !std::equal(PNG_IEND_SIG.begin(), PNG_IEND_SIG.end(), image_vec.end() - 8)) {
@@ -63,7 +62,7 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 		}
 	}
 
-	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  // 400MB.
+	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  
 
 	if (IMAGE_FILE_SIZE > LARGE_FILE_SIZE) {
 		std::cout << "\nPlease wait. Larger files will take longer to process.\n";
