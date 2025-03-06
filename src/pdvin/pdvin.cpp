@@ -59,7 +59,7 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 
 	const uintmax_t DATA_FILE_SIZE = std::filesystem::file_size(data_filename);
 
-	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  // 400MB.
+	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  
 
 	if (DATA_FILE_SIZE > LARGE_FILE_SIZE) {
 		std::cout << "\nPlease wait. Larger files will take longer to complete this process.\n";
@@ -73,7 +73,6 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 
 	std::reverse(data_file_vec.begin(), data_file_vec.end());
 
-	// First, compress the data file.
 	deflateFile(data_file_vec, hasMastodonOption, isCompressedFile);
 
 	if (data_file_vec.empty()) {
@@ -97,7 +96,6 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 	uint32_t mastodon_deflate_size = 0;
 
 	if (hasMastodonOption) {
-		// Compresss the data chunk again, this time including the color profile. A requirement for iCCP chunk/Mastodon.
 		deflateFile(profile_vec, hasMastodonOption, isCompressedFile);
 		mastodon_deflate_size = static_cast<uint32_t>(profile_vec.size());
 	}
