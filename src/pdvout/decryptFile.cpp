@@ -1,7 +1,6 @@
 // This project uses libsodium (https://libsodium.org/) for cryptographic functions.
 // Copyright (c) 2013-2025 Frank Denis <github@pureftpd.org>
 const std::string decryptFile(std::vector<uint8_t>& image_vec, bool isMastodonFile) {
-	
 	const uint16_t 
 		SODIUM_KEY_INDEX = isMastodonFile ? 0x1BE: 0x2D,
 		NONCE_KEY_INDEX  = isMastodonFile ? 0x1DE: 0x4D;
