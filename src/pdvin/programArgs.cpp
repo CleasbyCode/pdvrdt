@@ -21,7 +21,7 @@ ProgramArgs ProgramArgs::parse(int argc, char** argv) {
 	}
 
 	if (argc < 3 || argc > 4) {
-        	throw std::runtime_error("Usage: pdvin [-m|-r] <cover_image> <data_file>\n\t\bpdvin --info");
+        	throw std::runtime_error("Usage: pdvin [-m|-r] <cover_image> <secret_file>\n\t\bpdvin --info");
     	}
 
     	uint8_t arg_index = 1;
