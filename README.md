@@ -24,7 +24,7 @@ user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ sudo cp pdvin /usr/bin
 
 user1@linuxbox:~/Desktop$ pdvin 
 
-Usage: pdvin [-m|-r] <cover_image> <data_file>  
+Usage: pdvin [-m|-r] <cover_image> <secret_file>  
        pdvin --info
 
 user1@linuxbox:~/Desktop$ pdvin my_cover_image.png document.pdf
@@ -33,7 +33,7 @@ Saved "file-embedded" PNG image: prdt_17627.png (1245285 bytes).
 
 Recovery PIN: [***3483965536165427463***]
 
-Important: Please remember to keep your PIN safe, so that you can extract the hidden file.
+Important: Keep your PIN safe, so that you can extract the hidden file.
 
 Complete!
 
