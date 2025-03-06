@@ -31,10 +31,10 @@ uint64_t encryptFile(std::vector<uint8_t>&profile_vec, std::vector<uint8_t>&data
 
 	profile_vec.reserve(profile_vec.size() + data_file_vec_size);
 
-	std::array<uint8_t, crypto_secretbox_KEYBYTES> key;	// 32 Bytes.
+	std::array<uint8_t, crypto_secretbox_KEYBYTES> key;	
     	crypto_secretbox_keygen(key.data());
 
-	std::array<uint8_t, crypto_secretbox_NONCEBYTES> nonce; // 24 Bytes.
+	std::array<uint8_t, crypto_secretbox_NONCEBYTES> nonce; 
    	randombytes_buf(nonce.data(), nonce.size());
 
 	const uint16_t
