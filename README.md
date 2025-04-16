@@ -8,8 +8,8 @@ For increased storage capacity and better security, your embedded data file is c
  
 *Compatible hosting sites, ***listed below***, have their own ***much smaller*** image size limits:-
 * ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** / ***-r option***),
-* ***Mastodon*** (**16MB** / ***-m option***), ***ImgPile*** (**8MB**),
-* ****X/Twitter*** (**5MB** + ****Dimension limits: ***PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max. \ ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max. ***)
+* ***Mastodon*** (**16MB** / ***-m option***), ***ImgPile*** (**8MB**),****X/Twitter*** (**5MB** + ****Dimension limits***)
+* ***X/Twitter*** **Dimension Limits:* ***PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max. | ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_62941.png)  
 ***Image/video credit:*** [***@pixelbouncer***](https://x.com/pixelbouncer) / ***PIN: 1787925324565971918***
