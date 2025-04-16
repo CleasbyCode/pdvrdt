@@ -6,7 +6,6 @@ Unlike the common steganography method of concealing data within the pixels of a
 
 For increased storage capacity and better security, your embedded data file is compressed with ***zlib/deflate*** (*if not already a compressed file type*) and encrypted using the ***libsodium*** cryptographic library.  
  
-*Compatible hosting sites, ***listed below***, have their own ***much smaller*** image size limits:-
 * ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** / ***-r option***),
 * ***Mastodon*** (**16MB** / ***-m option***), ***ImgPile*** (**8MB**),****X/Twitter*** (**5MB** + ****Dimension limits***)
 * ***X/Twitter*** **Dimension Limits:* ***PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max. | ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
