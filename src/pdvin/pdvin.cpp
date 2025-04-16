@@ -1,4 +1,4 @@
-int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOption platform, bool isCompressedFile) {
+uint8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOption platform, bool isCompressedFile) {
 	std::ifstream 
 		image_file_ifs(IMAGE_FILENAME, std::ios::binary),
 		data_file_ifs(data_filename, std::ios::binary);
@@ -11,7 +11,9 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 		return 1;
 	}
 
-	const uintmax_t IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME);
+	const uintmax_t 
+		IMAGE_FILE_SIZE = std::filesystem::file_size(IMAGE_FILENAME),
+		DATA_FILE_SIZE = std::filesystem::file_size(data_filename);
 	
 	std::vector<uint8_t> image_vec;
 	image_vec.resize(IMAGE_FILE_SIZE); 
@@ -30,12 +32,12 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 			return 1;
     	}
 
-	copyEssentialPngChunks(image_vec, IMAGE_FILE_SIZE);
+	copyEssentialChunks(image_vec, IMAGE_FILE_SIZE);
 		
 	std::filesystem::path file_path(data_filename);
     	data_filename = file_path.filename().string();
 
-	const uint8_t DATA_FILENAME_LENGTH = static_cast<uint8_t>(data_filename.length());
+	const uint8_t DATA_FILENAME_LENGTH = static_cast<uint8_t>(data_filename.size());
 
 	if (DATA_FILENAME_LENGTH > MAX_FILENAME_LENGTH) {
     		std::cerr << "\nData File Error: Length of data filename is too long.\n\nFor compatibility requirements, length of filename must not exceed 20 characters.\n\n";
@@ -57,9 +59,7 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 	const uint16_t PROFILE_NAME_LENGTH_INDEX = hasMastodonOption ? 0x191: 0x00;
 	profile_vec[PROFILE_NAME_LENGTH_INDEX] = DATA_FILENAME_LENGTH;
 
-	const uintmax_t DATA_FILE_SIZE = std::filesystem::file_size(data_filename);
-
-	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  
+	constexpr uint32_t LARGE_FILE_SIZE = 300 * 1024 * 1024;  // 400MB.
 
 	if (DATA_FILE_SIZE > LARGE_FILE_SIZE) {
 		std::cout << "\nPlease wait. Larger files will take longer to complete this process.\n";
@@ -71,8 +71,7 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 	data_file_ifs.read(reinterpret_cast<char*>(data_file_vec.data()), DATA_FILE_SIZE);
 	data_file_ifs.close();
 
-	std::reverse(data_file_vec.begin(), data_file_vec.end());
-
+	// First, compress the data file.
 	deflateFile(data_file_vec, hasMastodonOption, isCompressedFile);
 
 	if (data_file_vec.empty()) {
@@ -96,6 +95,7 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 	uint32_t mastodon_deflate_size = 0;
 
 	if (hasMastodonOption) {
+		// Compresss the data chunk again, this time including the color profile. A requirement for iCCP chunk/Mastodon.
 		deflateFile(profile_vec, hasMastodonOption, isCompressedFile);
 		mastodon_deflate_size = static_cast<uint32_t>(profile_vec.size());
 	}
@@ -104,7 +104,7 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 
 	uint8_t
 		chunk_size_index = 0,
-		bits = 32;
+		value_bit_length = 32;
 
 	const uint32_t
 		PROFILE_VEC_DEFLATE_SIZE = static_cast<uint32_t>(profile_vec.size()),
@@ -119,24 +119,24 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 		iccp_vec.reserve(iccp_vec.size() + CHUNK_SIZE);
 
 		iccp_vec.insert((iccp_vec.begin() + PROFILE_VEC_INDEX), profile_vec.begin(), profile_vec.end());
-		valueUpdater(iccp_vec, chunk_size_index, mastodon_deflate_size + 5, bits);
+		valueUpdater(iccp_vec, chunk_size_index, mastodon_deflate_size + 5, value_bit_length);
 
 		const uint32_t ICCP_CHUNK_CRC = crcUpdate(&iccp_vec[CHUNK_START_INDEX], CHUNK_SIZE);
 		uint32_t iccp_crc_index = CHUNK_START_INDEX + CHUNK_SIZE;
 
-		valueUpdater(iccp_vec, iccp_crc_index, ICCP_CHUNK_CRC, bits);
+		valueUpdater(iccp_vec, iccp_crc_index, ICCP_CHUNK_CRC, value_bit_length);
 		image_vec.insert((image_vec.begin() + CHUNK_INDEX), iccp_vec.begin(), iccp_vec.end());
 	} else {
 	     	std::vector<uint8_t>idat_vec = { 0x00, 0x00, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54, 0x78, 0x5E, 0x5C, 0x00, 0x00, 0x00, 0x00 };
 		idat_vec.reserve(idat_vec.size() + CHUNK_SIZE);
 
 	     	idat_vec.insert(idat_vec.begin() + PROFILE_VEC_INDEX, profile_vec.begin(), profile_vec.end());		
-		valueUpdater(idat_vec, chunk_size_index, CHUNK_SIZE, bits);
+		valueUpdater(idat_vec, chunk_size_index, CHUNK_SIZE, value_bit_length);
 
 		const uint32_t IDAT_CHUNK_CRC = crcUpdate(&idat_vec[CHUNK_START_INDEX], CHUNK_SIZE + 4);
 		uint32_t idat_crc_index = CHUNK_SIZE + 8;
 
-		valueUpdater(idat_vec, idat_crc_index, IDAT_CHUNK_CRC, bits);
+		valueUpdater(idat_vec, idat_crc_index, IDAT_CHUNK_CRC, value_bit_length);
 		image_vec.insert((image_vec.begin() + CHUNK_INDEX), idat_vec.begin(), idat_vec.end());
 	}
 	
