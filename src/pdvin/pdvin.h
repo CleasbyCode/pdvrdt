@@ -14,11 +14,11 @@
 
 // This project uses libsodium (https://libsodium.org/) for cryptographic functions.
 #define SODIUM_STATIC
-#include <sodium.h>
+#include <C:\Users\Nickc\source\repos\pdvin\libsodium\include\sodium.h>
 // Copyright (c) 2013-2025 Frank Denis <github@pureftpd.org>
 
 // https://github.com/madler/zlib
-#include <zlib.h>
+#include <C:\Users\Nickc\source\zlib-1.3.1\zlib.h>
 // Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
 
 #include "profileVec.cpp"
@@ -54,7 +54,7 @@ void
 	validateFiles(const std::string&, const std::string&, ArgOption),
 	deflateFile(std::vector<uint8_t>&, bool, bool),
 	valueUpdater(std::vector<uint8_t>&, uint32_t, const uint64_t, uint8_t),
-	copyEssentialPngChunks(std::vector<uint8_t>&, const size_t),
+	copyEssentialChunks(std::vector<uint8_t>&, const size_t),
 	displayInfo();
 
-int pdvIn(const std::string&, std::string&, ArgOption, bool);
+uint8_t pdvIn(const std::string&, std::string&, ArgOption, bool);
