@@ -13,9 +13,7 @@ For increased storage capacity and better security, your embedded data file is c
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_62941.png)  
 ***Image/video credit:*** [***@pixelbouncer***](https://x.com/pixelbouncer) / ***PIN: 1787925324565971918***
 
-For extra security, your data file is also compressed (*zlib*) and encrypted using the ***libsodium*** crypto library. 
-
-(*You can try the [***pdvrdt Web App, here,***](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the CLI source code.*)
+*You can try the [***pdvrdt Web App, here,***](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the CLI source code.*
 
 ## Usage (Linux - pdvin / pdvout)
 
