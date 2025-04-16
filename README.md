@@ -8,7 +8,7 @@ Use CLI tools ***pdvin*** & ***pdvout*** with a ***PNG*** image, to hide/extract
 
 *There are many other image hosting sites on the web that may also be compatible.*  
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/red_clown65.png)  
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_62941.png)  
 ***Image/video credit:*** [***@pixelbouncer***](https://x.com/pixelbouncer) / ***PIN: 1787925324565971918***
 
 For extra security, your data file is also compressed (*zlib*) and encrypted using the ***libsodium*** crypto library. 
