@@ -1,4 +1,4 @@
-int pdvOut(const std::string& IMAGE_FILENAME) {
+uint8_t pdvOut(const std::string& IMAGE_FILENAME) {
 	std::ifstream image_file_ifs(IMAGE_FILENAME, std::ios::binary);
 	
 	if (!image_file_ifs) {
@@ -19,6 +19,7 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 		PNG_IEND_SIG	{ 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60 },
 		ICCP_SIG 	{ 0x69, 0x43, 0x43, 0x50, 0x69, 0x63, 0x63 },
 		PDV_SIG 	{ 0xC6, 0x50, 0x3C, 0xEA, 0x5E, 0x9D, 0xF9 };
+
 
 	constexpr uint8_t ICCP_CHUNK_INDEX = 0x25;
 		
@@ -62,7 +63,7 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 		}
 	}
 
-	constexpr uint32_t LARGE_FILE_SIZE = 400 * 1024 * 1024;  
+	constexpr uint32_t LARGE_FILE_SIZE = 300 * 1024 * 1024;  // 400MB.
 
 	if (IMAGE_FILE_SIZE > LARGE_FILE_SIZE) {
 		std::cout << "\nPlease wait. Larger files will take longer to process.\n";
@@ -81,11 +82,7 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 
 	    	file.read(reinterpret_cast<char*>(&byte), sizeof(byte));
 
-    	    	if (byte == 0x82) {
-			byte = 0;
-		} else {
-    			byte++;
-		}
+    	    	byte = byte == 0x82 ? 0 : ++byte;
 
 		if (byte > 2) {
 			file.close();
@@ -115,8 +112,6 @@ int pdvOut(const std::string& IMAGE_FILENAME) {
 
 		file.close();
 	}
-
-	std::reverse(image_vec.begin(), image_vec.end());
 		
 	std::ofstream file_ofs(DECRYPTED_FILENAME, std::ios::binary);
 
