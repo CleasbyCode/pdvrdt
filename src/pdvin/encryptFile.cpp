@@ -1,40 +1,34 @@
 // This project uses libsodium (https://libsodium.org/) for cryptographic functions.
 // Copyright (c) 2013-2025 Frank Denis <github@pureftpd.org>
 uint64_t encryptFile(std::vector<uint8_t>&profile_vec, std::vector<uint8_t>&data_file_vec, std::string& data_filename, bool hasMastodonOption) {
-	
 	std::random_device rd;
  	std::mt19937 gen(rd());
 	std::uniform_int_distribution<unsigned short> dis(1, 255); 
 	
-	const uint16_t DATA_FILENAME_XOR_KEY_INDEX = hasMastodonOption ? 0x1A6 : 0x15;	
-
+	const uint8_t XOR_KEY_LENGTH = 24;
+	
 	uint16_t 
-		data_filename_index = hasMastodonOption ? 0x192 : 0x01,  	
-		data_filename_xor_key_pos = DATA_FILENAME_XOR_KEY_INDEX;		
-									
+		data_filename_xor_key_index = hasMastodonOption ? 0x1A6 : 0x15, 
+		data_filename_index = hasMastodonOption ? 0x192 : 0x01;  	
+											
 	uint8_t 
-		data_filename_xor_key_length = 24,
 		data_filename_length = profile_vec[data_filename_index - 1],
 		data_filename_char_pos = 0;
 
-	while(data_filename_xor_key_length--) {
-		profile_vec[data_filename_xor_key_pos++] = static_cast<uint8_t>(dis(gen));
-	}
-
-	data_filename_xor_key_pos = DATA_FILENAME_XOR_KEY_INDEX;	
+	std::generate_n(profile_vec.begin() + data_filename_xor_key_index, XOR_KEY_LENGTH, [&dis, &gen]() { return static_cast<uint8_t>(dis(gen)); });
 
 	while (data_filename_length--) {
-		profile_vec[data_filename_index++] = data_filename[data_filename_char_pos++] ^ profile_vec[data_filename_xor_key_pos++];
+		profile_vec[data_filename_index++] = data_filename[data_filename_char_pos++] ^ profile_vec[data_filename_xor_key_index++];
 	}	
 
 	uint32_t data_file_vec_size = static_cast<uint32_t>(data_file_vec.size());
 
 	profile_vec.reserve(profile_vec.size() + data_file_vec_size);
 
-	std::array<uint8_t, crypto_secretbox_KEYBYTES> key;	
+	std::array<uint8_t, crypto_secretbox_KEYBYTES> key;	// 32 Bytes.
     	crypto_secretbox_keygen(key.data());
 
-	std::array<uint8_t, crypto_secretbox_NONCEBYTES> nonce; 
+	std::array<uint8_t, crypto_secretbox_NONCEBYTES> nonce; // 24 Bytes.
    	randombytes_buf(nonce.data(), nonce.size());
 
 	const uint16_t
