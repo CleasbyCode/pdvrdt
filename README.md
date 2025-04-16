@@ -11,7 +11,7 @@ For increased storage capacity and better security, your embedded data file is c
 * ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max. | ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_62941.png)  
-***Image/video credit:*** [***@pixelbouncer***](https://x.com/pixelbouncer) / ***PIN: 1787925324565971918***
+***Image credit:*** [***@pixelbouncer***](https://x.com/pixelbouncer) / ***PIN: 1787925324565971918***
 
 *You can try the [***pdvrdt Web App, here,***](https://cleasbycode.co.uk/pdvrdt/index/) if you don't want to download and compile the CLI source code.*
 
