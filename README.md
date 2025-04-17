@@ -5,7 +5,7 @@
 There is also a [***pdvrdt Web App,***](https://cleasbycode.co.uk/pdvrdt/index/) available to use, if you don't want to download and compile the CLI source code.  
 *Web file uploads are limited to 20MB.*  
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_61164.png) 
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_61164.png)  
 *Image credit: **Camouflage** is the work of [***@pixelbouncer***](https://x.com/pixelbouncer) / ***PIN: 7927377220012420213****
 
 Unlike the common steganography method of concealing data within the pixels of a cover image ([***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/)), ***pdvrdt*** hides files within various ***chunks*** of a ***PNG*** image, such as iCCP and IDAT. You can embed any file type up to ***2GB***, although compatible hosting sites (*listed below*) have their own ***much smaller*** size limits and *other requirements.  
