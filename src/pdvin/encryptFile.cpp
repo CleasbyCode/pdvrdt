@@ -42,7 +42,7 @@ uint64_t encryptFile(std::vector<uint8_t>&profile_vec, std::vector<uint8_t>&data
 
     	crypto_secretbox_easy(encrypted_vec.data(), data_file_vec.data(), data_file_vec_size, nonce.data(), key.data());
 
-	profile_vec.insert(profile_vec.end(), encrypted_vec.begin(), encrypted_vec.end());
+	std::copy_n(encrypted_vec.begin(), encrypted_vec.size(), std::back_inserter(profile_vec));
 	
 	std::vector<uint8_t>().swap(encrypted_vec);
 
