@@ -12,8 +12,8 @@ void copyEssentialChunks(std::vector<uint8_t>& image_vec, const size_t IMAGE_VEC
     	std::vector<uint8_t> copied_image_vec;
     	copied_image_vec.reserve(IMAGE_VEC_SIZE);     
   
-    	copied_image_vec.insert(copied_image_vec.begin(), image_vec.begin(), image_vec.begin() + PNG_FIRST_BYTES);	
-
+	std::copy_n(image_vec.begin(), PNG_FIRST_BYTES, std::back_inserter(copied_image_vec));
+    	
     	auto copy_chunk_type = [&](const auto& chunk_signature) {
 		constexpr uint8_t 
 			PNG_CHUNK_FIELDS_OVERHEAD = 12,
@@ -39,6 +39,6 @@ void copyEssentialChunks(std::vector<uint8_t>& image_vec, const size_t IMAGE_VEC
     		copy_chunk_type(PLTE_SIG);
 	}
     	copy_chunk_type(IDAT_SIG);
-    	copied_image_vec.insert(copied_image_vec.end(), image_vec.end() - PNG_IEND_BYTES, image_vec.end());
+	std::copy_n(image_vec.end() - PNG_IEND_BYTES, PNG_IEND_BYTES, std::back_inserter(copied_image_vec));	
     	image_vec = std::move(copied_image_vec);
 }
