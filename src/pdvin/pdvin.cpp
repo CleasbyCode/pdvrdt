@@ -105,7 +105,7 @@ uint8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, Arg
 	}
 
 	constexpr uint8_t 
-		CHUNK_START_INDEX = 4,
+		CHUNK_START_INDEX = 0x04,
 		MASTODON_SIZE_DIFF = 9,
 		DEFAULT_SIZE_DIFF = 3;
 
@@ -138,7 +138,7 @@ uint8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, Arg
 	} else {
 		constexpr uint8_t 
 			IDAT_CHUNK_SIZE_DIFF = 4,
-			IDAT_CHUNK_CRC_INDEX_DIFF = 8;
+			IDAT_CHUNK_CRC_INDEX_DIFF = 0x08;
 
 	     	std::vector<uint8_t>idat_vec = { 0x00, 0x00, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54, 0x78, 0x5E, 0x5C, 0x00, 0x00, 0x00, 0x00 };
 		idat_vec.reserve(idat_vec.size() + profile_vec.size() + CHUNK_SIZE);
