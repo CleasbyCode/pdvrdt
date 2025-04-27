@@ -24,7 +24,7 @@
 */
 
 const uint32_t inflateFile(std::vector<uint8_t>& vec) {
-	constexpr uint32_t BUFSIZE = 2 * 1024 * 1024; 
+	constexpr uint32_t BUFSIZE = 2 * 1024 * 1024; // 2MB
 	
 	const uint32_t VEC_SIZE = static_cast<uint32_t>(vec.size());
 	
