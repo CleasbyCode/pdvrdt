@@ -5,7 +5,7 @@ uint64_t encryptFile(std::vector<uint8_t>&profile_vec, std::vector<uint8_t>&data
  	std::mt19937 gen(rd());
 	std::uniform_int_distribution<unsigned short> dis(1, 255); 
 	
-	const uint8_t XOR_KEY_LENGTH = 24;
+	constexpr uint8_t XOR_KEY_LENGTH = 24;
 	
 	uint16_t 
 		data_filename_xor_key_index = hasMastodonOption ? 0x1A6 : 0x15, 
@@ -21,29 +21,29 @@ uint64_t encryptFile(std::vector<uint8_t>&profile_vec, std::vector<uint8_t>&data
 		profile_vec[data_filename_index++] = data_filename[data_filename_char_pos++] ^ profile_vec[data_filename_xor_key_index++];
 	}	
 
-	uint32_t data_file_vec_size = static_cast<uint32_t>(data_file_vec.size());
+	const uint32_t DATA_FILE_VEC_SIZE = static_cast<uint32_t>(data_file_vec.size());
 
-	profile_vec.reserve(profile_vec.size() + data_file_vec_size);
+	profile_vec.reserve(profile_vec.size() + DATA_FILE_VEC_SIZE);
 
-	std::array<uint8_t, crypto_secretbox_KEYBYTES> key;	// 32 Bytes.
+	std::array<uint8_t, crypto_secretbox_KEYBYTES> key;	
     	crypto_secretbox_keygen(key.data());
 
-	std::array<uint8_t, crypto_secretbox_NONCEBYTES> nonce; // 24 Bytes.
+	std::array<uint8_t, crypto_secretbox_NONCEBYTES> nonce; 
    	randombytes_buf(nonce.data(), nonce.size());
 
 	const uint16_t
 		SODIUM_KEY_INDEX = hasMastodonOption ? 0x1BE: 0x2D,     
 		NONCE_KEY_INDEX  = hasMastodonOption ? 0x1DE: 0x4D;      
 	
-	std::copy(key.begin(), key.end(), profile_vec.begin() + SODIUM_KEY_INDEX); 	
-	std::copy(nonce.begin(), nonce.end(), profile_vec.begin() + NONCE_KEY_INDEX);
+	std::copy_n(key.begin(), crypto_secretbox_KEYBYTES, profile_vec.begin() + SODIUM_KEY_INDEX); 	
+	std::copy_n(nonce.begin(), crypto_secretbox_NONCEBYTES, profile_vec.begin() + NONCE_KEY_INDEX);
 
-	std::vector<uint8_t> encrypted_vec(data_file_vec_size + crypto_secretbox_MACBYTES);
+	std::vector<uint8_t> encrypted_vec(DATA_FILE_VEC_SIZE + crypto_secretbox_MACBYTES);
 
-    	crypto_secretbox_easy(encrypted_vec.data(), data_file_vec.data(), data_file_vec_size, nonce.data(), key.data());
+    	crypto_secretbox_easy(encrypted_vec.data(), data_file_vec.data(), DATA_FILE_VEC_SIZE, nonce.data(), key.data());
 
 	std::copy_n(encrypted_vec.begin(), encrypted_vec.size(), std::back_inserter(profile_vec));
-	
+
 	std::vector<uint8_t>().swap(encrypted_vec);
 
 	const uint64_t PIN = getByteValue<uint64_t>(profile_vec, SODIUM_KEY_INDEX); 
@@ -73,9 +73,9 @@ uint64_t encryptFile(std::vector<uint8_t>&profile_vec, std::vector<uint8_t>&data
 	std::mt19937_64 gen64(rd()); 
     	std::uniform_int_distribution<uint64_t> dis64; 
 
-    	uint64_t random_val = dis64(gen64); 
+    	const uint64_t RANDOM_VAL = dis64(gen64); 
 
-	valueUpdater(profile_vec, sodium_key_pos, random_val, value_bit_length);
+	valueUpdater(profile_vec, sodium_key_pos, RANDOM_VAL, value_bit_length);
 
 	return PIN;
 }

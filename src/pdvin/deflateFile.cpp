@@ -58,10 +58,8 @@ void deflateFile(std::vector<uint8_t>& vec, bool hasMastodonOption, bool isCompr
 
 	deflateInit(&strm, compression_level);
 
-	while (strm.avail_in)
-	{
+	while (strm.avail_in) {
 		deflate(&strm, Z_NO_FLUSH);
-		
 		if (!strm.avail_out) {
 			std::copy_n(buffer, BUFSIZE, std::back_inserter(deflate_vec));
 			strm.next_out = buffer;

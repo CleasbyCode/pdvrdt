@@ -13,7 +13,7 @@ $ g++ main.cpp -O2 -lz -lsodium -s -o pdvin
 $ sudo cp pdvin /usr/bin
 $ pdvin
 
-Usage: pdvin [-m] [-r] <cover_image> <data_file>  
+Usage: pdvin [-m] [-r] <cover_image> <secret_file>  
        pdvin --info
 	
 Post your file-embedded image on the following compatible sites.  
