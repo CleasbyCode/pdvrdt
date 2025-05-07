@@ -18,7 +18,7 @@ void copyEssentialChunks(std::vector<uint8_t>& image_vec, const size_t IMAGE_VEC
     	
     	auto copy_chunk_type = [&](const auto& chunk_signature) {
 		constexpr uint8_t 
-			PNG_CHUNK_FIELDS_OVERHEAD = 12,
+			PNG_CHUNK_FIELDS_COMBINED_LENGTH = 12, // Size_field + Name_field + CRC_field.
 			PNG_CHUNK_LENGTH_FIELD_SIZE = 4,
 			SEARCH_INCREMENT = 5;
 
@@ -33,7 +33,7 @@ void copyEssentialChunks(std::vector<uint8_t>& image_vec, const size_t IMAGE_VEC
 				break;
 			}
 			chunk_length_pos = chunk_search_pos - PNG_CHUNK_LENGTH_FIELD_SIZE;
-            		chunk_length = getByteValue<uint32_t>(image_vec, chunk_length_pos) + PNG_CHUNK_FIELDS_OVERHEAD;
+            		chunk_length = getByteValue<uint32_t>(image_vec, chunk_length_pos) + PNG_CHUNK_FIELDS_COMBINED_LENGTH;
 	    		std::copy_n(image_vec.begin() + chunk_length_pos, chunk_length, std::back_inserter(copied_image_vec));
         	}
     	};
