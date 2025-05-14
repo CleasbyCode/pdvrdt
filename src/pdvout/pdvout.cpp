@@ -89,7 +89,11 @@ uint8_t pdvOut(const std::string& IMAGE_FILENAME) {
 
 	    	file.read(reinterpret_cast<char*>(&byte), sizeof(byte));
 
-    	    	byte = byte == 0x82 ? 0 : ++byte;
+    	    	if (byte == 0x82) {
+    			byte = 0;
+		} else {
+	   		byte++;
+		}	
 
 		if (byte > 2) {
 			file.close();
