@@ -91,7 +91,6 @@ uint8_t pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, Arg
 		std::fill_n(std::back_inserter(reddit_vec), 0x80000, 0);
 
 		std::copy_n(IDAT_REDDIT_CRC_BYTES.begin(), CRC_LENGTH, std::back_inserter(reddit_vec));
-		// reddit_vec.insert(reddit_vec.end(), IDAT_REDDIT_CRC_BYTES.begin(), IDAT_REDDIT_CRC_BYTES.end());
 
 		image_vec.insert(image_vec.end() - PNG_END_BYTES_LENGTH, reddit_vec.begin(), reddit_vec.end());
 	}
