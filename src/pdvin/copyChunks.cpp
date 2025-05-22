@@ -77,7 +77,3 @@ void copyEssentialChunks(std::vector<uint8_t>& image_vec, const size_t IMAGE_VEC
     	std::copy_n(image_vec.end() - PNG_IEND_BYTES, PNG_IEND_BYTES, std::back_inserter(copied_image_vec));
     	image_vec = std::move(copied_image_vec);
 }
-
-
-
-
