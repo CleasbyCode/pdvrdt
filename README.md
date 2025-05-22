@@ -18,16 +18,18 @@ For increased storage capacity and better security, your embedded data file is c
 ## Usage (Linux - pdvin / pdvout)
 
 ```console
-user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ sudo apt-get install libsodium-dev
-user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ g++ main.cpp -O2 -lz -lsodium -s -o pdvin
-user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ sudo cp pdvin /usr/bin
+user1@mx:~/Downloads/pdvrdt-main/src/pdvin$ sudo apt-get install libsodium-dev
+user1@mx:~/Downloads/pdvrdt-main/src/pdvin$ chmod +x compile_pdvin.sh
+user1@mx:~/Downloads/pdvrdt-main/src/pdvin$ ./compile_pdvin.sh
+user1@mx:~/Downloads/pdvrdt-main/src/pdvin$ Compilation successful. Executable 'pdvin' created.
+user1@mx:~/Downloads/pdvrdt-main/src/pdvin$ sudo cp pdvin /usr/bin
 
-user1@linuxbox:~/Desktop$ pdvin 
+user1@mx:~/Desktop$ pdvin 
 
 Usage: pdvin [-m|-r] <cover_image> <secret_file>  
        pdvin --info
 
-user1@linuxbox:~/Desktop$ pdvin my_cover_image.png document.pdf
+user1@mx:~/Desktop$ pdvin my_cover_image.png document.pdf
   
 Saved "file-embedded" PNG image: prdt_17627.png (1245285 bytes).
 
@@ -37,15 +39,18 @@ Important: Keep your PIN safe, so that you can extract the hidden file.
 
 Complete!
 
-user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvin$ g++ main.cpp -O2 -lz -lsodium -s -o pdvout
-user1@linuxbox:~/Downloads/pdvrdt-main/src/pdvout$ sudo cp pdvout /usr/bin
+user1@mx:~/Downloads/pdvrdt-main/src/pdvout$ sudo apt-get install libsodium-dev
+user1@mx:~/Downloads/pdvrdt-main/src/pdvout$ chmod +x compile_pdvout.sh
+user1@mx:~/Downloads/pdvrdt-main/src/pdvout$ ./compile_pdvout.sh
+user1@mx:~/Downloads/pdvrdt-main/src/pdvout$ Compilation successful. Executable 'pdvout' created.
+user1@mx:~/Downloads/pdvrdt-main/src/pdvout$ sudo cp pdvout /usr/bin
 
-user1@linuxbox:~/Desktop$ pdvout
+user1@mx:~/Desktop$ pdvout
 
 Usage: pdvout <file_embedded_image>
        pdvout --info
         
-user1@linuxbox:~/Desktop$ pdvout prdt_17627.png
+user1@mx:~/Desktop$ pdvout prdt_17627.png
 
 PIN: *******************
 
