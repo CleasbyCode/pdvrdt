@@ -14,7 +14,7 @@ ProgramArgs ProgramArgs::parse(int argc, char** argv) {
         	throw std::runtime_error("Usage: pdvin [-m|-r] <cover_image> <secret_file>\n\t\bpdvin --info");
     	}
 
-    	uint8_t arg_index = 1;
+    	int arg_index = 1;
 
     	if (argc == 4) {
 		if (std::string(argv[arg_index]) != "-r" && std::string(argv[arg_index]) != "-m") {
