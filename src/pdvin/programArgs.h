@@ -16,4 +16,3 @@ struct ProgramArgs {
 
     	static ProgramArgs parse(int argc, char** argv);
 };
-
