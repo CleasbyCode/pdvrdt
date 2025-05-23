@@ -11,7 +11,6 @@
 //	$ sudo cp pdvout /usr/bin
 //	$ pdvout
 
-
 #include "pdvOut.h"
 #include "programArgs.h"
 #include "fileChecks.h"
