@@ -26,9 +26,7 @@
 #include "deflateFile.h"
 #include <zlib.h>    
 #include <algorithm> 
-#include <iterator>  
 #include <utility>   
-#include <new>  
 
 void deflateFile(std::vector<uint8_t>& vec, bool hasMastodonOption, bool isCompressedFile) {
 	constexpr uint32_t 
@@ -39,18 +37,15 @@ void deflateFile(std::vector<uint8_t>& vec, bool hasMastodonOption, bool isCompr
 
 	const uint32_t VEC_SIZE = static_cast<uint32_t>(vec.size());
 
-	uint8_t* buffer{ new uint8_t[BUFSIZE] };
-	
-	std::vector<uint8_t>deflate_vec;
-	deflate_vec.reserve(VEC_SIZE + BUFSIZE);
-	
-	z_stream strm;
-	strm.zalloc = Z_NULL;
-	strm.zfree = Z_NULL;
-	strm.next_in = vec.data();
-	strm.avail_in = VEC_SIZE;
-	strm.next_out = buffer;
-	strm.avail_out = BUFSIZE;
+	std::vector<uint8_t> buffer(BUFSIZE); 
+    	std::vector<uint8_t> deflate_vec;
+    	deflate_vec.reserve(VEC_SIZE + BUFSIZE);
+
+    	z_stream strm = {};
+    	strm.next_in = vec.data();
+    	strm.avail_in = VEC_SIZE;
+    	strm.next_out = buffer.data();
+    	strm.avail_out = BUFSIZE;
 
 	int8_t compression_level;
 
@@ -65,22 +60,27 @@ void deflateFile(std::vector<uint8_t>& vec, bool hasMastodonOption, bool isCompr
 	}
 
 	deflateInit(&strm, compression_level);
+	
+	while (strm.avail_in > 0) {
+		int ret = deflate(&strm, Z_NO_FLUSH);
+        	if (ret != Z_OK) break;
 
-	while (strm.avail_in) {
-		deflate(&strm, Z_NO_FLUSH);
-		if (!strm.avail_out) {
-			std::copy_n(buffer, BUFSIZE, std::back_inserter(deflate_vec));
-			strm.next_out = buffer;
-			strm.avail_out = BUFSIZE;
-		} else {
-			break;
-		}
-	}	
-	deflate(&strm, Z_FINISH);
-	std::copy_n(buffer, BUFSIZE - strm.avail_out, std::back_inserter(deflate_vec));
-	deflateEnd(&strm);
+        	if (strm.avail_out == 0) {
+            		deflate_vec.insert(deflate_vec.end(), buffer.begin(), buffer.end());
+            		strm.next_out = buffer.data();
+            		strm.avail_out = BUFSIZE;
+        	}
+    	}
 
-	delete[] buffer;	
-	vec = std::move(deflate_vec);
-	std::vector<uint8_t>().swap(deflate_vec);
+    	int ret;
+    	do {
+        	ret = deflate(&strm, Z_FINISH);
+        	size_t bytes_written = BUFSIZE - strm.avail_out;
+        	deflate_vec.insert(deflate_vec.end(), buffer.begin(), buffer.begin() + bytes_written);
+        	strm.next_out = buffer.data();
+        	strm.avail_out = BUFSIZE;
+    	} while (ret == Z_OK);
+
+    	deflateEnd(&strm);
+    	vec = std::move(deflate_vec);
 }
