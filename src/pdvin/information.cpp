@@ -4,7 +4,7 @@
 void displayInfo() {
 	std::cout << R"(
 
-PNG Data Vehicle (pdvin v3.4). 
+PNG Data Vehicle (pdvin v3.5). 
 Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
 A steganography-like CLI tool to embed & hide any file type within a PNG image. 
