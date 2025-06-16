@@ -49,14 +49,12 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 			return 1;
     	}
 
-	copyEssentialChunks(image_vec, IMAGE_FILE_SIZE);
+	copyEssentialChunks(image_vec);
 		
 	std::filesystem::path file_path(data_filename);
     	data_filename = file_path.filename().string();
 
-	const uint8_t DATA_FILENAME_LENGTH = static_cast<uint8_t>(data_filename.size());
-
-	if (DATA_FILENAME_LENGTH > MAX_FILENAME_LENGTH) {
+	if (data_filename.size() > MAX_FILENAME_LENGTH) {
     		std::cerr << "\nData File Error: Length of data filename is too long.\n\nFor compatibility requirements, length of filename must not exceed 20 characters.\n\n";
 		return 1;
 	}
@@ -73,7 +71,8 @@ int pdvIn(const std::string& IMAGE_FILENAME, std::string& data_filename, ArgOpti
 	} 
 
 	const uint16_t PROFILE_NAME_LENGTH_INDEX = hasMastodonOption ? 0x191 : 0x00;
-	profile_vec[PROFILE_NAME_LENGTH_INDEX] = DATA_FILENAME_LENGTH;
+	
+	profile_vec[PROFILE_NAME_LENGTH_INDEX] = static_cast<uint8_t>(data_filename.size());
 
 	constexpr uint32_t LARGE_FILE_SIZE = 300 * 1024 * 1024; 
 
