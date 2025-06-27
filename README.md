@@ -2,7 +2,7 @@
 
 ***pdvrdt*** is a *"steganography-like"* utility for ***Linux*** and ***Windows***. It consists of two CLI tools, ***pdvin***, *used for embedding a data file within a ***PNG*** cover image*, and ***pdvout***, *used for extracting the hidden file from the cover image.*  
 
-There is also a [***pdvrdt Web App,***](https://cleasbycode.co.uk/pdvrdt/index/) available to use, if you don't want to download and compile the CLI source code.  *Web file uploads are limited to 20MB.*  
+*Try the ***pdvrdt*** Web App [***here***](https://cleasbycode.co.uk/pdvrdt/index/) for a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to 20MB.*
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_61164.png)  
 *Image credit: [***@pixelbouncer***](https://x.com/pixelbouncer) / ***PIN: 7927377220012420213****
