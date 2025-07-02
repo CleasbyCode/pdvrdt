@@ -1,6 +1,6 @@
 # pdvrdt
 
-***pdvrdt***, a *"steganography-like"* command-line utility consisting of two CLI tools, ***pdvin***, *used for embedding a data file within a ***PNG*** cover image*, and ***pdvout***, *used for extracting the hidden file from the cover image.*  
+A *"steganography-like"* command-line utility consisting of two CLI tools, ***pdvin***, *used for embedding a data file within a ***PNG*** cover image*, and ***pdvout***, *used for extracting the hidden file from the cover image.*  
 
 *Try the ***pdvrdt*** Web App [***here***](https://cleasbycode.co.uk/pdvrdt/index/) for a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to 20MB.*
 
