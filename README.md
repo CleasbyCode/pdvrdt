@@ -11,9 +11,11 @@ Unlike the common steganography method of concealing data within the pixels of a
 
 For increased storage capacity and better security, your embedded data file is compressed with ***zlib/deflate*** (*if not already a compressed file type*) and encrypted using the ***libsodium*** cryptographic library.  
 ## Compatible Platforms
+*Posting size limit measured by the combined size of the cover image + compressed data file:* 
  
-* ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** / ***-r option***),
-* ***Mastodon*** (**16MB** / ***-m option***), ***ImgPile*** (**8MB**), ***X/Twitter*** (**5MB** + ****Dimension limits, see below***)
+* ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** | ***-r option***),
+* ***Mastodon*** (**16MB** | ***-m option***), ***ImgPile*** (**8MB**), ***X-Twitter*** (**5MB** + ****Dimension limits, see below***)
+*X-Twitter image dimension size limits:* 
 * ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max. | ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
 
 ## Usage (Linux - pdvin / pdvout)
@@ -68,9 +70,9 @@ https://github.com/user-attachments/assets/dad59635-c431-4d3a-a2dc-93b9f4f3b6be
 
 https://github.com/user-attachments/assets/2776d34e-e220-4d7c-955f-04c7cf7ecc1f
 
-To correctly download images from ***X/Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
+To correctly download images from ***X-Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
 
-In addition to the **5MB** image size limit, ***X/Twitter*** also has image dimension size limits, listed above.
+In addition to the **5MB** image size limit, ***X-Twitter*** also has image dimension size limits, listed above.
  
 https://github.com/user-attachments/assets/aa99cb70-cf11-4bee-8cf5-40a6015c23e6
 
