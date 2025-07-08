@@ -17,7 +17,8 @@ For increased storage capacity and better security, your embedded data file is c
 * ***Mastodon*** (**16MB** | ***-m option***), ***ImgPile*** (**8MB**), ***X-Twitter*** (**5MB** + ****Dimension limits, see below***)
   
 *X-Twitter image dimension size limits:* 
-* ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max. | ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
+* ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
+* ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
 
 ## Usage (Linux - pdvin / pdvout)
 
