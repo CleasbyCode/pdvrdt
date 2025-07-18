@@ -70,7 +70,7 @@ To create "*file-embedded*" ***PNG*** images compatible for posting on ***Mastod
 
 https://github.com/user-attachments/assets/dad59635-c431-4d3a-a2dc-93b9f4f3b6be
 
-https://github.com/user-attachments/assets/2776d34e-e220-4d7c-955f-04c7cf7ecc1f
+https://github.com/user-attachments/assets/7b5a5e80-60fe-46f1-891c-7e5c8d16abbb
 
 To correctly download images from ***X-Twitter*** or ***Reddit***, click the image in the post to ***fully expand it***, before saving.  
 
