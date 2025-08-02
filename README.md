@@ -5,7 +5,7 @@ A *"steganography-like"* command-line utility consisting of two CLI tools, ***pd
 *Try the ***pdvrdt*** Web App [***here***](https://cleasbycode.co.uk/pdvrdt/index/) for a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to 20MB.*
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_33643.png)  
-*Image credit: #midjourney / ***PIN: 12733813636064477209****
+*Image credit: "Demonic Woods" #midjourney / ***PIN: 12733813636064477209****
 
 Unlike the common steganography method of concealing data within the pixels of a cover image ([***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/)), ***pdvrdt*** hides files within various ***chunks*** of a ***PNG*** image, such as iCCP and IDAT. You can embed any file type up to ***2GB***, although compatible hosting sites (*listed below*) have their own ***much smaller*** size limits and *other requirements.  
 
