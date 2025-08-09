@@ -3,50 +3,57 @@
 
 void displayInfo() {
 	std::cout << R"(
+ PNG Data Vehicle (pdvrdt v3.6)
+ Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
-PNG Data Vehicle (pdvin v3.4). 
-Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
+ pdvrdt is a "steganography-like" command-line tool used for concealing and extracting any file type via a PNG image. 
 
-A steganography-like CLI tool to embed & hide any file type within a PNG image. 
-
-Compile & run pdvin (Linux):
+ Compile & run pdvrdt (Linux):
 		
-$ sudo apt-get install libsodium-dev
-$
-$ chmod +x compile_pdvin.sh
-$ ./compile_pdvin.sh
-$
-$ Compilation successful. Executable 'pdvin' created.
-$ sudo cp pdvin /usr/bin
-$ pdvin
+  $ sudo apt-get install libsodium-dev
 
-Usage: pdvin [-m] [-r] <cover_image> <secret_file>  
-       pdvin --info
+  $ chmod +x compile_pdvrdt.sh
+  $ ./compile_pdvrdt.sh
+
+  $ Compilation successful. Executable 'pdvrdt' created.
+
+  $ sudo cp pdvrdt /usr/bin
+  $ pdvrdt
+		
+  Usage: pdvrdt conceal [-m|-r] <cover_image> <secret_file>
+  	 pdvrdt recover <cover_image> 
+         pdvrdt --info
+		
+ Share your "file-embedded" PNG image on the following compatible sites.
+ 
+ Size limit for these platforms measured by the combined size of cover image & compressed data file.
+ 
+  Flickr (200MB), ImgBB (32MB), PostImage (32MB), Reddit (19MB / -r option),
+  Mastodon (16MB / -m option), ImgPile (8MB), X-Twitter (5MB + *Dimension size limits).
+  
+  X-Twitter Image Dimension Size Limits:
+  
+   PNG-32/24 (Truecolor) 68x68 Min. --- 900x900 Max.
+   PNG-8 (Indexed-color) 68x68 Min. --- 4096x4096 Max.	
+ 
+ pdvrdt mode arguments:
+ 
+  conceal - Compresses, encrypts and embeds your secret data file within a PNG cover image.
+  recover - Decrypts, uncompresses and extracts the concealed data file from a PNG cover image (recovery PIN required!).
+ 
+ pdvrdt conceal mode platform options:
+ 
+  -m (Mastodon). To share/post compatible "file-embedded" PNG images on Mastodon, you must use the -m option with conceal mode.
+ 
+  $ pdvrdt conceal -m my_image.png hidden.doc
+ 
+  -r (Reddit). To share/post compatible "file-embedded" PNG images on Reddit, you must use the -r option with conceal mode.
 	
-Post your file-embedded image on the following compatible sites.  
-*Image size limits(cover image + data file):
+  $ pdvrdt conceal -r my_image.png secret.mp3 
 
-Flickr (200MB), ImgBB (32MB), PostImage (32MB), *Reddit (19MB / -r option), 
-*Mastodon (16MB / -m option), *ImgPile (8MB), *X/Twitter (5MB / *Dimension limits).
-
-Argument options:	
+  From the Reddit site, click "Create Post" then select the "Images & Video" tab, to attach and post your PNG image.
+  
+ To correctly download images from X-Twitter or Reddit, click the image in the post to fully expand it, before saving.
 		
-* To create "file-embedded" PNG images compatible for posting on Mastodon, use the -m option with pdvin.
-* To create "file-embedded" PNG images compatible for posting on Reddit, use the -r option with pdvin.
-		
- -m = Mastodon option, (pdvin -m cover_image.png my_hidden_file.mp3).
- -r = Reddit option,   (pdvin -r cover_image.png my_hidden_file.doc).
-		
-From the Reddit site, click "Create Post" then always select "Images & Video" tab, to post your PNG image.
-
-To correctly download images from X/Twitter or Reddit, click the image in the post to fully expand it, before saving.
-
-*X/Twitter - As well as the 5MB PNG image size limit, X/Twitter also has dimension size limits.
-PNG-32/24 (Truecolor) 68x68 Min. - 900x900 Max. 
-PNG-8 (Indexed color) 68x68 Min. - 4096x4096 Max.
-
-*ImgPile - You must sign in to an account before sharing your file-embedded PNG image on this platform.
-Sharing your image without logging in, your embedded file will not be preserved.
-
 )";
 }
