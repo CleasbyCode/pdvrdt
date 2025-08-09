@@ -55,7 +55,7 @@ Important: Keep your PIN safe, so that you can extract the hidden file.
 
 Complete!
         
-user1@mx:~/Desktop$ pdvrdt recover prdt_12462.jpg
+user1@mx:~/Desktop$ pdvrdt recover prdt_12462.png
 
 PIN: *******************
 
