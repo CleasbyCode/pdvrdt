@@ -11,6 +11,8 @@ Unlike the common steganography method of concealing data within the pixels of a
 
 For increased storage capacity and better security, your embedded data file is compressed with ***Zlib*** (*if not already a compressed file type*) and encrypted using the ***Libsodium*** cryptographic library.  
 
+https://github.com/user-attachments/assets/76732196-815b-45ac-b71d-6e1aca672e25
+
 ## Compatible Platforms
 *Posting size limit measured by the combined size of the cover image + compressed data file:* 
  
