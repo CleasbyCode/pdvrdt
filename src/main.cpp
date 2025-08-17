@@ -101,11 +101,11 @@ int main(int argc, char** argv) {
 		
 		auto updateValue = [](std::vector<uint8_t>& vec, uint32_t insert_index, const uint64_t NEW_VALUE, uint8_t bits) {
 					while (bits) { vec[insert_index++] = (NEW_VALUE >> (bits -= 8)) & 0xff; }	// Big-endian.
-				};
+		};
 
 		auto searchSig = []<typename T, size_t N>(std::vector<uint8_t>& vec, uint32_t start_index, const uint8_t INCREMENT_SEARCH_INDEX, const std::array<T, N>& SIG) -> uint32_t {
     					return static_cast<uint32_t>(std::search(vec.begin() + start_index + INCREMENT_SEARCH_INDEX, vec.end(), SIG.begin(), SIG.end()) - vec.begin());
-				};
+		};
 		
 		auto zlibFunc = [&platform = args.platform, &isCompressedFile](std::vector<uint8_t>& vec, ArgMode mode) {
 			constexpr uint32_t BUFSIZE = 2 * 1024 * 1024; 
@@ -137,7 +137,7 @@ int main(int argc, char** argv) {
     					if (vec_size >= SECOND_SIZE_OPTION) return Z_BEST_COMPRESSION;
     					if (vec_size >= FIRST_SIZE_OPTION)  return Z_DEFAULT_COMPRESSION;
     					return Z_BEST_COMPRESSION;
-				};
+					};
         
         			int compression_level = select_compression_level(VEC_SIZE, isCompressedFile);
 
@@ -979,3 +979,4 @@ int main(int argc, char** argv) {
         	return 1;
     	}
 }
+
