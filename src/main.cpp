@@ -142,85 +142,78 @@ int main(int argc, char** argv) {
         			int compression_level = select_compression_level(VEC_SIZE, isCompressedFile);
 
         			if (deflateInit(&strm, compression_level)  != Z_OK) {
-            				throw std::runtime_error("Zlib Deflate Init Error");
+            			throw std::runtime_error("Zlib Deflate Init Error");
         			}
         			while (strm.avail_in > 0) {
-            				int ret = deflate(&strm, Z_NO_FLUSH);
-            				if (ret != Z_OK) {
-                				deflateEnd(&strm);
-                				throw std::runtime_error("Zlib Compression Error");
-            				}
-            				if (strm.avail_out == 0) {
-                				tmp_vec.insert(tmp_vec.end(), buffer_vec.begin(), buffer_vec.end());
-                				strm.next_out = buffer_vec.data();
-                				strm.avail_out = BUFSIZE;
-            				}
+            			int ret = deflate(&strm, Z_NO_FLUSH);
+            			if (ret != Z_OK) {
+                			deflateEnd(&strm);
+                			throw std::runtime_error("Zlib Compression Error");
+            			}
+            			if (strm.avail_out == 0) {
+                			tmp_vec.insert(tmp_vec.end(), buffer_vec.begin(), buffer_vec.end());
+                			strm.next_out = buffer_vec.data();
+                			strm.avail_out = BUFSIZE;
+            			}
         			}
         			int ret;
         			do {
             				ret = deflate(&strm, Z_FINISH);
             				size_t bytes_written = BUFSIZE - strm.avail_out;
             				if (bytes_written > 0) {
-                				tmp_vec.insert(tmp_vec.end(),
-                               			buffer_vec.begin(),
-                               			buffer_vec.begin() + bytes_written);
+                				tmp_vec.insert(tmp_vec.end(), buffer_vec.begin(), buffer_vec.begin() + bytes_written);
             				}
             				strm.next_out = buffer_vec.data();
             				strm.avail_out = BUFSIZE;
         			} while (ret == Z_OK);
         			deflateEnd(&strm);
-    			} else { // (inflate)
+    			} else { 
+					// (inflate)
         			if (inflateInit(&strm) != Z_OK) {
-            				throw std::runtime_error("Zlib Inflate Init Error");
+            			throw std::runtime_error("Zlib Inflate Init Error");
         			}
         			while (strm.avail_in > 0) {
-            				int ret = inflate(&strm, Z_NO_FLUSH);
-            				if (ret == Z_STREAM_END) {
-                				size_t bytes_written = BUFSIZE - strm.avail_out;
-                				if (bytes_written > 0) {
-                    					tmp_vec.insert(tmp_vec.end(),
-                                   			buffer_vec.begin(),
-                                   			buffer_vec.begin() + bytes_written);
-                				}
-                				inflateEnd(&strm);
-                				goto inflate_done; 
-            				}
-            				if (ret != Z_OK) {
-                				inflateEnd(&strm);
-                				throw std::runtime_error(
-                    				"Zlib Inflate Error: " +
-                    				std::string(strm.msg ? strm.msg : "Unknown error"));
-            				}
-            				if (strm.avail_out == 0) {
-                				tmp_vec.insert(tmp_vec.end(), buffer_vec.begin(), buffer_vec.end());
-                				strm.next_out = buffer_vec.data();
-                				strm.avail_out = BUFSIZE;
-            				}
+            			int ret = inflate(&strm, Z_NO_FLUSH);
+            			if (ret == Z_STREAM_END) {
+                			size_t bytes_written = BUFSIZE - strm.avail_out;
+                			if (bytes_written > 0) {
+                    				tmp_vec.insert(tmp_vec.end(), buffer_vec.begin(), buffer_vec.begin() + bytes_written);
+                			}
+                			inflateEnd(&strm);
+                			goto inflate_done; 
+            			}
+            			if (ret != Z_OK) {
+                			inflateEnd(&strm);
+                			throw std::runtime_error("Zlib Inflate Error: " + std::string(strm.msg ? strm.msg : "Unknown error"));
+        				}
+            			if (strm.avail_out == 0) {
+                			tmp_vec.insert(tmp_vec.end(), buffer_vec.begin(), buffer_vec.end());
+                			strm.next_out = buffer_vec.data();
+                			strm.avail_out = BUFSIZE;
+            			}
         			}
 
         			{	
-            				int ret;
-            				do {
-                				ret = inflate(&strm, Z_FINISH);
-                				size_t bytes_written = BUFSIZE - strm.avail_out;
-                				if (bytes_written > 0) {
-                    					tmp_vec.insert(tmp_vec.end(),
-                                	  	 	buffer_vec.begin(),
-                                	   		buffer_vec.begin() + bytes_written);
-                				}
-                				strm.next_out = buffer_vec.data();
-                				strm.avail_out = BUFSIZE;
-            				} while (ret == Z_OK);
+            			int ret;
+            			do {
+                			ret = inflate(&strm, Z_FINISH);
+                			size_t bytes_written = BUFSIZE - strm.avail_out;
+                			if (bytes_written > 0) {
+                    			tmp_vec.insert(tmp_vec.end(), buffer_vec.begin(), buffer_vec.begin() + bytes_written);
+                			}
+                			strm.next_out = buffer_vec.data();
+                			strm.avail_out = BUFSIZE;
+            			} while (ret == Z_OK);
         			}
-        			inflateEnd(&strm);
+        				inflateEnd(&strm);
     			}
-			inflate_done:
-    			vec.resize(tmp_vec.size());
-    			if (!tmp_vec.empty()) {
-        			std::memcpy(vec.data(), tmp_vec.data(), tmp_vec.size());
-    			}
-    			std::vector<uint8_t>().swap(tmp_vec);
-    			std::vector<uint8_t>().swap(buffer_vec);
+				inflate_done:
+    				vec.resize(tmp_vec.size());
+    				if (!tmp_vec.empty()) {
+        				std::memcpy(vec.data(), tmp_vec.data(), tmp_vec.size());
+    				}
+    				std::vector<uint8_t>().swap(tmp_vec);
+    				std::vector<uint8_t>().swap(buffer_vec);
 		};
 	
 		constexpr uint32_t LARGE_FILE_SIZE = 300 * 1024 * 1024;
@@ -979,4 +972,5 @@ int main(int argc, char** argv) {
         	return 1;
     	}
 }
+
 
