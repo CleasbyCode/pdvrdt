@@ -7,39 +7,40 @@ ProgramArgs ProgramArgs::parse(int argc, char** argv) {
 	ProgramArgs args;
 	if (argc == 2 && std::string(argv[1]) == "--info") {
 		displayInfo();
-        std::exit(0);
+        	std::exit(0);
 	}
 
 	if (argc < 3 || argc > 5) {
-    	throw std::runtime_error("Usage: pdvrdt conceal [-m|-r] <cover_image> <secret_file>\n\t\bpdvrdt recover <cover_image>\n\t\bpdvrdt --info");
-    }
+        	throw std::runtime_error("Usage: pdvrdt conceal [-m|-r] <cover_image> <secret_file>\n\t\bpdvrdt recover <cover_image>\n\t\bpdvrdt --info");
+    	}
 
-    int arg_index = 1;
+    	int arg_index = 1;
     	
-    if (std::string(argv[arg_index]) != "conceal" && std::string(argv[arg_index]) != "recover") {
-    	throw std::runtime_error("Input Error: Invalid mode arguments. Expecting \"conceal\" or \"recover\" as the only mode arguments.");
-    }
+    	if (std::string(argv[arg_index]) != "conceal" && std::string(argv[arg_index]) != "recover") {
+    		throw std::runtime_error("Input Error: Invalid mode arguments. Expecting \"conceal\" or \"recover\" as the only mode arguments.");
+    	}
 	
 	++arg_index;
 	
-    if (argc == 5) {
+    	if (argc == 5) {
 		if (std::string(argv[arg_index]) != "-m" && std::string(argv[arg_index]) != "-r") {
-            throw std::runtime_error("Input Error: Invalid platform arguments. Expecting \"-m\" or \"-r\" as the only optional platform arguments.");
-        }
+            		throw std::runtime_error("Input Error: Invalid platform arguments. Expecting \"-m\" or \"-r\" as the only optional platform arguments.");
+        	}
 		if (std::string(argv[arg_index]) == "-m") {
-        	args.platform = ArgOption::mastodon;
+        		args.platform = ArgOption::mastodon;
 		} else {
 			args.platform = ArgOption::reddit;
 		}
-        ++arg_index;
-        args.cover_image = argv[arg_index];
-    	args.data_file = argv[++arg_index];
-    } else if (argc == 4) {
-    	args.cover_image = argv[arg_index];
-    	args.data_file = argv[++arg_index];
-    } else {
-    	args.cover_image = argv[arg_index];
-    	args.mode = ArgMode::recover;
-    }
-	return args;
+        	++arg_index;
+        	args.cover_image = argv[arg_index];
+    		args.data_file = argv[++arg_index];
+    	} else if (argc == 4) {
+    		args.cover_image = argv[arg_index];
+    		args.data_file = argv[++arg_index];
+    	} else {
+    		args.cover_image = argv[arg_index];
+    		args.mode = ArgMode::recover;
+    	}
+
+    	return args;
 }

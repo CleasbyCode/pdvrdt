@@ -3,7 +3,7 @@
 
 void displayInfo() {
 	std::cout << R"(
- PNG Data Vehicle (pdvrdt v3.6)
+ PNG Data Vehicle (pdvrdt v3.7)
  Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
  pdvrdt is a "steganography-like" command-line tool used for concealing and extracting any file type via a PNG image. 
