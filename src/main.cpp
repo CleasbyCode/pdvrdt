@@ -723,8 +723,8 @@ int main(int argc, char** argv) {
 					 
 			return 0;
 		} else {
-        		// ------- Recover data file section code.
-        		constexpr uint_fast8_t ICCP_CHUNK_INDEX = 0x25;
+			// ------- Recover data file section code.
+        	constexpr uint_fast8_t ICCP_CHUNK_INDEX = 0x25;
 
 			constexpr std::array<uint_fast8_t, 7> 
 				ICCP_SIG { 0x69, 0x43, 0x43, 0x50, 0x69, 0x63, 0x63 },
@@ -741,12 +741,12 @@ int main(int argc, char** argv) {
 			bool isMastodonFile = (ICCP_SIG_POS == ICCP_CHUNK_INDEX && PDV_SIG_POS == cover_image_vec.size());
 		
 			constexpr uint_fast8_t 
-				DEFAULT_CHUNK_SIZE_INDEX_DIFF 	 = 112,
-				DEFAULT_PROFILE_DATA_INDEX_DIFF  = 11,
-				MASTODON_PROFILE_DATA_INDEX_DIFF = 9,
-				MASTODON_CHUNK_SIZE_DIFF 	 = 9,
-				MASTODON_CHUNK_SIZE_INDEX_DIFF 	 = 4,
-				CHUNK_SIZE_DIFF 		 = 3;
+				DEFAULT_CHUNK_SIZE_INDEX_DIFF 	 	= 112,
+				DEFAULT_PROFILE_DATA_INDEX_DIFF  	= 11,
+				MASTODON_PROFILE_DATA_INDEX_DIFF 	= 9,
+				MASTODON_CHUNK_SIZE_DIFF 	 		= 9,
+				MASTODON_CHUNK_SIZE_INDEX_DIFF 	 	= 4,
+				CHUNK_SIZE_DIFF 		 			= 3;
 	
 			const uint_fast32_t
 				CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_SIG_POS - MASTODON_CHUNK_SIZE_INDEX_DIFF : PDV_SIG_POS - DEFAULT_CHUNK_SIZE_INDEX_DIFF,				
@@ -792,61 +792,61 @@ int main(int argc, char** argv) {
 			std::cout << "\nPIN: ";
 		
 			const std::string MAX_UINT64_STR = "18446744073709551615";
-    			std::string input;
-    			char ch; 
-    			bool sync_status = std::cout.sync_with_stdio(false);
+    		std::string input;
+    		char ch; 
+    		bool sync_status = std::cout.sync_with_stdio(false);
 	
 			#ifdef _WIN32
-    				while (input.length() < 20) { 
+				while (input.length() < 20) { 
 	 				ch = _getch();
         				if (ch >= '0' && ch <= '9') {
-            					input.push_back(ch);
-            					std::cout << '*' << std::flush;  
+            				input.push_back(ch);
+            				std::cout << '*' << std::flush;  
         				} else if (ch == '\b' && !input.empty()) {  
-            					std::cout << "\b \b" << std::flush;  
-            					input.pop_back();
+            				std::cout << "\b \b" << std::flush;  
+            				input.pop_back();
         				} else if (ch == '\r') {
-            					break;
+            				break;
         				}
     				}
-			#else   
-    				struct termios oldt, newt;
-    				tcgetattr(STDIN_FILENO, &oldt);
-    				newt = oldt;
-    				newt.c_lflag &= ~(ICANON | ECHO);
-    				tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+			#else
+				struct termios oldt, newt;
+    			tcgetattr(STDIN_FILENO, &oldt);
+    			newt = oldt;
+    			newt.c_lflag &= ~(ICANON | ECHO);
+    			tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 	
    				while (input.length() < 20) {
-        				ssize_t bytes_read = read(STDIN_FILENO, &ch, 1); 
-        				if (bytes_read <= 0) continue; 
+        			ssize_t bytes_read = read(STDIN_FILENO, &ch, 1); 
+        			if (bytes_read <= 0) continue; 
        
-        				if (ch >= '0' && ch <= '9') {
-            					input.push_back(ch);
-            					std::cout << '*' << std::flush; 
-        				} else if ((ch == '\b' || ch == 127) && !input.empty()) {  
-            					std::cout << "\b \b" << std::flush;
-            					input.pop_back();
-        				} else if (ch == '\n') {
-            					break;
-        				}
-    				}
-    				tcsetattr(STDIN_FILENO, TCSANOW, &oldt); 
+        			if (ch >= '0' && ch <= '9') {
+            			input.push_back(ch);
+            			std::cout << '*' << std::flush; 
+        			} else if ((ch == '\b' || ch == 127) && !input.empty()) {  
+            			std::cout << "\b \b" << std::flush;
+            			input.pop_back();
+        			} else if (ch == '\n') {
+            			break;
+        			}
+    			}
+    			tcsetattr(STDIN_FILENO, TCSANOW, &oldt); 
 			#endif
 
-    			std::cout << std::endl; 
-    			std::cout.sync_with_stdio(sync_status);
+    		std::cout << std::endl; 
+    		std::cout.sync_with_stdio(sync_status);
 	
-    			uint_fast64_t pin;
+    		uint_fast64_t pin;
     			
-    			if (input.empty() || (input.length() == 20 && input > MAX_UINT64_STR)) {
-        			pin = 0; 
-    			} else {
-        			pin = std::stoull(input); 
-    			}
+    		if (input.empty() || (input.length() == 20 && input > MAX_UINT64_STR)) {
+        		pin = 0; 
+    		} else {
+        		pin = std::stoull(input); 
+    		}
 		
 			updateValue(cover_image_vec, sodium_key_pos, pin, value_bit_length); 
 	
-			constexpr uint_fast8_t SODIUM_XOR_KEY_LENGTH	= 8; 
+			constexpr uint_fast8_t SODIUM_XOR_KEY_LENGTH = 8; 
 			
 			sodium_key_pos += SODIUM_XOR_KEY_LENGTH;
 
@@ -896,17 +896,16 @@ int main(int argc, char** argv) {
 			if (hasDecryptionFailed) {	
 				std::fstream file(args.cover_image, std::ios::in | std::ios::out | std::ios::binary); 
    		 
-	    			file.seekg(-1, std::ios::end);
-	    			std::streampos byte_pos = file.tellg();
+	    		file.seekg(-1, std::ios::end);
+	    		std::streampos byte_pos = file.tellg();
 
-	    			file.read(reinterpret_cast<char*>(&byte), sizeof(byte));
+	    		file.read(reinterpret_cast<char*>(&byte), sizeof(byte));
 
-    	    			if (byte == 0x82) {
-    					byte = 0;
+    	    	if (byte == 0x82) {
+    				byte = 0;
 				} else {
 	   				byte++;
 				}		
-
 				if (byte > 2) {
 					file.close();
 					std::ofstream file(args.cover_image, std::ios::out | std::ios::trunc | std::ios::binary);
@@ -914,10 +913,8 @@ int main(int argc, char** argv) {
 					file.seekp(byte_pos);
 					file.write(reinterpret_cast<char*>(&byte), sizeof(byte));
 				}
-
 				file.close();
-
-    	    			throw std::runtime_error("File Recovery Error: Invalid PIN or file is corrupt.");
+    	    	throw std::runtime_error("File Recovery Error: Invalid PIN or file is corrupt.");
 			}
 		
 			zlibFunc(decrypted_vec, args.mode, args.platform, isCompressedFile);
@@ -956,12 +953,10 @@ int main(int argc, char** argv) {
 			std::cout << "\nExtracted hidden file: " << decrypted_filename << " (" << INFLATED_FILE_SIZE << " bytes).\n\nComplete! Please check your file.\n\n";
 
 			return 0;
-	    		}   
-		}
-		catch (const std::runtime_error& e) {
-        		std::cerr << "\n" << e.what() << "\n\n";
-        		return 1;
-    		}
+	    }   
 	}
-
-
+	catch (const std::runtime_error& e) {
+    	std::cerr << "\n" << e.what() << "\n\n";
+        return 1;
+    }
+}
