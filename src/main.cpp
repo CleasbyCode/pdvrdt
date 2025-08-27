@@ -243,16 +243,16 @@ static inline void zlibFunc(std::vector<uint_fast8_t>& vec, ArgMode mode, ArgOpt
 }
 	
 int main(int argc, char** argv) {
-	try {	
+	try {
 		#ifdef _WIN32
-    			SetConsoleOutputCP(CP_UTF8);  
+    		SetConsoleOutputCP(CP_UTF8);  
 		#endif
 	
 		ProgramArgs args = ProgramArgs::parse(argc, argv);
 		
 		std::vector<uint_fast8_t> 
-        		cover_image_vec,
-        		data_file_vec;
+        	cover_image_vec,
+        	data_file_vec;
 		
 		uintmax_t 
 			cover_image_size = 0,
@@ -269,42 +269,42 @@ int main(int argc, char** argv) {
 		if (args.mode == ArgMode::conceal) {  
 			// --- Embed data file section code.		
 			bool 
-                       		hasMastodonOption = (args.platform == ArgOption::mastodon),
+            	hasMastodonOption = (args.platform == ArgOption::mastodon),
 				hasRedditOption = (args.platform == ArgOption::reddit),
 				hasNoneOption = (args.platform == ArgOption::none),
 				hasTwitterBadDims = false;
                                                
-        		validateDataFile(args.data_file, args.platform, cover_image_size, data_file_size, data_file_vec, isCompressedFile);
+        	validateDataFile(args.data_file, args.platform, cover_image_size, data_file_size, data_file_vec, isCompressedFile);
         				
 			constexpr uint_fast8_t 
 				COLOR_TYPE_INDEX = 0x19,
 				TRUECOLOR_RGB	= 2,
 				TRUECOLOR_RGBA	= 6;
 		
-       			std::vector<uint_fast8_t> image; 
-    			lodepng::State state;
+       		std::vector<uint_fast8_t> image; 
+    		lodepng::State state;
     		
-    			unsigned 
-    				width = 0,
-    				height = 0,
-    				error = lodepng::decode(image, width, height, state, cover_image_vec);
+    		unsigned 
+    			width = 0,
+    			height = 0,
+    			error = lodepng::decode(image, width, height, state, cover_image_vec);
     			
-    			if (error) {
-        			throw std::runtime_error("Lodepng decoder error: " + std::to_string(error));
-    			}
+    		if (error) {
+        		throw std::runtime_error("Lodepng decoder error: " + std::to_string(error));
+    		}
     			
-    			uint_fast8_t color_type = static_cast<uint_fast8_t>(state.info_png.color.colortype);
+    		uint_fast8_t color_type = static_cast<uint_fast8_t>(state.info_png.color.colortype);
     			
  			if (color_type == TRUECOLOR_RGB || color_type == TRUECOLOR_RGBA) {	
  	   			LodePNGColorStats stats;
-    				lodepng_color_stats_init(&stats);
-    				stats.allow_palette = 1; 
-    				stats.allow_greyscale = 0;
+    			lodepng_color_stats_init(&stats);
+    			stats.allow_palette = 1; 
+    			stats.allow_greyscale = 0;
 
-    				error = lodepng_compute_color_stats(&stats, image.data(), width, height, &state.info_raw);
-    				if (error) {
-        				throw std::runtime_error("Lodepng stats error: " + std::to_string(error));
-    				}
+    			error = lodepng_compute_color_stats(&stats, image.data(), width, height, &state.info_raw);
+    			if (error) {
+        			throw std::runtime_error("Lodepng stats error: " + std::to_string(error));
+    			}
 				constexpr uint_fast16_t
 					TWITTER_MAX_PLTE_DIMS = 4096,  
 					TWITTER_MAX_RGB_DIMS = 900,	
@@ -312,121 +312,120 @@ int main(int argc, char** argv) {
 			
 				hasTwitterBadDims = (height > TWITTER_MAX_RGB_DIMS || width > TWITTER_MAX_RGB_DIMS || TWITTER_MIN_DIMS > height || TWITTER_MIN_DIMS > width);
 			
-    				if (stats.numcolors <= 256) {
-        				std::vector<uint_fast8_t> indexed_image(width * height);
-        				std::vector<uint_fast8_t> palette;
+    			if (stats.numcolors <= 256) {
+        			std::vector<uint_fast8_t> indexed_image(width * height);
+        			std::vector<uint_fast8_t> palette;
         				
-        				size_t palette_size = stats.numcolors > 0 ? stats.numcolors : 1;
+        			size_t palette_size = stats.numcolors > 0 ? stats.numcolors : 1;
 
-        				if (stats.numcolors > 0) {
-            					for (size_t i = 0; i < palette_size; ++i) {
-            						palette.push_back(stats.palette[i * 4]);     
-                					palette.push_back(stats.palette[i * 4 + 1]); 
-                					palette.push_back(stats.palette[i * 4 + 2]); 
-                					palette.push_back(stats.palette[i * 4 + 3]); 
-            					}
-        				} else {
-            					uint_fast8_t r = 0, g = 0, b = 0, a = 255; 
-            					if (!image.empty()) {
-                					r = image[0];
-                					g = image[1];
-                					b = image[2];
-                					if (state.info_raw.colortype == LCT_RGBA) a = image[3];
-            					}
-            					palette.push_back(r);
-            					palette.push_back(g);
-            					palette.push_back(b);
-            					palette.push_back(a);
-        				}	
-
-        				size_t channels = (state.info_raw.colortype == LCT_RGBA) ? 4 : 3;
+        			if (stats.numcolors > 0) {
+            			for (size_t i = 0; i < palette_size; ++i) {
+            				palette.push_back(stats.palette[i * 4]);     
+                			palette.push_back(stats.palette[i * 4 + 1]); 
+                			palette.push_back(stats.palette[i * 4 + 2]); 
+                			palette.push_back(stats.palette[i * 4 + 3]); 
+            			}
+        			} else {
+						uint_fast8_t r = 0, g = 0, b = 0, a = 255; 
+            			if (!image.empty()) {
+							r = image[0];
+                			g = image[1];
+                			b = image[2];
+                			if (state.info_raw.colortype == LCT_RGBA) a = image[3];
+            			}
+            			palette.push_back(r);
+            			palette.push_back(g);
+            			palette.push_back(b);
+            			palette.push_back(a);
+        			}	
+        			size_t channels = (state.info_raw.colortype == LCT_RGBA) ? 4 : 3;
         				
-        				for (size_t i = 0; i < width * height; ++i) {
-            					uint_fast8_t 
-            						r = image[i * channels],
-            						g = image[i * channels + 1],
-            						b = image[i * channels + 2],
-            						a = (channels == 4) ? image[i * channels + 3] : 255;
+        			for (size_t i = 0; i < width * height; ++i) {
+            			uint_fast8_t 
+            				r = image[i * channels],
+            				g = image[i * channels + 1],
+            				b = image[i * channels + 2],
+            				a = (channels == 4) ? image[i * channels + 3] : 255;
 
-            					size_t index = 0;
-            					for (size_t j = 0; j < palette_size; ++j) {
-                					if (palette[j * 4] == r && palette[j * 4 + 1] == g && palette[j * 4 + 2] == b && palette[j * 4 + 3] == a) {
-                    						index = j;
-                    						break;
-                					}
-            					}	
-            					indexed_image[i] = static_cast<uint_fast8_t>(index);
-        				}
+            			size_t index = 0;
+            			for (size_t j = 0; j < palette_size; ++j) {
+                			if (palette[j * 4] == r && palette[j * 4 + 1] == g && palette[j * 4 + 2] == b && palette[j * 4 + 3] == a) {
+                    			index = j;
+                    			break;
+                			}
+            			}	
+            			indexed_image[i] = static_cast<uint_fast8_t>(index);
+        			}
 
-        				lodepng::State encodeState;
-        				encodeState.info_raw.colortype = LCT_PALETTE; 
-        				encodeState.info_raw.bitdepth = 8; 
-        				encodeState.info_png.color.colortype = LCT_PALETTE;
-        				encodeState.info_png.color.bitdepth = 8;
-        				encodeState.encoder.auto_convert = 0; 
+        			lodepng::State encodeState;
+        			encodeState.info_raw.colortype = LCT_PALETTE; 
+        			encodeState.info_raw.bitdepth = 8; 
+        			encodeState.info_png.color.colortype = LCT_PALETTE;
+        			encodeState.info_png.color.bitdepth = 8;
+        			encodeState.encoder.auto_convert = 0; 
 
-        				for (size_t i = 0; i < palette_size; ++i) {
-            					lodepng_palette_add(&encodeState.info_png.color, palette[i * 4], palette[i * 4 + 1], palette[i * 4 + 2], palette[i * 4 + 3]);
-            					lodepng_palette_add(&encodeState.info_raw, palette[i * 4], palette[i * 4 + 1], palette[i * 4 + 2], palette[i * 4 + 3]);
-        				}
+        			for (size_t i = 0; i < palette_size; ++i) {
+            			lodepng_palette_add(&encodeState.info_png.color, palette[i * 4], palette[i * 4 + 1], palette[i * 4 + 2], palette[i * 4 + 3]);
+            			lodepng_palette_add(&encodeState.info_raw, palette[i * 4], palette[i * 4 + 1], palette[i * 4 + 2], palette[i * 4 + 3]);
+        			}
 
-        				std::vector<uint_fast8_t> output;
+        			std::vector<uint_fast8_t> output;
         				
-        				error = lodepng::encode(output, indexed_image.data(), width, height, encodeState);
-        				if (error) {
-            					throw std::runtime_error("Lodepng encode error: " + std::to_string(error));
-        				}
+        			error = lodepng::encode(output, indexed_image.data(), width, height, encodeState);
+        			if (error) {
+            			throw std::runtime_error("Lodepng encode error: " + std::to_string(error));
+        			}
 
-        				cover_image_vec.swap(output);
-        				std::vector<uint_fast8_t>().swap(image);
-        				std::vector<uint_fast8_t>().swap(output);
-        				std::vector<uint_fast8_t>().swap(indexed_image);
-        				std::vector<uint_fast8_t>().swap(palette);
+        			cover_image_vec.swap(output);
+        			std::vector<uint_fast8_t>().swap(image);
+        			std::vector<uint_fast8_t>().swap(output);
+        			std::vector<uint_fast8_t>().swap(indexed_image);
+        			std::vector<uint_fast8_t>().swap(palette);
         		
-        				hasTwitterBadDims = (height > TWITTER_MAX_PLTE_DIMS || width > TWITTER_MAX_PLTE_DIMS || TWITTER_MIN_DIMS > height || TWITTER_MIN_DIMS > width);
-    				}	 	
-       			}	
+        			hasTwitterBadDims = (height > TWITTER_MAX_PLTE_DIMS || width > TWITTER_MAX_PLTE_DIMS || TWITTER_MIN_DIMS > height || TWITTER_MIN_DIMS > width);
+    			}	 	
+       		}	
     			
-    			color_type = cover_image_vec[COLOR_TYPE_INDEX];   // Color type may of changed, update variable.
+    		color_type = cover_image_vec[COLOR_TYPE_INDEX];   // Color type may of changed, update variable.
     			
-    			constexpr uint_fast8_t 
-    				PNG_FIRST_BYTES = 33,
+    		constexpr uint_fast8_t 
+    			PNG_FIRST_BYTES = 33,
 				PNG_IEND_BYTES 	= 12,
 				INDEXED_PLTE	= 3;
 				
-    			constexpr std::array<uint_fast8_t, 4>
+    		constexpr std::array<uint_fast8_t, 4>
 				PLTE_SIG 	{ 0x50, 0x4C, 0x54, 0x45 },
 				TRNS_SIG 	{ 0x74, 0x52, 0x4E, 0x53 },
 				IDAT_SIG 	{ 0x49, 0x44, 0x41, 0x54 };
 					
-    			const uint_fast32_t 
-    				IMAGE_SIZE = static_cast<uint_fast32_t>(cover_image_vec.size()),
-    				FIRST_IDAT_INDEX = searchSig(cover_image_vec, 0, 0, IDAT_SIG);
+    		const uint_fast32_t 
+    			IMAGE_SIZE = static_cast<uint_fast32_t>(cover_image_vec.size()),
+    			FIRST_IDAT_INDEX = searchSig(cover_image_vec, 0, 0, IDAT_SIG);
     	
-    			if (FIRST_IDAT_INDEX == IMAGE_SIZE) {
-    				throw std::runtime_error("Image Error: Invalid or corrupt image file. Expected IDAT chunk not found!");
-    			}
+    		if (FIRST_IDAT_INDEX == IMAGE_SIZE) {
+    			throw std::runtime_error("Image Error: Invalid or corrupt image file. Expected IDAT chunk not found!");
+    		}
     	
-    			std::vector<uint_fast8_t> copied_image_vec;
-    			copied_image_vec.reserve(IMAGE_SIZE);     
+    		std::vector<uint_fast8_t> copied_image_vec;
+    		copied_image_vec.reserve(IMAGE_SIZE);     
   
-    			std::copy_n(cover_image_vec.begin(), PNG_FIRST_BYTES, std::back_inserter(copied_image_vec));	
+    		std::copy_n(cover_image_vec.begin(), PNG_FIRST_BYTES, std::back_inserter(copied_image_vec));	
 	
-    			auto copy_chunk_type = [&](const auto& chunk_signature) {
+    		auto copy_chunk_type = [&](const auto& chunk_signature) {
 				constexpr uint_fast8_t 
 					CHUNK_FIELDS_COMBINED_LENGTH 	= 12, // Size_field + Name_field + CRC_field.
-					CHUNK_LENGTH_FIELD_SIZE 	= 4,
-					INCREMENT_NEXT_SEARCH_POS 	= 5;
+					CHUNK_LENGTH_FIELD_SIZE 		= 4,
+					INCREMENT_NEXT_SEARCH_POS 		= 5;
 
 				uint_fast64_t chunk_length = 0;
 				
-        			uint_fast32_t 
+        		uint_fast32_t 
 					chunk_search_pos 	= 0,
 					chunk_length_pos 	= 0,
 					chunk_count 		= 0;
 		
-        			while (true) {
-            				chunk_search_pos = searchSig(cover_image_vec, chunk_search_pos, INCREMENT_NEXT_SEARCH_POS, chunk_signature);
+        		while (true) {
+            		chunk_search_pos = searchSig(cover_image_vec, chunk_search_pos, INCREMENT_NEXT_SEARCH_POS, chunk_signature);
             		
 					if (chunk_signature != IDAT_SIG && chunk_search_pos > FIRST_IDAT_INDEX) {
 						if (chunk_signature == PLTE_SIG && !chunk_count) {
@@ -443,23 +442,23 @@ int main(int argc, char** argv) {
 					chunk_length_pos = chunk_search_pos - CHUNK_LENGTH_FIELD_SIZE;
 					chunk_length = getValue(cover_image_vec, chunk_length_pos, byte_size) + CHUNK_FIELDS_COMBINED_LENGTH;
             		
-	    				std::copy_n(cover_image_vec.begin() + chunk_length_pos, chunk_length, std::back_inserter(copied_image_vec));
-        			}
-    			};
+	    			std::copy_n(cover_image_vec.begin() + chunk_length_pos, chunk_length, std::back_inserter(copied_image_vec));
+        		}
+    		};
 
 			if (color_type == INDEXED_PLTE || color_type == TRUECOLOR_RGB) {
-    				if (color_type == INDEXED_PLTE) {
-    					copy_chunk_type(PLTE_SIG); 
-    				}
-    				copy_chunk_type(TRNS_SIG);
+    			if (color_type == INDEXED_PLTE) {
+    				copy_chunk_type(PLTE_SIG); 
+    			}
+    			copy_chunk_type(TRNS_SIG);
 			}
 	
-    			copy_chunk_type(IDAT_SIG);
+    		copy_chunk_type(IDAT_SIG);
 
-    			std::copy_n(cover_image_vec.end() - PNG_IEND_BYTES, PNG_IEND_BYTES, std::back_inserter(copied_image_vec));
+    		std::copy_n(cover_image_vec.end() - PNG_IEND_BYTES, PNG_IEND_BYTES, std::back_inserter(copied_image_vec));
     	
-    			cover_image_vec.swap(copied_image_vec);
-    			std::vector<uint_fast8_t>().swap(copied_image_vec);
+    		cover_image_vec.swap(copied_image_vec);
+    		std::vector<uint_fast8_t>().swap(copied_image_vec);
 	
 			std::string data_filename = args.data_file;
 
@@ -505,17 +504,17 @@ int main(int argc, char** argv) {
 			std::generate_n(profile_vec.begin() + data_filename_xor_key_index, XOR_KEY_LENGTH, [&dis, &gen]() { return static_cast<uint_fast8_t>(dis(gen)); });
 
 			std::transform(
-        			data_filename.begin() + data_filename_char_pos, data_filename.begin() + data_filename_char_pos + data_filename_length,
-        			profile_vec.begin() + data_filename_xor_key_index, profile_vec.begin() + data_filename_index,
-        			[](char a, uint_fast8_t b) { return static_cast<uint_fast8_t>(a) ^ b; }
-    			);
+        		data_filename.begin() + data_filename_char_pos, data_filename.begin() + data_filename_char_pos + data_filename_length,
+        		profile_vec.begin() + data_filename_xor_key_index, profile_vec.begin() + data_filename_index,
+        		[](char a, uint_fast8_t b) { return static_cast<uint_fast8_t>(a) ^ b; }
+    		);
 
 			const uint_fast32_t DATA_FILE_VEC_SIZE = static_cast<uint_fast32_t>(data_file_vec.size());
 
 			profile_vec.reserve(profile_vec.size() + DATA_FILE_VEC_SIZE);
 
 			std::array<uint_fast8_t, crypto_secretbox_KEYBYTES> key;	
-    			crypto_secretbox_keygen(key.data());
+    		crypto_secretbox_keygen(key.data());
 
 			std::array<uint_fast8_t, crypto_secretbox_NONCEBYTES> nonce; 
    			randombytes_buf(nonce.data(), nonce.size());
@@ -529,9 +528,9 @@ int main(int argc, char** argv) {
 
 			std::vector<uint_fast8_t> encrypted_vec(DATA_FILE_VEC_SIZE + crypto_secretbox_MACBYTES);
 
-    			crypto_secretbox_easy(encrypted_vec.data(), data_file_vec.data(), DATA_FILE_VEC_SIZE, nonce.data(), key.data());
+    		crypto_secretbox_easy(encrypted_vec.data(), data_file_vec.data(), DATA_FILE_VEC_SIZE, nonce.data(), key.data());
     		
-    			std::vector<uint_fast8_t>().swap(data_file_vec);
+    		std::vector<uint_fast8_t>().swap(data_file_vec);
 
 			std::copy_n(encrypted_vec.begin(), encrypted_vec.size(), std::back_inserter(profile_vec));
 
@@ -554,19 +553,19 @@ int main(int argc, char** argv) {
 			constexpr uint_fast8_t SODIUM_XOR_KEY_LENGTH = 8;
 
 			while (sodium_keys_length--) {   
-    				profile_vec[sodium_key_pos] = profile_vec[sodium_key_pos] ^ profile_vec[sodium_xor_key_pos++];
+    			profile_vec[sodium_key_pos] = profile_vec[sodium_key_pos] ^ profile_vec[sodium_xor_key_pos++];
 				sodium_key_pos++;
-    				sodium_xor_key_pos = (sodium_xor_key_pos >= SODIUM_XOR_KEY_LENGTH + SODIUM_KEY_INDEX) 
-                        	 	? SODIUM_KEY_INDEX 
-                        	 	: sodium_xor_key_pos;
+    			sodium_xor_key_pos = (sodium_xor_key_pos >= SODIUM_XOR_KEY_LENGTH + SODIUM_KEY_INDEX) 
+                	? SODIUM_KEY_INDEX 
+                    : sodium_xor_key_pos;
 			}
 
 			sodium_key_pos = SODIUM_KEY_INDEX;  
 
 			std::mt19937_64 gen64(rd()); 
-    			std::uniform_int_distribution<uint_fast64_t> dis64; 
+    		std::uniform_int_distribution<uint_fast64_t> dis64; 
 
-    			const uint_fast64_t RANDOM_VAL = dis64(gen64); 
+    		const uint_fast64_t RANDOM_VAL = dis64(gen64); 
 
 			updateValue(profile_vec, sodium_key_pos, RANDOM_VAL, value_bit_length);
 	
@@ -644,10 +643,10 @@ int main(int argc, char** argv) {
 					IDAT_CHUNK_SIZE_DIFF = 4,
 					IDAT_CHUNK_CRC_INDEX_DIFF = 8;
 
-	     			std::vector<uint_fast8_t>idat_vec = { 0x00, 0x00, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54, 0x78, 0x5E, 0x5C, 0x00, 0x00, 0x00, 0x00 };
+	     		std::vector<uint_fast8_t>idat_vec = { 0x00, 0x00, 0x00, 0x00, 0x49, 0x44, 0x41, 0x54, 0x78, 0x5E, 0x5C, 0x00, 0x00, 0x00, 0x00 };
 				idat_vec.reserve(idat_vec.size() + profile_vec.size() + CHUNK_SIZE);
 		
-	     			idat_vec.insert(idat_vec.begin() + PROFILE_VEC_INDEX, profile_vec.begin(), profile_vec.end());		
+	     		idat_vec.insert(idat_vec.begin() + PROFILE_VEC_INDEX, profile_vec.begin(), profile_vec.end());		
 				updateValue(idat_vec, chunk_size_index, CHUNK_SIZE, value_bit_length);
 
 				const uint_fast32_t IDAT_CHUNK_CRC = crcUpdate(&idat_vec[CHUNK_START_INDEX], CHUNK_SIZE + IDAT_CHUNK_SIZE_DIFF);
@@ -661,7 +660,7 @@ int main(int argc, char** argv) {
 	
 			std::vector<uint_fast8_t>().swap(profile_vec);
 
-    			std::uniform_int_distribution<> dist(10000, 99999);  
+    		std::uniform_int_distribution<> dist(10000, 99999);  
 
 			const std::string OUTPUT_FILENAME = "prdt_" + std::to_string(dist(gen)) + ".png";
 
@@ -688,22 +687,22 @@ int main(int argc, char** argv) {
 				std::vector<std::string> filtered_platforms;
 
 				for (const std::string& platform : platforms_vec) {
-    					if ((platform == "X-Twitter" && OUTPUT_SIZE > TWITTER_MAX_IMAGE_SIZE) || (platform == "X-Twitter" && hasTwitterBadDims)) {
-        					continue;
-    					}
-    					if ((platform == "ImgBB" || platform == "PostImage") && (OUTPUT_SIZE > IMGBB_POSTIMAGE_MAX_IMAGE_SIZE)) {
-        					continue;
-    					}
-    					if (platform == "ImgPile" && OUTPUT_SIZE > IMGPILE_MAX_IMAGE_SIZE) {
-        					continue;
-    					}
-    					if (platform == "Flickr" && OUTPUT_SIZE > FLICKR_MAX_IMAGE_SIZE) {
-        					continue;
-    					}	
+    				if ((platform == "X-Twitter" && OUTPUT_SIZE > TWITTER_MAX_IMAGE_SIZE) || (platform == "X-Twitter" && hasTwitterBadDims)) {
+        				continue;
+    				}
+    				if ((platform == "ImgBB" || platform == "PostImage") && (OUTPUT_SIZE > IMGBB_POSTIMAGE_MAX_IMAGE_SIZE)) {
+        				continue;
+    				}
+    				if (platform == "ImgPile" && OUTPUT_SIZE > IMGPILE_MAX_IMAGE_SIZE) {
+        				continue;
+    				}
+    				if (platform == "Flickr" && OUTPUT_SIZE > FLICKR_MAX_IMAGE_SIZE) {
+        				continue;
+    				}	
 					filtered_platforms.push_back(platform);
 				}
 				if (filtered_platforms.empty()) {
-    					filtered_platforms.push_back("\b\bUnknown!\n\n Due to the large file size of the output PNG image, I'm unaware of any\n compatible platforms that this image can be posted on. Local use only?");
+    				filtered_platforms.push_back("\b\bUnknown!\n\n Due to the large file size of the output PNG image, I'm unaware of any\n compatible platforms that this image can be posted on. Local use only?");
 				}	
 				platforms_vec.swap(filtered_platforms);
 				std::vector<std::string>().swap(filtered_platforms);
@@ -712,7 +711,7 @@ int main(int argc, char** argv) {
 			std::cout << "\nPlatform compatibility for output image:-\n\n";
 			
 			for (const auto& s : platforms_vec) {
-        			std::cout << " ✓ "<< s << '\n' ;
+        		std::cout << " ✓ "<< s << '\n' ;
    		 	}	
    		 	
 			std::vector<std::string>().swap(platforms_vec);
@@ -964,4 +963,5 @@ int main(int argc, char** argv) {
         		return 1;
     		}
 	}
+
 
