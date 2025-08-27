@@ -71,6 +71,3 @@ std::vector<std::string> platforms_vec {
 	"ImgBB", 
 	"Flickr"
 	};
-
-
-
