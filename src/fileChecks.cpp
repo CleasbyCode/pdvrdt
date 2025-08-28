@@ -25,7 +25,7 @@ bool hasValidImageExtension(const std::string& ext) {
 	return ext == ".png";
 }
 
-void validateImageFile(std::string& cover_image, ArgMode mode, ArgOption platform, uintmax_t& cover_image_size, std::vector<uint_fast8_t>& cover_image_vec) {
+void validateImageFile(std::string& cover_image, ArgMode mode, ArgOption platform, uintmax_t& cover_image_size, std::vector<uint8_t>& cover_image_vec) {
 	std::filesystem::path image_path(cover_image);
 
     std::string image_ext = image_path.extension().string();
@@ -50,7 +50,7 @@ void validateImageFile(std::string& cover_image, ArgMode mode, ArgOption platfor
 
 	cover_image_size = std::filesystem::file_size(image_path);
 
-    constexpr uint_fast8_t MINIMUM_IMAGE_SIZE = 87;
+    constexpr uint8_t MINIMUM_IMAGE_SIZE = 87;
 
     if (MINIMUM_IMAGE_SIZE > cover_image_size) {
         throw std::runtime_error("Image File Error: Invalid file size.");
@@ -64,16 +64,16 @@ void validateImageFile(std::string& cover_image, ArgMode mode, ArgOption platfor
 		throw std::runtime_error("File Size Error: Image file exceeds maximum default size limit for jdvrif.");
 	}
 
-	std::vector<uint_fast8_t> tmp_vec(cover_image_size);
+	std::vector<uint8_t> tmp_vec(cover_image_size);
 	
 	cover_image_ifs.read(reinterpret_cast<char*>(tmp_vec.data()), cover_image_size);
 	cover_image_ifs.close();
 	
 	cover_image_vec.swap(tmp_vec);
-	std::vector<uint_fast8_t>().swap(tmp_vec);
+	std::vector<uint8_t>().swap(tmp_vec);
 	
 	if (!isModeRecover) {
-		constexpr std::array<uint_fast8_t, 8>
+		constexpr std::array<uint8_t, 8>
 			PNG_SIG 	{ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A },
 			PNG_IEND_SIG	{ 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 };
 
@@ -83,7 +83,7 @@ void validateImageFile(std::string& cover_image, ArgMode mode, ArgOption platfor
     }
 }
 	
-void validateDataFile(std::string& data_filename, ArgOption platform, uintmax_t& cover_image_size, uintmax_t& data_file_size, std::vector<uint_fast8_t>& data_file_vec, bool& isCompressedFile) {
+void validateDataFile(std::string& data_filename, ArgOption platform, uintmax_t& cover_image_size, uintmax_t& data_file_size, std::vector<uint8_t>& data_file_vec, bool& isCompressedFile) {
 	std::filesystem::path data_path(data_filename);
 	
 	if (!hasValidFilename(data_path.string())) {
@@ -100,7 +100,7 @@ void validateDataFile(std::string& data_filename, ArgOption platform, uintmax_t&
 		throw std::runtime_error("Read File Error: Unable to read data file. Check the filename and try again.");
 	}
 	
-	constexpr uint_fast8_t DATA_FILENAME_MAX_LENGTH = 20;
+	constexpr uint8_t DATA_FILENAME_MAX_LENGTH = 20;
 	
 	data_filename = data_path.filename().string();
 
@@ -144,11 +144,11 @@ void validateDataFile(std::string& data_filename, ArgOption platform, uintmax_t&
 		throw std::runtime_error("File Size Error: Combined size of image and data file exceeds maximum default size limit for pdvrdt.");
 	}
 	
-	std::vector<uint_fast8_t> tmp_vec(data_file_size);
+	std::vector<uint8_t> tmp_vec(data_file_size);
 
 	data_file_ifs.read(reinterpret_cast<char*>(tmp_vec.data()), data_file_size);
 	data_file_ifs.close();
 	
 	data_file_vec.swap(tmp_vec);
-	std::vector<uint_fast8_t>().swap(tmp_vec);
+	std::vector<uint8_t>().swap(tmp_vec);
 }
