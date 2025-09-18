@@ -928,8 +928,8 @@ int main(int argc, char** argv) {
 	
 			if (hasMastodonOption) {
 				constexpr uint8_t MASTODON_ICCP_CHUNK_SIZE_DIFF = 5;
-				constexpr uint16_t TWITTER_ICCP_MAX_CHUNK_SIZE = 10 * 1024;
-				constexpr uint32_t TWITTER_IMAGE_MAX_SIZE = 5 * 1024 * 1024;
+				constexpr uint16_t TWITTER_ICCP_MAX_CHUNK_SIZE 	= 10 * 1024;
+				constexpr uint32_t TWITTER_IMAGE_MAX_SIZE 		= 5 * 1024 * 1024;
 			
 				const uint32_t MASTODON_CHUNK_SIZE = mastodon_deflate_size + MASTODON_ICCP_CHUNK_SIZE_DIFF;
 
@@ -994,10 +994,10 @@ int main(int argc, char** argv) {
 				platforms_vec.erase(platforms_vec.begin() + 2, platforms_vec.begin() + 5);
 			
 				constexpr uint32_t 
-					FLICKR_MAX_IMAGE_SIZE = 200 * 1024 * 1024,
-					IMGBB_POSTIMAGE_MAX_IMAGE_SIZE = 32 * 1024 * 1024,
-					IMGPILE_MAX_IMAGE_SIZE = 8 * 1024 * 1024,
-					TWITTER_MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+					FLICKR_MAX_IMAGE_SIZE 			= 200 * 1024 * 1024,
+					IMGBB_POSTIMAGE_MAX_IMAGE_SIZE 	= 32 * 1024 * 1024,
+					IMGPILE_MAX_IMAGE_SIZE 			= 8 * 1024 * 1024,
+					TWITTER_MAX_IMAGE_SIZE 			= 5 * 1024 * 1024;
 				
 				std::vector<std::string> filtered_platforms;
 
@@ -1059,9 +1059,9 @@ int main(int argc, char** argv) {
 				DEFAULT_CHUNK_SIZE_INDEX_DIFF 	 	= 112,
 				DEFAULT_PROFILE_DATA_INDEX_DIFF  	= 11,
 				MASTODON_PROFILE_DATA_INDEX_DIFF 	= 9,
-				MASTODON_CHUNK_SIZE_DIFF 	 	= 9,
+				MASTODON_CHUNK_SIZE_DIFF 	 		= 9,
 				MASTODON_CHUNK_SIZE_INDEX_DIFF 	 	= 4,
-				CHUNK_SIZE_DIFF 		 	= 3;
+				CHUNK_SIZE_DIFF 		 			= 3;
 	
 			const uint32_t
 				CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_SIG_POS - MASTODON_CHUNK_SIZE_INDEX_DIFF : PDV_SIG_POS - DEFAULT_CHUNK_SIZE_INDEX_DIFF,				
@@ -1275,5 +1275,3 @@ int main(int argc, char** argv) {
         return 1;
     }
 }
-
-
