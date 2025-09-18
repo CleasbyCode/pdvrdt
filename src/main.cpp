@@ -1,4 +1,4 @@
-// PNG Data Vehicle (pdvrdt v3.7). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+// PNG Data Vehicle (pdvrdt v4.1). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
 
 // Compile program (Linux):
 
@@ -14,58 +14,216 @@
 #include "lodepng/lodepng.h"
 // Using lodepng. https://github.com/lvandeve/lodepng  (Copyright (c) 2005-2024 Lode Vandevenne).
 
-#include <zlib.h>
+#ifdef _WIN32	
+	#include "windows/zlib-1.3.1/include/zlib.h"
+	
+	// zlib.h -- interface of the 'zlib' general purpose compression library
+	// version 1.3.1, January 22nd, 2024
 
-// zlib.h -- interface of the 'zlib' general purpose compression library
-// version 1.3.1, January 22nd, 2024
+	// Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
 
-// Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
+	// This software is provided 'as-is', without any express or implied
+	// warranty. In no event will the authors be held liable for any damages
+	// arising from the use of this software.
 
-// This software is provided 'as-is', without any express or implied
-// warranty. In no event will the authors be held liable for any damages
-// arising from the use of this software.
+	// Permission is granted to anyone to use this software for any purpose,
+	// including commercial applications, and to alter it and redistribute it
+	// freely, subject to the following restrictions:
 
-// Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it
-// freely, subject to the following restrictions:
+	// 1. The origin of this software must not be misrepresented; you must not
+	//    claim that you wrote the original software. If you use this software
+	//    in a product, an acknowledgment in the product documentation would be
+	//    appreciated but is not required.
+	// 2. Altered source versions must be plainly marked as such, and must not be
+	//    misrepresented as being the original software.
+	// 3. This notice may not be removed or altered from any source distribution.
 
-// 1. The origin of this software must not be misrepresented; you must not
-//    claim that you wrote the original software. If you use this software
-//    in a product, an acknowledgment in the product documentation would be
-//    appreciated but is not required.
-// 2. Altered source versions must be plainly marked as such, and must not be
-//    misrepresented as being the original software.
-// 3. This notice may not be removed or altered from any source distribution.
-
-// Jean-loup Gailly        Mark Adler
-// jloup@gzip.org          madler@alumni.caltech.edu
-
-#define SODIUM_STATIC
-#include <sodium.h>
-
-// This project uses libsodium (https://libsodium.org/) for cryptographic functions.
-// Copyright (c) 2013-2025 Frank Denis <github@pureftpd.org>
-
-#ifdef _WIN32
+	// Jean-loup Gailly        Mark Adler
+	// jloup@gzip.org          madler@alumni.caltech.edu
+	
+	#define SODIUM_STATIC
+	#include "windows/libsodium/include/sodium.h"
+	
+	// This project uses libsodium (https://libsodium.org/) for cryptographic functions.
+	// Copyright (c) 2013-2025 Frank Denis <github@pureftpd.org>
+	
 	#include <conio.h>
 	#include <windows.h>
 #else
+	#include <zlib.h>
+	#include <sodium.h>
 	#include <termios.h>
 	#include <unistd.h>
 #endif
 
-#include "profileVec.h" 
-#include "fileChecks.h" 
-#include <array>
 #include <algorithm>
-#include <utility>        
+#include <array>
+#include <cctype>
 #include <cstddef>
+#include <cstdlib>
+#include <filesystem>
+#include <fstream> 
+#include <iostream>
+#include <iterator> 
+#include <random> 
 #include <stdexcept>
-#include <fstream>          
-#include <iostream>         
-#include <filesystem>       
-#include <random>       
-#include <iterator>   
+#include <string>
+#include <string_view>
+#include <utility>
+#include <vector>    
+
+namespace fs = std::filesystem;
+
+static inline void displayInfo() {
+	std::cout << R"(
+
+PNG Data Vehicle (pdvrdt v4.1)
+Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
+
+pdvrdt is a metadata “steganography-like” command-line tool used for concealing and extracting
+any file type within and from a PNG image.
+
+──────────────────────────
+Compile & run (Linux)
+──────────────────────────
+
+  $ sudo apt-get install libsodium-dev
+
+  $ chmod +x compile_pdvrdt.sh
+  $ ./compile_pdvrdt.sh
+
+  Compilation successful. Executable 'pdvrdt' created.
+
+  $ sudo cp pdvrdt /usr/bin
+  $ pdvrdt
+
+──────────────────────────
+Usage
+──────────────────────────
+
+  pdvrdt conceal [-m|-r] <cover_image> <secret_file>
+  pdvrdt recover <cover_image>
+  pdvrdt --info
+
+──────────────────────────
+Platform compatibility & size limits
+──────────────────────────
+
+Share your “file-embedded” PNG image on the following compatible sites.
+
+Size limit is measured by the combined size of cover image + compressed data file:
+
+	• Flickr    (200 MB)
+	• ImgBB     (32 MB)
+	• PostImage (32 MB)
+	• Reddit    (19 MB) — (use -r option).
+	• Mastodon  (16 MB) — (use -m option).
+	• ImgPile   (8 MB)
+	• X-Twitter (5 MB)  — (*Dimension size limits).
+	
+X-Twitter Image Dimension Size Limits:	
+
+	• PNG-32/24 (Truecolor) 68x68 Min. <-> 900x900 Max.
+	• PNG-8 (Indexed-color) 68x68 Min. <-> 4096x4096 Max.
+
+──────────────────────────
+Modes
+──────────────────────────
+
+  conceal - Compresses, encrypts and embeds your secret data file within a PNG cover image.
+  recover - Decrypts, uncompresses and extracts the concealed data file from a PNG cover image
+            (recovery PIN required).
+
+──────────────────────────
+Platform options for conceal mode
+──────────────────────────
+
+  -m (Mastodon) : Createa compatible “file-embedded” PNG images for posting on Mastodon.
+
+      $ pdvrdt conceal -m my_image.png hidden.doc
+ 
+  -r (Reddit) : Creates compatible “file-embedded” PNG images for posting on Reddit.
+
+      $ pdvrdt conceal -r my_image.png secret.mp3
+
+    From the Reddit site, click “Create Post”, then select the “Images & Video” tab to attach the PNG image.
+    These images are only compatible for posting on Reddit.
+
+──────────────────────────
+Notes
+──────────────────────────
+
+• To correctly download images from X-Twitter or Reddit, click image within the post to fully expand it before saving.
+• ImgPile: sign in to an account before sharing; otherwise, the embedded data will not be preserved.
+
+)"; 
+}
+
+enum class Mode 	: unsigned char { conceal, recover };
+enum class Option 	: unsigned char { None, Mastodon, Reddit };
+
+struct ProgramArgs {
+	Mode mode{Mode::conceal};
+	Option option{Option::None};
+
+	fs::path image_file_path;
+	fs::path data_file_path;
+    
+	static ProgramArgs parse(int argc, char** argv) {
+		using std::string_view;
+
+        auto arg = [&](int i) -> string_view {
+			return (i >= 0 && i < argc) ? string_view(argv[i]) : string_view{};
+        };
+
+        const std::string prog = fs::path(argv[0]).filename().string();
+        const std::string USAGE =
+        	"Usage: " + prog + " conceal [-m|-r] <cover_image> <secret_file>\n\t\b"
+            + prog + " recover <cover_image>\n\t\b"
+            + prog + " --info";
+
+        auto die = [&]() -> void {
+        	throw std::runtime_error(USAGE);
+        };
+
+        if (argc < 2) die();
+
+        if (argc == 2 && arg(1) == "--info") {
+        	displayInfo();
+        	std::exit(0);
+        }
+
+        ProgramArgs out{};
+
+        const string_view cmd = arg(1);
+
+        if (cmd == "conceal") {
+        	int i = 2;
+
+            if (arg(i) == "-m" || arg(i) == "-r") {
+        		out.option = (arg(i) == "-m") ? Option::Mastodon : Option::Reddit;
+            	++i;
+            }
+
+            if (i + 1 >= argc || (i + 2) != argc) die();
+
+            out.image_file_path = fs::path(arg(i));
+            out.data_file_path  = fs::path(arg(i + 1));
+            out.mode = Mode::conceal;
+            return out;
+        }
+
+        if (cmd == "recover") {
+        	if (argc != 3) die();
+        	out.image_file_path = fs::path(arg(2));
+        	out.mode = Mode::recover;
+        	return out;
+        }
+
+        die();
+        return out; // Keeps compiler happy.
+    }
+};
 
 // Return vector index location for relevant signature search.
 template <typename T, size_t N>
@@ -84,7 +242,7 @@ static inline void updateValue(std::vector<uint8_t>& vec, uint32_t insert_index,
 static inline uint64_t getValue(const std::vector<uint8_t>& vec, uint32_t index, uint8_t bytes) {
 	uint64_t value = 0;
     for (uint8_t i = 0; i < bytes; ++i) {
-        value = (value << 8) | static_cast<uint64_t>(vec[index + i]);
+    	value = (value << 8) | static_cast<uint64_t>(vec[index + i]);
     }
     return value;
 }
@@ -94,7 +252,7 @@ static inline uint32_t crcUpdate(uint8_t* buf, uint32_t buf_length) {
 	constexpr std::array<uint32_t, 256> CRC_TABLE = {
     	0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F, 0xE963A535, 0x9E6495A3,
         0x0EDB8832, 0x79DCB8A4, 0xE0D5E91E, 0x97D2D988, 0x09B64C2B, 0x7EB17CBD, 0xE7B82D07, 0x90BF1D91,
-	    0x1DB71064, 0x6AB020F2, 0xF3B97148, 0x84BE41DE, 0x1ADAD47D, 0x6DDDE4EB, 0xF4D4B551, 0x83D385C7,
+		0x1DB71064, 0x6AB020F2, 0xF3B97148, 0x84BE41DE, 0x1ADAD47D, 0x6DDDE4EB, 0xF4D4B551, 0x83D385C7,
         0x136C9856, 0x646BA8C0, 0xFD62F97A, 0x8A65C9EC, 0x14015C4F, 0x63066CD9, 0xFA0F3D63, 0x8D080DF5,
         0x3B6E20C8, 0x4C69105E, 0xD56041E4, 0xA2677172, 0x3C03E4D1, 0x4B04D447, 0xD20D85FD, 0xA50AB56B,
         0x35B5A8FA, 0x42B2986C, 0xDBBBC9D6, 0xACBCF940, 0x32D86CE3, 0x45DF5C75, 0xDCD60DCF, 0xABD13D59,
@@ -135,8 +293,37 @@ static inline uint32_t crcUpdate(uint8_t* buf, uint32_t buf_length) {
     }
     return crc_value ^ 0xFFFFFFFF;
 }
+
+static inline bool hasValidFilename(const fs::path& p) {
+	if (p.empty()) {
+    	return false;
+    }
+    
+    std::string filename = p.filename().string();
+    if (filename.empty()) {
+    	return false;
+    }
+
+    auto validChar = [](unsigned char c) {
+    	return std::isalnum(c) || c == '.' || c == '-' || c == '_' || c == '@' || c == '%';
+ 	};
+
+    return std::all_of(filename.begin(), filename.end(), validChar);
+}
+
+static inline bool hasFileExtension(const fs::path& p, std::initializer_list<const char*> exts) {
+    auto e = p.extension().string();
+    std::transform(e.begin(), e.end(), e.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
+    for (const char* cand : exts) {
+    	std::string c = cand;
+        std::transform(c.begin(), c.end(), c.begin(), [](unsigned char x){ return static_cast<char>(std::tolower(x)); });
+        if (e == c) return true;
+    }
+    return false;
+}
+
 // Zlib function, deflate or inflate data file within vector.
-static inline void zlibFunc(std::vector<uint8_t>& vec, ArgMode mode, ArgOption& platform, bool& isCompressedFile) {
+static inline void zlibFunc(std::vector<uint8_t>& vec, Mode mode, Option& option, bool& isCompressedFile) {
 	constexpr uint32_t BUFSIZE = 2 * 1024 * 1024; 
 	const uint32_t VEC_SIZE = static_cast<uint32_t>(vec.size());
 			
@@ -150,8 +337,8 @@ static inline void zlibFunc(std::vector<uint8_t>& vec, ArgMode mode, ArgOption& 
     strm.next_out  = buffer_vec.data();
     strm.avail_out = BUFSIZE;
 
-    if (mode == ArgMode::conceal) {
-    	auto select_compression_level = [&platform](uint32_t vec_size, bool isCompressedFile) -> int {
+    if (mode == Mode::conceal) {
+    	auto select_compression_level = [&option](uint32_t vec_size, bool isCompressedFile) -> int {
     		constexpr uint32_t 
     			FIFTH_SIZE_OPTION   = 750 * 1024 * 1024,
     			FOURTH_SIZE_OPTION  = 450 * 1024 * 1024,
@@ -159,7 +346,7 @@ static inline void zlibFunc(std::vector<uint8_t>& vec, ArgMode mode, ArgOption& 
     			SECOND_SIZE_OPTION  = 150 * 1024 * 1024,
     			FIRST_SIZE_OPTION   = 10 * 1024 * 1024;
     					
-    		if (platform == ArgOption::mastodon) return Z_DEFAULT_COMPRESSION;
+    		if (option == Option::Mastodon) return Z_DEFAULT_COMPRESSION;
     		if (isCompressedFile || vec_size >= FIFTH_SIZE_OPTION) return Z_NO_COMPRESSION;
     		if (vec_size >= FOURTH_SIZE_OPTION) return Z_BEST_SPEED;
     		if (vec_size >= THIRD_SIZE_OPTION)  return Z_DEFAULT_COMPRESSION;
@@ -248,33 +435,130 @@ int main(int argc, char** argv) {
 		#endif
 	
 		ProgramArgs args = ProgramArgs::parse(argc, argv);
-		
-		std::vector<uint8_t> 
-        	cover_image_vec,
-        	data_file_vec;
-		
-		uintmax_t 
-			cover_image_size = 0,
-			data_file_size = 0;
 			
 		bool isCompressedFile = false;
+				
+		if (!fs::exists(args.image_file_path)) {
+        	throw std::runtime_error("Image File Error: File not found.");
+    	}
+			
+		if (!hasValidFilename(args.image_file_path)) {
+    		throw std::runtime_error("Invalid Input Error: Unsupported characters in filename arguments.");
+		}
+
+		if (!hasFileExtension(args.image_file_path, {".png"})) {
+        	throw std::runtime_error("File Type Error: Invalid image extension. Only expecting \".jpg\", \".jpeg\", or \".jfif\".");
+    	}
+    			
+		std::ifstream image_file_ifs(args.image_file_path, std::ios::binary);
+        	
+    	if (!image_file_ifs) {
+    		throw std::runtime_error("Read File Error: Unable to read image file. Check the filename and try again.");
+   		}
+   		
+   		uintmax_t image_file_size = fs::file_size(args.image_file_path);
+
+    	constexpr uint8_t MINIMUM_IMAGE_SIZE = 87;
+
+    	if (MINIMUM_IMAGE_SIZE > image_file_size) {
+        	throw std::runtime_error("Image File Error: Invalid file size.");
+    	}
+   		
+		constexpr uintmax_t MAX_SIZE_RECOVER = 3ULL * 1024 * 1024 * 1024;    
+    	
+		if (args.mode == Mode::recover && image_file_size > MAX_SIZE_RECOVER) {
+			throw std::runtime_error("File Size Error: Image file exceeds maximum default size limit for jdvrif.");
+		}
 		
-		validateImageFile(args.cover_image, args.mode, args.platform, cover_image_size, cover_image_vec);
+		std::vector<uint8_t> image_file_vec(image_file_size);
+	
+		image_file_ifs.read(reinterpret_cast<char*>(image_file_vec.data()), image_file_size);
+		image_file_ifs.close();
 		
 		constexpr uint32_t LARGE_FILE_SIZE = 300 * 1024 * 1024;
 		const std::string LARGE_FILE_MSG = "\nPlease wait. Larger files will take longer to complete this process.\n";
+		
 		uint8_t byte_size = 4;
 		
-		if (args.mode == ArgMode::conceal) {  
+		if (args.mode == Mode::conceal) {  
 			// --- Embed data file section code.		
+			
+			std::vector<std::string> platforms_vec { 
+				"X-Twitter", "ImgPile", "Mastodon & X-Twitter.", "Mastodon. (Only share this \"file-embedded\" PNG image on Mastodon).", 
+				"Reddit. (Only share this \"file-embedded\" PNG image on Reddit).", "PostImage", "ImgBB", "Flickr"
+			};
+					
+			constexpr std::array<uint8_t, 8>
+				PNG_SIG 		{ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A },
+				PNG_IEND_SIG	{ 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 };
+
+			if (!std::equal(PNG_SIG.begin(), PNG_SIG.end(), image_file_vec.begin()) || !std::equal(PNG_IEND_SIG.begin(), PNG_IEND_SIG.end(), image_file_vec.end() - 8)) {
+        		throw std::runtime_error("\nImage File Error: Signature check failure. Not a valid PNG image.\n\n");
+    		}
+			
 			bool 
-            	hasMastodonOption = (args.platform == ArgOption::mastodon),
-				hasRedditOption = (args.platform == ArgOption::reddit),
-				hasNoneOption = (args.platform == ArgOption::none),
-				hasTwitterBadDims = false;
+            	hasMastodonOption 	= (args.option == Option::Mastodon),
+				hasRedditOption 	= (args.option == Option::Reddit),
+				hasNoneOption		= (args.option == Option::None),
+				hasTwitterBadDims 	= false;
                                                
-        	validateDataFile(args.data_file, args.platform, cover_image_size, data_file_size, data_file_vec, isCompressedFile);
+        	if (!hasValidFilename(args.data_file_path)) {
+				throw std::runtime_error("Invalid Input Error: Unsupported characters in filename arguments.");
+    		}
+	
+			if (!fs::exists(args.data_file_path) || !fs::is_regular_file(args.data_file_path)) {
+        		throw std::runtime_error("Data File Error: File not found or not a regular file.");
+    		}
+    				
+    		std::ifstream data_file_ifs(args.data_file_path, std::ios::binary);
+
+			if (!data_file_ifs) {
+				throw std::runtime_error("Read File Error: Unable to read data file. Check the filename and try again.");
+			}
+	
+			constexpr uint8_t DATA_FILENAME_MAX_LENGTH = 20;
+
+			std::string data_filename = args.data_file_path.filename().string();
+
+			if (data_filename.size() > DATA_FILENAME_MAX_LENGTH) {
+    			throw std::runtime_error("Data File Error: For compatibility requirements, length of data filename must not exceed 20 characters.");
+			}
+		
+			uintmax_t data_file_size = fs::file_size(args.data_file_path);	
+			
+    		if (!data_file_size) {
+				throw std::runtime_error("Data File Error: File is empty.");
+    		}
+    				
+    		isCompressedFile = hasFileExtension(args.data_file_path, {
+        		".zip",".jar",".rar",".7z",".bz2",".gz",".xz",".tar",".lz",".lz4",".cab",".rpm",".deb",
+        		".mp4",".mp3",".exe",".jpg",".jpeg",".jfif",".png",".webp",".bmp",".gif",".ogg",".flac"
+    		});
         				
+        	constexpr uintmax_t
+    			MAX_SIZE_CONCEAL  = 2ULL * 1024 * 1024 * 1024,   
+    			MAX_SIZE_REDDIT   = 20ULL * 1024 * 1024,         
+   				MAX_SIZE_MASTODON = 16ULL * 1024 * 1024;
+	
+    		const uintmax_t COMBINED_FILE_SIZE = data_file_size + image_file_size;
+	
+			if (args.option == Option::Mastodon && COMBINED_FILE_SIZE > MAX_SIZE_MASTODON) {
+				throw std::runtime_error("Data File Size Error: Combined size of image and data file exceeds maximum size limit for the Mastodon platform.");
+			}
+
+   			if (args.option == Option::Reddit && COMBINED_FILE_SIZE > MAX_SIZE_REDDIT) {
+   				throw std::runtime_error("File Size Error: Combined size of image and data file exceeds maximum size limit for the Reddit platform.");
+   			}
+
+			if (args.option == Option::None && COMBINED_FILE_SIZE > MAX_SIZE_CONCEAL) {
+				throw std::runtime_error("File Size Error: Combined size of image and data file exceeds maximum default size limit for pdvrdt.");
+			}
+			
+			std::vector<uint8_t> data_file_vec(data_file_size);
+
+			data_file_ifs.read(reinterpret_cast<char*>(data_file_vec.data()), data_file_size);
+			data_file_ifs.close();
+			
 			constexpr uint8_t 
 				COLOR_TYPE_INDEX = 0x19,
 				TRUECOLOR_RGB	= 2,
@@ -286,7 +570,7 @@ int main(int argc, char** argv) {
     		unsigned 
     			width = 0,
     			height = 0,
-    			error = lodepng::decode(image, width, height, state, cover_image_vec);
+    			error = lodepng::decode(image, width, height, state, image_file_vec);
     			
     		if (error) {
         		throw std::runtime_error("Lodepng decoder error: " + std::to_string(error));
@@ -305,9 +589,9 @@ int main(int argc, char** argv) {
         			throw std::runtime_error("Lodepng stats error: " + std::to_string(error));
     			}
 				constexpr uint16_t
-					TWITTER_MAX_PLTE_DIMS = 4096,  
-					TWITTER_MAX_RGB_DIMS = 900,	
-					TWITTER_MIN_DIMS = 68;
+					TWITTER_MAX_PLTE_DIMS 	= 4096,  
+					TWITTER_MAX_RGB_DIMS 	= 900,	
+					TWITTER_MIN_DIMS 		= 68;
 			
 				hasTwitterBadDims = (height > TWITTER_MAX_RGB_DIMS || width > TWITTER_MAX_RGB_DIMS || TWITTER_MIN_DIMS > height || TWITTER_MIN_DIMS > width);
 			
@@ -375,7 +659,7 @@ int main(int argc, char** argv) {
             			throw std::runtime_error("Lodepng encode error: " + std::to_string(error));
         			}
 
-        			cover_image_vec.swap(output);
+        			image_file_vec.swap(output);
         			std::vector<uint8_t>().swap(image);
         			std::vector<uint8_t>().swap(output);
         			std::vector<uint8_t>().swap(indexed_image);
@@ -385,7 +669,7 @@ int main(int argc, char** argv) {
     			}	 	
        		}	
     			
-    		color_type = cover_image_vec[COLOR_TYPE_INDEX];   // Color type may of changed, update variable.
+    		color_type = image_file_vec[COLOR_TYPE_INDEX];   // Color type may of changed, update variable.
     			
     		constexpr uint8_t 
     			PNG_FIRST_BYTES = 33,
@@ -398,8 +682,8 @@ int main(int argc, char** argv) {
 				IDAT_SIG 	{ 0x49, 0x44, 0x41, 0x54 };
 					
     		const uint32_t 
-    			IMAGE_SIZE = static_cast<uint32_t>(cover_image_vec.size()),
-    			FIRST_IDAT_INDEX = searchSig(cover_image_vec, 0, 0, IDAT_SIG);
+    			IMAGE_SIZE = static_cast<uint32_t>(image_file_vec.size()),
+    			FIRST_IDAT_INDEX = searchSig(image_file_vec, 0, 0, IDAT_SIG);
     	
     		if (FIRST_IDAT_INDEX == IMAGE_SIZE) {
     			throw std::runtime_error("Image Error: Invalid or corrupt image file. Expected IDAT chunk not found!");
@@ -408,7 +692,7 @@ int main(int argc, char** argv) {
     		std::vector<uint8_t> copied_image_vec;
     		copied_image_vec.reserve(IMAGE_SIZE);     
   
-    		std::copy_n(cover_image_vec.begin(), PNG_FIRST_BYTES, std::back_inserter(copied_image_vec));	
+    		std::copy_n(image_file_vec.begin(), PNG_FIRST_BYTES, std::back_inserter(copied_image_vec));	
 	
     		auto copy_chunk_type = [&](const auto& chunk_signature) {
 				constexpr uint8_t 
@@ -424,8 +708,7 @@ int main(int argc, char** argv) {
 					chunk_count 		= 0;
 		
         		while (true) {
-            		chunk_search_pos = searchSig(cover_image_vec, chunk_search_pos, INCREMENT_NEXT_SEARCH_POS, chunk_signature);
-            		
+            		chunk_search_pos = searchSig(image_file_vec, chunk_search_pos, INCREMENT_NEXT_SEARCH_POS, chunk_signature);
 					if (chunk_signature != IDAT_SIG && chunk_search_pos > FIRST_IDAT_INDEX) {
 						if (chunk_signature == PLTE_SIG && !chunk_count) {
 							throw std::runtime_error("Image Error: Invalid or corrupt image file. Expected PLTE chunk not found!");
@@ -439,9 +722,9 @@ int main(int argc, char** argv) {
 					++chunk_count;
 			
 					chunk_length_pos = chunk_search_pos - CHUNK_LENGTH_FIELD_SIZE;
-					chunk_length = getValue(cover_image_vec, chunk_length_pos, byte_size) + CHUNK_FIELDS_COMBINED_LENGTH;
+					chunk_length = getValue(image_file_vec, chunk_length_pos, byte_size) + CHUNK_FIELDS_COMBINED_LENGTH;
             		
-	    			std::copy_n(cover_image_vec.begin() + chunk_length_pos, chunk_length, std::back_inserter(copied_image_vec));
+	    			std::copy_n(image_file_vec.begin() + chunk_length_pos, chunk_length, std::back_inserter(copied_image_vec));
         		}
     		};
 
@@ -454,13 +737,46 @@ int main(int argc, char** argv) {
 	
     		copy_chunk_type(IDAT_SIG);
 
-    		std::copy_n(cover_image_vec.end() - PNG_IEND_BYTES, PNG_IEND_BYTES, std::back_inserter(copied_image_vec));
+    		std::copy_n(image_file_vec.end() - PNG_IEND_BYTES, PNG_IEND_BYTES, std::back_inserter(copied_image_vec));
     	
-    		cover_image_vec.swap(copied_image_vec);
+    		image_file_vec.swap(copied_image_vec);
     		std::vector<uint8_t>().swap(copied_image_vec);
+    		
+			// Default vector, where data is stored in the last IDAT chunk of the PNG cover image.
+			std::vector<uint8_t>default_vec {
+				0x75, 0x5D, 0x19, 0x3D, 0x72, 0xCE, 0x28, 0xA5, 0x60, 0x59, 0x17, 0x98, 0x13, 0x40, 0xB4, 0xDB, 0x3D, 0x18, 0xEC, 0x10, 0xFA, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0xC6, 0x50, 0x3C, 0xEA, 0x5E, 0x9D, 0xF9, 0x90, 0x82
+			};
 	
-			std::string data_filename = args.data_file;
-
+			// COLOR PROFILE FOR PNG / Mastodon, where data need to be stored in the iCCP chunk. 0x1FE
+			std::vector<uint8_t>mastodon_vec {
+				0x00, 0x00, 0x02, 0x98, 0x6C, 0x63, 0x6D, 0x73, 0x02, 0x10, 0x00, 0x00, 0x6D, 0x6E, 0x74, 0x72, 0x52, 0x47, 0x42, 0x20, 0x58, 0x59, 0x5A, 0x20,
+				0x07, 0xE2, 0x00, 0x03, 0x00, 0x14, 0x00, 0x09, 0x00, 0x0E, 0x00, 0x1D, 0x61, 0x63, 0x73, 0x70, 0x4D, 0x53, 0x46, 0x54, 0x00, 0x00, 0x00, 0x00,
+				0x73, 0x61, 0x77, 0x73, 0x63, 0x74, 0x72, 0x6C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF6, 0xD6,
+				0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0xD3, 0x2D, 0x68, 0x61, 0x6E, 0x64, 0xEB, 0x77, 0x1F, 0x3C, 0xAA, 0x53, 0x51, 0x02, 0xE9, 0x3E, 0x28, 0x6C,
+				0x91, 0x46, 0xAE, 0x57, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x64, 0x65, 0x73, 0x63, 0x00, 0x00, 0x00, 0xF0, 0x00, 0x00, 0x00, 0x1C,
+				0x77, 0x74, 0x70, 0x74, 0x00, 0x00, 0x01, 0x0C, 0x00, 0x00, 0x00, 0x14, 0x72, 0x58, 0x59, 0x5A, 0x00, 0x00, 0x01, 0x20, 0x00, 0x00, 0x00, 0x14,
+				0x67, 0x58, 0x59, 0x5A, 0x00, 0x00, 0x01, 0x34, 0x00, 0x00, 0x00, 0x14, 0x62, 0x58, 0x59, 0x5A, 0x00, 0x00, 0x01, 0x48, 0x00, 0x00, 0x00, 0x14,
+				0x72, 0x54, 0x52, 0x43, 0x00, 0x00, 0x01, 0x5C, 0x00, 0x00, 0x00, 0x34, 0x67, 0x54, 0x52, 0x43, 0x00, 0x00, 0x01, 0x5C, 0x00, 0x00, 0x00, 0x34,
+				0x62, 0x54, 0x52, 0x43, 0x00, 0x00, 0x01, 0x5C, 0x00, 0x00, 0x00, 0x34, 0x63, 0x70, 0x72, 0x74, 0x00, 0x00, 0x01, 0x90, 0x00, 0x00, 0x00, 0x01,
+				0x64, 0x65, 0x73, 0x63, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x6E, 0x52, 0x47, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x58, 0x59, 0x5A, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF3, 0x54, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x16, 0xC9,
+				0x58, 0x59, 0x5A, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x6F, 0xA0, 0x00, 0x00, 0x38, 0xF2, 0x00, 0x00, 0x03, 0x8F, 0x58, 0x59, 0x5A, 0x20,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x62, 0x96, 0x00, 0x00, 0xB7, 0x89, 0x00, 0x00, 0x18, 0xDA, 0x58, 0x59, 0x5A, 0x20, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x24, 0xA0, 0x00, 0x00, 0x0F, 0x85, 0x00, 0x00, 0xB6, 0xC4, 0x63, 0x75, 0x72, 0x76, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x14,
+				0x00, 0x00, 0x01, 0x07, 0x02, 0xB5, 0x05, 0x6B, 0x09, 0x36, 0x0E, 0x50, 0x14, 0xB1, 0x1C, 0x80, 0x25, 0xC8, 0x30, 0xA1, 0x3D, 0x19, 0x4B, 0x40,
+				0x5B, 0x27, 0x6C, 0xDB, 0x80, 0x6B, 0x95, 0xE3, 0xAD, 0x50, 0xC6, 0xC2, 0xE2, 0x31, 0xFF, 0xFF, 0x00, 0x12, 0xB7, 0x19, 0x18, 0xA4, 0xEF, 0x15,
+				0x8F, 0x9E, 0x7B, 0xB4, 0xF3, 0xAA, 0x0A, 0x5C, 0x80, 0x54, 0xAF, 0xC8, 0x0E, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC6, 0x50,
+    			0x3C, 0xEA, 0x5E, 0x9D, 0xF9, 0x90
+			};
+			
 			std::vector<uint8_t>profile_vec;
 	
 			if (hasMastodonOption) {
@@ -480,7 +796,7 @@ int main(int argc, char** argv) {
 			}
 
 			// First, compress just the data file.
-			zlibFunc(data_file_vec, args.mode, args.platform, isCompressedFile);
+			zlibFunc(data_file_vec, args.mode, args.option, isCompressedFile);
 
 			if (data_file_vec.empty()) {
 				throw std::runtime_error("File Size Error: File is zero bytes. Probable compression failure.");
@@ -579,7 +895,7 @@ int main(int argc, char** argv) {
 
 				std::copy_n(IDAT_REDDIT_CRC_BYTES.begin(), CRC_LENGTH, std::back_inserter(reddit_vec));
 			
-				cover_image_vec.insert(cover_image_vec.end() - PNG_IEND_BYTES, reddit_vec.begin(), reddit_vec.end());
+				image_file_vec.insert(image_file_vec.end() - PNG_IEND_BYTES, reddit_vec.begin(), reddit_vec.end());
 				std::vector<uint8_t>().swap(reddit_vec);
 				platforms_vec[0] = std::move(platforms_vec[4]);
 				platforms_vec.resize(1);
@@ -589,7 +905,7 @@ int main(int argc, char** argv) {
 
 			if (hasMastodonOption) {
 				// Compresss the data chunk again, this time including the icc color profile. A requirement for iCCP chunk/Mastodon.
-				zlibFunc(profile_vec, args.mode, args.platform, isCompressedFile);
+				zlibFunc(profile_vec, args.mode, args.option, isCompressedFile);
 				mastodon_deflate_size = static_cast<uint32_t>(profile_vec.size());
 			}
 
@@ -602,7 +918,7 @@ int main(int argc, char** argv) {
 
 			const uint32_t
 				PROFILE_VEC_DEFLATE_SIZE = static_cast<uint32_t>(profile_vec.size()),
-				IMAGE_VEC_SIZE = static_cast<uint32_t>(cover_image_vec.size()),
+				IMAGE_VEC_SIZE = static_cast<uint32_t>(image_file_vec.size()),
 				CHUNK_SIZE = hasMastodonOption ? mastodon_deflate_size + MASTODON_SIZE_DIFF : PROFILE_VEC_DEFLATE_SIZE + DEFAULT_SIZE_DIFF,
 				CHUNK_INDEX = hasMastodonOption ? 0x21 : IMAGE_VEC_SIZE - PNG_IEND_BYTES;
 
@@ -627,11 +943,11 @@ int main(int argc, char** argv) {
 				uint32_t iccp_crc_index = CHUNK_START_INDEX + CHUNK_SIZE;
 
 				updateValue(iccp_vec, iccp_crc_index, ICCP_CHUNK_CRC, value_bit_length);
-				cover_image_vec.insert((cover_image_vec.begin() + CHUNK_INDEX), iccp_vec.begin(), iccp_vec.end());
+				image_file_vec.insert((image_file_vec.begin() + CHUNK_INDEX), iccp_vec.begin(), iccp_vec.end());
 			
 				std::vector<uint8_t>().swap(iccp_vec);
 			
-				if (!hasTwitterBadDims && TWITTER_IMAGE_MAX_SIZE >= cover_image_vec.size() && TWITTER_ICCP_MAX_CHUNK_SIZE >= MASTODON_CHUNK_SIZE) {
+				if (!hasTwitterBadDims && TWITTER_IMAGE_MAX_SIZE >= image_file_vec.size() && TWITTER_ICCP_MAX_CHUNK_SIZE >= MASTODON_CHUNK_SIZE) {
 					platforms_vec[0] = std::move(platforms_vec[2]);
 				} else {
 					platforms_vec[0] = std::move(platforms_vec[3]);
@@ -652,7 +968,7 @@ int main(int argc, char** argv) {
 				uint32_t idat_crc_index = CHUNK_SIZE + IDAT_CHUNK_CRC_INDEX_DIFF;
 
 				updateValue(idat_vec, idat_crc_index, IDAT_CHUNK_CRC, value_bit_length);
-				cover_image_vec.insert((cover_image_vec.begin() + CHUNK_INDEX), idat_vec.begin(), idat_vec.end());
+				image_file_vec.insert((image_file_vec.begin() + CHUNK_INDEX), idat_vec.begin(), idat_vec.end());
 
 				std::vector<uint8_t>().swap(idat_vec);
 			}
@@ -669,9 +985,9 @@ int main(int argc, char** argv) {
 				throw std::runtime_error("Write Error: Unable to write to file.");
 			}
 	
-			const uint32_t OUTPUT_SIZE = static_cast<uint32_t>(cover_image_vec.size());
+			const uint32_t OUTPUT_SIZE = static_cast<uint32_t>(image_file_vec.size());
 
-			file_ofs.write(reinterpret_cast<const char*>(cover_image_vec.data()), OUTPUT_SIZE);
+			file_ofs.write(reinterpret_cast<const char*>(image_file_vec.data()), OUTPUT_SIZE);
 			file_ofs.close();
 		
 			if (hasNoneOption) {
@@ -714,7 +1030,7 @@ int main(int argc, char** argv) {
    		 	}	
    		 	
 			std::vector<std::string>().swap(platforms_vec);
-			std::vector<uint8_t>().swap(cover_image_vec);
+			std::vector<uint8_t>().swap(image_file_vec);
 		
 			std::cout << "\nSaved \"file-embedded\" PNG image: " << OUTPUT_FILENAME << " (" << OUTPUT_SIZE << " bytes).\n";
 
@@ -730,47 +1046,47 @@ int main(int argc, char** argv) {
 				PDV_SIG  { 0xC6, 0x50, 0x3C, 0xEA, 0x5E, 0x9D, 0xF9 };
 		
 			const uint32_t
-				ICCP_SIG_POS = searchSig(cover_image_vec, 0, 0, ICCP_SIG),
-				PDV_SIG_POS  = searchSig(cover_image_vec, 0, 0, PDV_SIG);
+				ICCP_SIG_POS = searchSig(image_file_vec, 0, 0, ICCP_SIG),
+				PDV_SIG_POS  = searchSig(image_file_vec, 0, 0, PDV_SIG);
 
-			if (ICCP_SIG_POS != ICCP_CHUNK_INDEX && PDV_SIG_POS == cover_image_vec.size()) {
+			if (ICCP_SIG_POS != ICCP_CHUNK_INDEX && PDV_SIG_POS == image_file_vec.size()) {
 				throw std::runtime_error("Image File Error: This is not a pdvrdt image.");
 			}
 
-			bool isMastodonFile = (ICCP_SIG_POS == ICCP_CHUNK_INDEX && PDV_SIG_POS == cover_image_vec.size());
+			bool isMastodonFile = (ICCP_SIG_POS == ICCP_CHUNK_INDEX && PDV_SIG_POS == image_file_vec.size());
 		
 			constexpr uint8_t 
 				DEFAULT_CHUNK_SIZE_INDEX_DIFF 	 	= 112,
 				DEFAULT_PROFILE_DATA_INDEX_DIFF  	= 11,
 				MASTODON_PROFILE_DATA_INDEX_DIFF 	= 9,
-				MASTODON_CHUNK_SIZE_DIFF 	 		= 9,
+				MASTODON_CHUNK_SIZE_DIFF 	 	= 9,
 				MASTODON_CHUNK_SIZE_INDEX_DIFF 	 	= 4,
-				CHUNK_SIZE_DIFF 		 			= 3;
+				CHUNK_SIZE_DIFF 		 	= 3;
 	
 			const uint32_t
 				CHUNK_SIZE_INDEX = isMastodonFile ? ICCP_SIG_POS - MASTODON_CHUNK_SIZE_INDEX_DIFF : PDV_SIG_POS - DEFAULT_CHUNK_SIZE_INDEX_DIFF,				
 				PROFILE_DATA_INDEX = isMastodonFile ? ICCP_SIG_POS + MASTODON_PROFILE_DATA_INDEX_DIFF : CHUNK_SIZE_INDEX + DEFAULT_PROFILE_DATA_INDEX_DIFF;
 		
-			const uint64_t CHUNK_SIZE = isMastodonFile ? getValue(cover_image_vec, CHUNK_SIZE_INDEX, byte_size) - MASTODON_CHUNK_SIZE_DIFF : getValue(cover_image_vec, CHUNK_SIZE_INDEX, byte_size);
+			const uint64_t CHUNK_SIZE = isMastodonFile ? getValue(image_file_vec, CHUNK_SIZE_INDEX, byte_size) - MASTODON_CHUNK_SIZE_DIFF : getValue(image_file_vec, CHUNK_SIZE_INDEX, byte_size);
 
-			uint8_t byte = cover_image_vec.back();
+			uint8_t byte = image_file_vec.back();
 
-			cover_image_vec.erase(cover_image_vec.begin(), cover_image_vec.begin() + PROFILE_DATA_INDEX);
-			cover_image_vec.erase(cover_image_vec.begin() + (isMastodonFile ? CHUNK_SIZE + CHUNK_SIZE_DIFF : CHUNK_SIZE - CHUNK_SIZE_DIFF), cover_image_vec.end());
+			image_file_vec.erase(image_file_vec.begin(), image_file_vec.begin() + PROFILE_DATA_INDEX);
+			image_file_vec.erase(image_file_vec.begin() + (isMastodonFile ? CHUNK_SIZE + CHUNK_SIZE_DIFF : CHUNK_SIZE - CHUNK_SIZE_DIFF), image_file_vec.end());
 		
 			if (isMastodonFile) {
-				zlibFunc(cover_image_vec, args.mode, args.platform, isCompressedFile);
-				if (cover_image_vec.empty()) {
+				zlibFunc(image_file_vec, args.mode, args.option, isCompressedFile);
+				if (image_file_vec.empty()) {
 					throw std::runtime_error("File Size Error: File is zero bytes. Probable failure inflating file.");
 				}
-				const uint32_t PDV_ICCP_SIG_POS = searchSig(cover_image_vec, 0, 0, PDV_SIG);
+				const uint32_t PDV_ICCP_SIG_POS = searchSig(image_file_vec, 0, 0, PDV_SIG);
 		
-				if (PDV_ICCP_SIG_POS == cover_image_vec.size()) {
+				if (PDV_ICCP_SIG_POS == image_file_vec.size()) {
 					throw std::runtime_error("Image File Error: This is not a pdvrdt image.");
 				}
 			}
 
-			if (cover_image_size > LARGE_FILE_SIZE) {
+			if (image_file_size > LARGE_FILE_SIZE) {
 				std::cout << LARGE_FILE_MSG;
 			}
 
@@ -798,16 +1114,16 @@ int main(int argc, char** argv) {
 			#ifdef _WIN32
 				while (input.length() < 20) { 
 	 				ch = _getch();
-        				if (ch >= '0' && ch <= '9') {
-            				input.push_back(ch);
-            				std::cout << '*' << std::flush;  
-        				} else if (ch == '\b' && !input.empty()) {  
-            				std::cout << "\b \b" << std::flush;  
-            				input.pop_back();
-        				} else if (ch == '\r') {
+        			if (ch >= '0' && ch <= '9') {
+            			input.push_back(ch);
+            			std::cout << '*' << std::flush;  
+        			} else if (ch == '\b' && !input.empty()) {  
+            			std::cout << "\b \b" << std::flush;  
+            			input.pop_back();
+        			} else if (ch == '\r') {
             				break;
-        				}
-    				}
+        			}
+    			}
 			#else
 				struct termios oldt, newt;
     			tcgetattr(STDIN_FILENO, &oldt);
@@ -843,14 +1159,14 @@ int main(int argc, char** argv) {
         		pin = std::stoull(input); 
     		}
 		
-			updateValue(cover_image_vec, sodium_key_pos, pin, value_bit_length); 
+			updateValue(image_file_vec, sodium_key_pos, pin, value_bit_length); 
 	
 			constexpr uint8_t SODIUM_XOR_KEY_LENGTH = 8; 
 			
 			sodium_key_pos += SODIUM_XOR_KEY_LENGTH;
 
 			while(sodium_keys_length--) {
-				cover_image_vec[sodium_key_pos] = cover_image_vec[sodium_key_pos] ^ cover_image_vec[sodium_xor_key_pos++];
+				image_file_vec[sodium_key_pos] = image_file_vec[sodium_key_pos] ^ image_file_vec[sodium_xor_key_pos++];
 				sodium_key_pos++;
 				sodium_xor_key_pos = (sodium_xor_key_pos >= SODIUM_XOR_KEY_LENGTH + SODIUM_KEY_INDEX) 
 					? SODIUM_KEY_INDEX 
@@ -860,8 +1176,8 @@ int main(int argc, char** argv) {
 			std::array<uint8_t, crypto_secretbox_KEYBYTES> key;
 			std::array<uint8_t, crypto_secretbox_NONCEBYTES> nonce;
 
-			std::copy(cover_image_vec.begin() + SODIUM_KEY_INDEX, cover_image_vec.begin() + SODIUM_KEY_INDEX + crypto_secretbox_KEYBYTES, key.data());
-			std::copy(cover_image_vec.begin() + NONCE_KEY_INDEX, cover_image_vec.begin() + NONCE_KEY_INDEX + crypto_secretbox_NONCEBYTES, nonce.data());
+			std::copy(image_file_vec.begin() + SODIUM_KEY_INDEX, image_file_vec.begin() + SODIUM_KEY_INDEX + crypto_secretbox_KEYBYTES, key.data());
+			std::copy(image_file_vec.begin() + NONCE_KEY_INDEX, image_file_vec.begin() + NONCE_KEY_INDEX + crypto_secretbox_NONCEBYTES, nonce.data());
 
 			std::string decrypted_filename;
 
@@ -870,30 +1186,30 @@ int main(int argc, char** argv) {
 			uint16_t filename_xor_key_pos = isMastodonFile ? 0x1A6 : 0x15;
 	
 			uint8_t
-				encrypted_filename_length = cover_image_vec[ENCRYPTED_FILENAME_INDEX - 1],
+				encrypted_filename_length = image_file_vec[ENCRYPTED_FILENAME_INDEX - 1],
 				filename_char_pos = 0;
 
-			const std::string ENCRYPTED_FILENAME { cover_image_vec.begin() + ENCRYPTED_FILENAME_INDEX, cover_image_vec.begin() + ENCRYPTED_FILENAME_INDEX + encrypted_filename_length };
+			const std::string ENCRYPTED_FILENAME { image_file_vec.begin() + ENCRYPTED_FILENAME_INDEX, image_file_vec.begin() + ENCRYPTED_FILENAME_INDEX + encrypted_filename_length };
 
 			while (encrypted_filename_length--) {
-				decrypted_filename += ENCRYPTED_FILENAME[filename_char_pos++] ^ cover_image_vec[filename_xor_key_pos++];
+				decrypted_filename += ENCRYPTED_FILENAME[filename_char_pos++] ^ image_file_vec[filename_xor_key_pos++];
 			}
 
 			const uint16_t ENCRYPTED_FILE_START_INDEX = isMastodonFile ? 0x1FE: 0x6E;
 
-			cover_image_vec.erase(cover_image_vec.begin(), cover_image_vec.begin() + ENCRYPTED_FILE_START_INDEX);
+			image_file_vec.erase(image_file_vec.begin(), image_file_vec.begin() + ENCRYPTED_FILE_START_INDEX);
 
-			std::vector<uint8_t>decrypted_vec(cover_image_vec.size() - crypto_secretbox_MACBYTES);
+			std::vector<uint8_t>decrypted_vec(image_file_vec.size() - crypto_secretbox_MACBYTES);
 	
-			if (crypto_secretbox_open_easy(decrypted_vec.data(), cover_image_vec.data(), cover_image_vec.size(), nonce.data(), key.data()) !=0 ) {
+			if (crypto_secretbox_open_easy(decrypted_vec.data(), image_file_vec.data(), image_file_vec.size(), nonce.data(), key.data()) !=0 ) {
 				std::cerr << "\nDecryption failed!" << std::endl;
 				hasDecryptionFailed = true;
 			}
 
-			std::vector<uint8_t>().swap(cover_image_vec);
+			std::vector<uint8_t>().swap(image_file_vec);
 		
 			if (hasDecryptionFailed) {	
-				std::fstream file(args.cover_image, std::ios::in | std::ios::out | std::ios::binary); 
+				std::fstream file(args.image_file_path, std::ios::in | std::ios::out | std::ios::binary); 
    		 
 	    		file.seekg(-1, std::ios::end);
 	    		std::streampos byte_pos = file.tellg();
@@ -907,7 +1223,7 @@ int main(int argc, char** argv) {
 				}		
 				if (byte > 2) {
 					file.close();
-					std::ofstream file(args.cover_image, std::ios::out | std::ios::trunc | std::ios::binary);
+					std::ofstream file(args.image_file_path, std::ios::out | std::ios::trunc | std::ios::binary);
 				} else {
 					file.seekp(byte_pos);
 					file.write(reinterpret_cast<char*>(&byte), sizeof(byte));
@@ -916,7 +1232,7 @@ int main(int argc, char** argv) {
     	    	throw std::runtime_error("File Recovery Error: Invalid PIN or file is corrupt.");
 			}
 		
-			zlibFunc(decrypted_vec, args.mode, args.platform, isCompressedFile);
+			zlibFunc(decrypted_vec, args.mode, args.option, isCompressedFile);
 
 			const uint32_t INFLATED_FILE_SIZE = static_cast<uint32_t>(decrypted_vec.size());
 
@@ -925,7 +1241,7 @@ int main(int argc, char** argv) {
 			}
 
 			if (byte != 0x82) {	
-				std::fstream file(args.cover_image, std::ios::in | std::ios::out | std::ios::binary); 
+				std::fstream file(args.image_file_path, std::ios::in | std::ios::out | std::ios::binary); 
    		 
 				file.seekg(-1, std::ios::end);
 				std::streampos byte_pos = file.tellg();
