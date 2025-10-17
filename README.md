@@ -2,6 +2,8 @@
 
 A steganography command-line tool used for embedding and extracting any file type via a **PNG** cover image.  
 
+Any issues with configuring ***pdvrdt***, then please just ask: [***@cleasbycode***](https://x.com/CleasbyCode).
+
 There is also a Web App version, which you can try [***here***](https://cleasbycode.co.uk/pdvrdt/index/) as a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to **20MB**.    
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_80983.png)  
