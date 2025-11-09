@@ -236,12 +236,12 @@ struct ProgramArgs {
 static std::optional<size_t>searchSig(const std::vector<uint8_t>& vec, std::span<const uint8_t> sig, size_t start = 0) {
 	if (sig.empty() || start >= vec.size()) return std::nullopt;
 
-    	auto 
-    		first = vec.begin() + start,
-    		it = std::search(first, vec.end(), sig.begin(), sig.end());
+    auto 
+    	first = vec.begin() + start,
+    	it = std::search(first, vec.end(), sig.begin(), sig.end());
     		
-    	if (it == vec.end()) return std::nullopt;
-    	return static_cast<size_t>(std::distance(vec.begin(), it));
+    if (it == vec.end()) return std::nullopt;
+    return static_cast<size_t>(std::distance(vec.begin(), it));
 }
 
 // Writes updated values, such as chunk lengths, crc32, etc. into the relevant vector index location.
@@ -382,18 +382,16 @@ static void imageColorCheck(std::vector<uint8_t>& png, bool& hasTwitterBadDims) 
         hasTwitterBadDims = (height > TWITTER_MAX_PLTE_DIMS || width > TWITTER_MAX_PLTE_DIMS || TWITTER_MIN_DIMS > height || TWITTER_MIN_DIMS > width);
     } else {
 		// Because image was not re-encoded, we need to manually check for and remove trailing data and also remove superfluous chunks.
-        	constexpr std::array<uint8_t, 4>
-    			IEND_SIG { 0x49, 0x45, 0x4E, 0x44 },
-				PLTE_SIG { 0x50, 0x4C, 0x54, 0x45 },
-				TRNS_SIG { 0x74, 0x52, 0x4E, 0x53 },
-				IDAT_SIG { 0x49, 0x44, 0x41, 0x54 };	
+        constexpr std::array<uint8_t, 4>
+    		IEND_SIG { 0x49, 0x45, 0x4E, 0x44 },
+			PLTE_SIG { 0x50, 0x4C, 0x54, 0x45 },
+			TRNS_SIG { 0x74, 0x52, 0x4E, 0x53 },
+			IDAT_SIG { 0x49, 0x44, 0x41, 0x54 };	
 	
 		// Check for and remove any trialing data after IEND.		
     	if (auto pos_opt = searchSig(png, IEND_SIG)) {
     		const size_t CHUNK_LENGTH_INDEX = *pos_opt - 4;
-    		
     		const uint64_t CHUNK_LENGTH = getValue(png, CHUNK_LENGTH_INDEX, 4);
-    		
     		const size_t CHUNK_END = CHUNK_LENGTH_INDEX + 8 + CHUNK_LENGTH + 4; 
     			
     		if (CHUNK_END <= png.size()) {
@@ -748,6 +746,7 @@ static void zlibFunc(std::vector<uint8_t>& vec, Mode mode, Option& option, bool&
             	spill(strm);
         	}
     	}
+		
     	while (true) {
         	int ret = inflate(&strm, Z_FINISH);
 
