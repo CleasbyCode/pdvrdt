@@ -895,7 +895,7 @@ int main(int argc, char** argv) {
 		}
 
 		if (!hasFileExtension(args.image_file_path, {".png"})) {
-        	throw std::runtime_error("File Type Error: Invalid image extension. Only expecting \".jpg\", \".jpeg\", or \".jfif\".");
+        	throw std::runtime_error("File Type Error: Invalid image extension. Only expecting \".png\".");
     	}
     			
 		std::ifstream image_file_ifs(args.image_file_path, std::ios::binary);
@@ -1350,3 +1350,4 @@ int main(int argc, char** argv) {
         return 1;
     }
 }
+
