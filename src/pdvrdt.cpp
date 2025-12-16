@@ -915,7 +915,7 @@ int main(int argc, char** argv) {
 		constexpr uintmax_t MAX_SIZE_RECOVER = 3ULL * 1024 * 1024 * 1024;    
     	
 		if (args.mode == Mode::recover && png_size > MAX_SIZE_RECOVER) {
-			throw std::runtime_error("File Size Error: Image file exceeds maximum default size limit for jdvrif.");
+			throw std::runtime_error("File Size Error: Image file exceeds maximum default size limit for pdvrdt.");
 		}
 		
 		std::vector<uint8_t> png_vec(png_size);
@@ -1350,4 +1350,5 @@ int main(int argc, char** argv) {
         return 1;
     }
 }
+
 
