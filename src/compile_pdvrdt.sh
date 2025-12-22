@@ -2,7 +2,7 @@
 
 # compile_pdvin.sh
 
-g++ -std=c++20 pdvrdt.cpp lodepng/lodepng.cpp -Wall -O3 -lz -lsodium -s -o pdvrdt
+g++ -std=c++23 -O3 -march=native -pipe -Wall -Wextra -Wpedantic -DNDEBUG -s -flto=auto -fuse-linker-plugin pdvrdt.cpp lodepng/lodepng.cpp -lz -lsodium -o pdvrdt
 
 if [ $? -eq 0 ]; then
     echo "Compilation successful. Executable 'pdvrdt' created."
