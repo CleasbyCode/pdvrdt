@@ -2,7 +2,7 @@
 
 // Compile program (Linux):
 
-// $ sudo apt install libsodium-dev
+// $ sudo apt-get install libsodium-dev
 
 // $ chmod +x compile_pdvrdt.sh
 // $ ./compile_pdvrdt.sh
@@ -66,7 +66,6 @@
 #include <cctype>
 #include <cstddef>
 #include <cstring>
-#include <expected>
 #include <filesystem>
 #include <format>
 #include <fstream>
@@ -119,7 +118,7 @@ any file type within and from a PNG image.
 Compile & run (Linux)
 ──────────────────────────
 
-  $ sudo apt install libsodium-dev
+  $ sudo apt-get install libsodium-dev
 
   $ chmod +x compile_pdvrdt.sh
   $ ./compile_pdvrdt.sh
@@ -250,23 +249,15 @@ Notes
 		}
 	};
 
-	[[nodiscard]] std::expected<std::size_t, std::string> searchSig(
-		std::span<const Byte> data,
-		std::span<const Byte> sig,
-		std::size_t start_index = 0,
-		std::size_t increment = 0
-	) {
+	[[nodiscard]] std::optional<std::size_t> searchSig(std::span<const Byte> data, std::span<const Byte> sig, std::size_t start_index = 0, std::size_t increment = 0) {
 		if (start_index >= data.size()) {
-			return std::unexpected("start_index out of bounds");
+			return std::nullopt;
 		}
-
 		auto search_range = std::views::drop(data, start_index + increment);
 		auto result = std::ranges::search(search_range, sig);
-
 		if (result.empty()) {
-			return std::unexpected("signature not found");
+			return std::nullopt;
 		}
-
 		return static_cast<std::size_t>(result.begin() - data.begin());
 	}
 
@@ -486,7 +477,6 @@ Notes
 				}
 				copy_chunk_type(TRNS_SIG);
 			}
-
 			copy_chunk_type(IDAT_SIG);
 
 			// Copy IEND chunk
