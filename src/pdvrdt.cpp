@@ -1144,8 +1144,6 @@ Notes
 				IMGPILE_MAX_IMAGE_SIZE 			= 8   * 1024 * 1024,
 				TWITTER_MAX_IMAGE_SIZE 			= 5   * 1024 * 1024;
 
-			vString filtered_platforms;
-
 			std::erase_if(platforms_vec, [&](const std::string& platform) {
 				if ((platform == "X-Twitter" && OUTPUT_SIZE > TWITTER_MAX_IMAGE_SIZE) || (platform == "X-Twitter" && hasTwitterBadDims)) {
 					return true;
@@ -1162,8 +1160,8 @@ Notes
 				return false;
 			});
 
-			if (filtered_platforms.empty()) {
-				filtered_platforms.emplace_back("\b\bUnknown!\n\n Due to the large file size of the output PNG image, I'm unaware of any\n compatible platforms that this image can be posted on. Local use only?");
+			if (platforms_vec.empty()) {
+				platforms_vec.emplace_back("\b\bUnknown!\n\n Due to the large file size of the output PNG image, I'm unaware of any\n compatible platforms that this image can be posted on. Local use only?");
 			}
 		}
 
@@ -1336,3 +1334,4 @@ int main(int argc, char** argv) {
     }
      return 0;
 }
+
