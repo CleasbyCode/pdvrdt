@@ -211,7 +211,7 @@ Notes
 			const std::string
             PROG = fs::path(argv[0]).filename().string(),
             INDENT(PREFIX.size(), ' '),
-            USAGE = std::format("{}{} conceal [-m|-r] <secret_file>\n""{}{} recover <cover_image>\n""{}{} --info", PREFIX, PROG, INDENT, PROG, INDENT, PROG);
+            USAGE = std::format("{}{} conceal [-m|-r] <cover_image> <secret_file>\n""{}{} recover <cover_image>\n""{}{} --info", PREFIX, PROG, INDENT, PROG, INDENT, PROG);
 
 			if (argc < 2) die(USAGE);
 
@@ -1334,4 +1334,5 @@ int main(int argc, char** argv) {
     }
      return 0;
 }
+
 
