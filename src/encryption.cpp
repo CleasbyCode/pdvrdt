@@ -3,6 +3,8 @@
 
 namespace {
 
+	constexpr std::size_t VALUE_BYTE_LENGTH_EIGHT = 8;
+
 struct SensitiveKeyData {
 	Key   key{};
 	Nonce nonce{};
@@ -109,14 +111,11 @@ std::size_t getPin() {
 	return result;
 }
 
-std::size_t encryptDataFile(
-	vBytes& profile_vec,
-	vBytes& data_vec,
-	const std::string& data_filename,
-	bool has_mastodon_option) {
+std::size_t encryptDataFile(vBytes& profile_vec, vBytes& data_vec, const std::string& data_filename, bool has_mastodon_option) {
 
 	const auto& offsets = has_mastodon_option ? MASTODON_OFFSETS : DEFAULT_OFFSETS;
 	const Byte filename_length = profile_vec[offsets.filename - 1];
+
 
 	// XOR-encrypt the data filename into the profile.
 	randombytes_buf(profile_vec.data() + offsets.filename_xor_key, filename_length);
@@ -134,10 +133,11 @@ std::size_t encryptDataFile(
 	std::ranges::copy(crypto.nonce, profile_vec.begin() + offsets.nonce);
 
 	// Retrieve the key fingerprint before obfuscation.
-	const std::size_t key_fingerprint = getValue<8>(profile_vec, offsets.sodium_key);
-
 	// Encrypt data in-place (libsodium supports overlapping src/dst for _easy functions).
-	const std::size_t plaintext_length = data_vec.size();
+	const std::size_t
+		key_fingerprint = getValue(profile_vec, offsets.sodium_key, VALUE_BYTE_LENGTH_EIGHT),
+		plaintext_length = data_vec.size();
+
 	data_vec.resize(plaintext_length + TAG_BYTES);
 
 	if (crypto_secretbox_easy(data_vec.data(), data_vec.data(), plaintext_length, crypto.nonce.data(), crypto.key.data()) != 0) {
@@ -154,8 +154,9 @@ std::size_t encryptDataFile(
 		XOR_MASK_LENGTH    = 8,
 		SODIUM_KEYS_LENGTH = 48;
 
-	const std::size_t mask_start = offsets.sodium_key;
-	const std::size_t keys_start = offsets.sodium_key + XOR_MASK_LENGTH;
+	const std::size_t
+		mask_start = offsets.sodium_key,
+		keys_start = offsets.sodium_key + XOR_MASK_LENGTH;
 
 	for (std::size_t i = 0; i < SODIUM_KEYS_LENGTH; ++i) {
 		profile_vec[keys_start + i] ^= profile_vec[mask_start + (i % XOR_MASK_LENGTH)];
@@ -164,7 +165,7 @@ std::size_t encryptDataFile(
 	// Overwrite the XOR mask with random data.
 	std::size_t random_val;
 	randombytes_buf(&random_val, sizeof random_val);
-	updateValue<8>(profile_vec, offsets.sodium_key, random_val);
+	updateValue(profile_vec, offsets.sodium_key, random_val, VALUE_BYTE_LENGTH_EIGHT);
 
 	return key_fingerprint;
 }
@@ -178,21 +179,19 @@ std::optional<std::string> decryptDataFile(vBytes& png_vec, bool is_mastodon_fil
 
 	// Restore the XOR mask from the user-provided recovery pin.
 	const std::size_t recovery_pin = getPin();
-	updateValue<8>(png_vec, offsets.sodium_key, recovery_pin);
+	updateValue(png_vec, offsets.sodium_key, recovery_pin, VALUE_BYTE_LENGTH_EIGHT);
 
 	// De-obfuscate the stored key+nonce using the rolling XOR mask.
-	const std::size_t mask_start = offsets.sodium_key;
-	const std::size_t keys_start = offsets.sodium_key + XOR_MASK_LENGTH;
+	const std::size_t
+		mask_start = offsets.sodium_key,
+		keys_start = offsets.sodium_key + XOR_MASK_LENGTH;
 
 	for (std::size_t i = 0; i < SODIUM_KEYS_LENGTH; ++i) {
 		png_vec[keys_start + i] ^= png_vec[mask_start + (i % XOR_MASK_LENGTH)];
 	}
 
 	// Load key and nonce (RAII ensures cleanup on any exit path).
-	SensitiveKeyData crypto(
-		std::span<const Byte>(png_vec).subspan(offsets.sodium_key, 32),
-		std::span<const Byte>(png_vec).subspan(offsets.nonce, 24)
-	);
+	SensitiveKeyData crypto(std::span<const Byte>(png_vec).subspan(offsets.sodium_key, 32), std::span<const Byte>(png_vec).subspan(offsets.nonce, 24));
 
 	// Decrypt the filename.
 	const Byte filename_length = png_vec[offsets.filename - 1];

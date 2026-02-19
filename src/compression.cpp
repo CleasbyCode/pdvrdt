@@ -113,8 +113,9 @@ void zlibInflate(vBytes& data_vec) {
 		strm.next_out  = buffer.data();
 		strm.avail_out = static_cast<uInt>(ZLIB_BUFSIZE);
 
-		const int flush = (strm.avail_in > 0) ? Z_NO_FLUSH : Z_FINISH;
-		const int ret = inflate(&strm, flush);
+		const int
+			flush = (strm.avail_in > 0) ? Z_NO_FLUSH : Z_FINISH,
+			ret = inflate(&strm, flush);
 
 		flush_output();
 

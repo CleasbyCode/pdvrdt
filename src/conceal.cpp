@@ -68,10 +68,7 @@ constexpr std::array PLATFORM_LIMITS = {
 	PlatformLimits{ "X-Twitter",   5ULL * 1024 * 1024, true  },
 };
 
-void validateInputs(
-	std::size_t combined_size,
-	const std::string& data_filename,
-	Option option) {
+void validateInputs(std::size_t combined_size, const std::string& data_filename, Option option) {
 
 	constexpr std::size_t
 		MAX_SIZE_DEFAULT  = 2ULL * 1024 * 1024 * 1024,
@@ -109,10 +106,10 @@ vBytes buildIccpChunk(vBytes& profile_vec) {
 	iccp.insert(iccp.begin() + PROFILE_INDEX, profile_vec.begin(), profile_vec.end());
 
 	const std::size_t chunk_data_size = profile_vec.size() + SIZE_DIFF;
-	updateValue<4>(iccp, CHUNK_SIZE_INDEX, chunk_data_size);
+	updateValue(iccp, CHUNK_SIZE_INDEX, chunk_data_size);
 
 	const std::size_t crc = lodepng_crc32(&iccp[CHUNK_START], chunk_data_size + 4);
-	updateValue<4>(iccp, CHUNK_START + chunk_data_size + 4, crc);
+	updateValue(iccp, (CHUNK_START + chunk_data_size + 4), crc);
 
 	return iccp;
 }
@@ -130,10 +127,10 @@ vBytes buildIdatChunk(vBytes& profile_vec) {
 	idat.insert(idat.begin() + PROFILE_INDEX, profile_vec.begin(), profile_vec.end());
 
 	const std::size_t chunk_data_size = profile_vec.size() + SIZE_DIFF;
-	updateValue<4>(idat, CHUNK_SIZE_INDEX, chunk_data_size);
+	updateValue(idat, CHUNK_SIZE_INDEX, chunk_data_size);
 
 	const std::size_t crc = lodepng_crc32(&idat[CHUNK_START], chunk_data_size + CRC_FIELD_SIZE);
-	updateValue<4>(idat, chunk_data_size + CHUNK_START + CRC_FIELD_SIZE, crc);
+	updateValue(idat, (chunk_data_size + CHUNK_START + CRC_FIELD_SIZE), crc);
 
 	return idat;
 }
@@ -150,11 +147,7 @@ void insertRedditPadding(vBytes& png_vec) {
 	png_vec.insert(png_vec.end() - INSERT_INDEX_DIFF, reddit_chunk.begin(), reddit_chunk.end());
 }
 
-std::vector<std::string> getCompatiblePlatforms(
-	Option option,
-	std::size_t output_size,
-	bool has_bad_dims,
-	bool twitter_iccp_compatible) {
+std::vector<std::string> getCompatiblePlatforms(Option option, std::size_t output_size, bool has_bad_dims, bool twitter_iccp_compatible) {
 
 	if (option == Option::Reddit) {
 		return { "Reddit. (Only share this \"file-embedded\" PNG image on Reddit)." };
@@ -197,7 +190,6 @@ void writeOutputFile(const vBytes& png_vec, std::size_t pin) {
 	std::println("\nSaved \"file-embedded\" PNG image: {} ({} bytes).", output_filename, png_vec.size());
 	std::println("\nRecovery PIN: [***{}***]\n\nImportant: Keep your PIN safe, so that you can extract the hidden file.\n\nComplete!\n", pin);
 }
-
 } // namespace
 
 void concealData(vBytes& png_vec, Option option, const fs::path& data_file_path) {
@@ -208,8 +200,9 @@ void concealData(vBytes& png_vec, Option option, const fs::path& data_file_path)
 		FILENAME_LEN_MASTODON = 0x191,
 		FILENAME_LEN_DEFAULT  = 0x00;
 
-	const bool is_mastodon = (option == Option::Mastodon);
-	const bool is_reddit   = (option == Option::Reddit);
+	const bool
+		is_mastodon = (option == Option::Mastodon),
+		is_reddit   = (option == Option::Reddit);
 
 	vBytes data_vec = readFile(data_file_path);
 
@@ -285,6 +278,5 @@ void concealData(vBytes& png_vec, Option option, const fs::path& data_file_path)
 	for (const auto& platform : platforms) {
 		std::println(" ✓ {}", platform);
 	}
-
 	writeOutputFile(png_vec, pin);
 }

@@ -4,45 +4,76 @@
 
 namespace {
 
-void convertToPalette(vBytes& image_file_vec, const vBytes& image, unsigned width, unsigned height,
-		const LodePNGColorStats& stats, LodePNGColorType raw_color_type) {
+void convertToPalette(vBytes& image_file_vec, const vBytes& image, unsigned width, unsigned height, const LodePNGColorStats& stats, LodePNGColorType raw_color_type) {
 
 	constexpr Byte
 		PALETTE_BIT_DEPTH = 8,
 		ALPHA_OPAQUE      = 255;
 
 	constexpr std::size_t
-		RGBA_COMPONENTS = 4,
-		RGB_COMPONENTS  = 3;
+		RGBA_COMPONENTS  = 4,
+		RGB_COMPONENTS   = 3,
+		MAX_PALETTE_SIZE = 256;
 
-	const std::size_t
-		palette_size = stats.numcolors,
-		channels     = (raw_color_type == LCT_RGBA) ? RGBA_COMPONENTS : RGB_COMPONENTS;
+	// Validate color type — this function only handles RGB and RGBA input.
+	if (raw_color_type != LCT_RGB && raw_color_type != LCT_RGBA) {
+		throw std::runtime_error(std::format(
+			"convertToPalette: Unsupported color type {}. Expected RGB or RGBA.",
+			static_cast<unsigned>(raw_color_type)));
+	}
 
-	vBytes palette(palette_size * RGBA_COMPONENTS);
+	const std::size_t palette_size = stats.numcolors;
+
+	if (palette_size == 0) {
+		throw std::runtime_error("convertToPalette: Palette is empty.");
+	}
+	if (palette_size > MAX_PALETTE_SIZE) {
+		throw std::runtime_error(std::format(
+			"convertToPalette: Palette has {} colors, exceeds maximum of {}.",
+			palette_size, MAX_PALETTE_SIZE));
+	}
+
+	const std::size_t channels =
+		(raw_color_type == LCT_RGBA) ? RGBA_COMPONENTS : RGB_COMPONENTS;
+
+	// Build a lookup from RGBA key -> palette index.
 	std::unordered_map<uint32_t, Byte> color_to_index;
 	color_to_index.reserve(palette_size);
 
 	for (std::size_t i = 0; i < palette_size; ++i) {
 		const Byte* src = &stats.palette[i * RGBA_COMPONENTS];
-		std::copy_n(src, RGBA_COMPONENTS, &palette[i * RGBA_COMPONENTS]);
-
-		const uint32_t key = (src[0] << 24) | (src[1] << 16) | (src[2] << 8) | src[3];
+		const uint32_t key =
+			(static_cast<uint32_t>(src[0]) << 24) |
+			(static_cast<uint32_t>(src[1]) << 16) |
+			(static_cast<uint32_t>(src[2]) << 8)  |
+			 static_cast<uint32_t>(src[3]);
 		color_to_index[key] = static_cast<Byte>(i);
 	}
 
-	vBytes indexed_image(width * height);
-	for (std::size_t i = 0; i < width * height; ++i) {
-		const Byte
-			r = image[i * channels],
-			g = image[i * channels + 1],
-			b = image[i * channels + 2],
-			a = (channels == RGBA_COMPONENTS) ? image[i * channels + 3] : ALPHA_OPAQUE;
+	// Map each pixel to its palette index.
+	const std::size_t pixel_count = static_cast<std::size_t>(width) * height;
+	vBytes indexed_image(pixel_count);
 
-		const uint32_t key = (r << 24) | (g << 16) | (b << 8) | a;
-		indexed_image[i] = color_to_index.at(key);
+	for (std::size_t i = 0; i < pixel_count; ++i) {
+		const std::size_t offset = i * channels;
+		const uint32_t key =
+			(static_cast<uint32_t>(image[offset])     << 24) |
+			(static_cast<uint32_t>(image[offset + 1]) << 16) |
+			(static_cast<uint32_t>(image[offset + 2]) << 8)  |
+			((channels == RGBA_COMPONENTS)
+				? static_cast<uint32_t>(image[offset + 3])
+				: ALPHA_OPAQUE);
+
+		auto it = color_to_index.find(key);
+		if (it == color_to_index.end()) {
+			throw std::runtime_error(std::format(
+				"convertToPalette: Pixel {} has color 0x{:08X} not found in palette.",
+				i, key));
+		}
+		indexed_image[i] = it->second;
 	}
 
+	// Encode as 8-bit palette PNG.
 	lodepng::State encode_state;
 	lodepng_zlib_adapter::configureEncoder(encode_state);
 	encode_state.info_raw.colortype       = LCT_PALETTE;
@@ -52,7 +83,7 @@ void convertToPalette(vBytes& image_file_vec, const vBytes& image, unsigned widt
 	encode_state.encoder.auto_convert     = 0;
 
 	for (std::size_t i = 0; i < palette_size; ++i) {
-		const Byte* p = &palette[i * RGBA_COMPONENTS];
+		const Byte* p = &stats.palette[i * RGBA_COMPONENTS];
 		lodepng_palette_add(&encode_state.info_png.color, p[0], p[1], p[2], p[3]);
 		lodepng_palette_add(&encode_state.info_raw, p[0], p[1], p[2], p[3]);
 	}
@@ -62,32 +93,41 @@ void convertToPalette(vBytes& image_file_vec, const vBytes& image, unsigned widt
 	if (error) {
 		throw std::runtime_error(std::format("LodePNG encode error: {}", error));
 	}
-
 	image_file_vec = std::move(output);
 }
 
+// ============================================================================
+// Internal: Strip non-essential chunks, keeping only IHDR, PLTE, tRNS, IDAT, IEND
+// ============================================================================
+
 void stripAndCopyChunks(vBytes& image_file_vec, Byte color_type) {
-	constexpr Byte INDEXED_PLTE = 3;
 
 	constexpr auto
 		PLTE_SIG = std::to_array<Byte>({ 0x50, 0x4C, 0x54, 0x45 }),
 		TRNS_SIG = std::to_array<Byte>({ 0x74, 0x52, 0x4E, 0x53 }),
 		IDAT_SIG = std::to_array<Byte>({ 0x49, 0x44, 0x41, 0x54 });
-	constexpr auto
-		IEND_SIG = std::to_array<Byte>({ 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 });
+
+	constexpr auto IEND_SIG = std::to_array<Byte>({ 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 });
 
 	// Pdvrdt signature found at the start of a steganographic IDAT payload.
 	constexpr std::array<Byte, 3> PDVRDT_IDAT_SIG = { 0x78, 0x5E, 0x5C };
 
 	constexpr std::size_t
 		PNG_HEADER_AND_IHDR_SIZE = 33,
-		PNG_IEND_SIZE            = 12,
-		IEND_TOTAL_SIZE          = 8;  // name(4) + crc(4)
+		CHUNK_OVERHEAD           = 12,  // length(4) + name(4) + crc(4)
+		LENGTH_FIELD_SIZE        = 4,
+		IEND_CHUNK_SIZE          = 12;
+
+	const std::size_t file_size = image_file_vec.size();
+
+	if (file_size < PNG_HEADER_AND_IHDR_SIZE + IEND_CHUNK_SIZE) {
+		throw std::runtime_error("PNG Error: File too small to contain valid PNG structure.");
+	}
 
 	// Truncate any trailing data after IEND.
 	if (auto pos_opt = searchSig(image_file_vec, IEND_SIG)) {
-		const std::size_t end_index = *pos_opt + IEND_TOTAL_SIZE;
-		if (end_index <= image_file_vec.size()) {
+		const std::size_t end_index = *pos_opt + IEND_SIG.size();
+		if (end_index <= file_size) {
 			image_file_vec.resize(end_index);
 		}
 	}
@@ -96,19 +136,26 @@ void stripAndCopyChunks(vBytes& image_file_vec, Byte color_type) {
 	cleaned_png.reserve(image_file_vec.size());
 
 	// Copy PNG signature + IHDR chunk.
-	cleaned_png.insert(cleaned_png.end(),
+	cleaned_png.insert(
+		cleaned_png.end(),
 		image_file_vec.begin(),
 		image_file_vec.begin() + PNG_HEADER_AND_IHDR_SIZE);
 
+	// Copy all chunks of a given type.
 	auto copy_chunks_of_type = [&](std::span<const Byte> chunk_sig) {
-		constexpr std::size_t
-			CHUNK_OVERHEAD    = 12, // length(4) + name(4) + crc(4)
-			LENGTH_FIELD_SIZE = 4;
-
-		std::size_t search_pos = 0;
+		std::size_t search_pos = PNG_HEADER_AND_IHDR_SIZE;
 
 		while (auto chunk_opt = searchSig(image_file_vec, chunk_sig, search_pos)) {
 			const std::size_t name_index = *chunk_opt;
+
+			if (name_index < LENGTH_FIELD_SIZE) {
+				throw std::runtime_error("PNG Error: Chunk found before valid length field.");
+			}
+
+			const std::size_t
+				chunk_start      = name_index - LENGTH_FIELD_SIZE,
+				data_length      = getValue(image_file_vec, chunk_start, 4),
+				total_chunk_size = data_length + CHUNK_OVERHEAD;
 
 			// Skip pdvrdt steganographic IDAT chunks.
 			if (std::equal(
@@ -117,15 +164,18 @@ void stripAndCopyChunks(vBytes& image_file_vec, Byte color_type) {
 				break;
 			}
 
-			const std::size_t
-				chunk_start  = name_index - LENGTH_FIELD_SIZE,
-				chunk_length = getValue<4>(image_file_vec, chunk_start) + CHUNK_OVERHEAD;
+			if (chunk_start + total_chunk_size > image_file_vec.size()) {
+				throw std::runtime_error(std::format(
+					"PNG Error: Chunk at offset 0x{:X} claims length {} but exceeds file size.",
+					chunk_start, data_length));
+			}
 
-			cleaned_png.insert(cleaned_png.end(),
+			cleaned_png.insert(
+				cleaned_png.end(),
 				image_file_vec.begin() + chunk_start,
-				image_file_vec.begin() + chunk_start + chunk_length);
+				image_file_vec.begin() + chunk_start + total_chunk_size);
 
-			search_pos = name_index + 5;
+			search_pos = chunk_start + total_chunk_size;
 		}
 	};
 
@@ -135,9 +185,10 @@ void stripAndCopyChunks(vBytes& image_file_vec, Byte color_type) {
 	copy_chunks_of_type(TRNS_SIG);
 	copy_chunks_of_type(IDAT_SIG);
 
-	// Copy IEND chunk.
-	cleaned_png.insert(cleaned_png.end(),
-		image_file_vec.end() - PNG_IEND_SIZE,
+	// Append IEND chunk.
+	cleaned_png.insert(
+		cleaned_png.end(),
+		image_file_vec.end() - IEND_CHUNK_SIZE,
 		image_file_vec.end());
 
 	image_file_vec = std::move(cleaned_png);
@@ -145,11 +196,11 @@ void stripAndCopyChunks(vBytes& image_file_vec, Byte color_type) {
 
 } // namespace
 
-ImageCheckResult optimizeImage(vBytes& image_file_vec) {
-	constexpr Byte
-		TRUECOLOR_RGB  = 2,
-		TRUECOLOR_RGBA = 6;
+// ============================================================================
+// Public: Optimize image for polyglot embedding
+// ============================================================================
 
+ImageCheckResult optimizeImage(vBytes& image_file_vec) {
 	constexpr uint16_t
 		MIN_DIMS       = 68,
 		MAX_PLTE_DIMS  = 4096,
@@ -162,8 +213,10 @@ ImageCheckResult optimizeImage(vBytes& image_file_vec) {
 	// System zlib handles checksum validation internally.
 
 	vBytes image;
-	unsigned width = 0, height = 0;
-	unsigned error = lodepng::decode(image, width, height, state, image_file_vec);
+	unsigned
+		width = 0,
+		height = 0,
+		error = lodepng::decode(image, width, height, state, image_file_vec);
 	if (error) {
 		throw std::runtime_error(std::format("LodePNG decode error {}: {}", error, lodepng_error_text(error)));
 	}

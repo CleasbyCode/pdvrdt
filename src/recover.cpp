@@ -6,8 +6,9 @@
 namespace {
 
 struct ChunkLocation {
-	std::size_t data_start;
-	std::size_t data_size;
+	std::size_t
+		data_start,
+		data_size;
 	bool is_mastodon;
 };
 
@@ -28,11 +29,13 @@ ChunkLocation locateEmbeddedData(const vBytes& png_vec) {
 		DEFAULT_DATA_OFFSET        = 11,  // profile data starts 11 bytes after chunk size field
 		DEFAULT_TAIL_PAD           = 3;
 
-	const auto iccp_opt = searchSig(png_vec, ICCP_SIG);
-	const auto pdv_opt  = searchSig(png_vec, PDV_SIG);
+	const auto
+		iccp_opt = searchSig(png_vec, ICCP_SIG),
+		pdv_opt  = searchSig(png_vec, PDV_SIG);
 
-	const bool has_iccp_at_expected = iccp_opt && (*iccp_opt == EXPECTED_ICCP_INDEX);
-	const bool has_pdv = pdv_opt.has_value();
+	const bool
+		has_iccp_at_expected = iccp_opt && (*iccp_opt == EXPECTED_ICCP_INDEX),
+		has_pdv = pdv_opt.has_value();
 
 	if (!has_iccp_at_expected && !has_pdv) {
 		throw std::runtime_error("Image File Error: This is not a pdvrdt image.");
@@ -41,9 +44,10 @@ ChunkLocation locateEmbeddedData(const vBytes& png_vec) {
 	// Mastodon files have iCCP at the expected index and no visible PDV signature
 	// (PDV signature is inside the deflated iCCP data).
 	if (has_iccp_at_expected && !has_pdv) {
-		const std::size_t iccp_index = *iccp_opt;
-		const std::size_t chunk_size_index = iccp_index - MASTODON_SIZE_INDEX_OFFSET;
-		const std::size_t raw_chunk_size = getValue<4>(png_vec, chunk_size_index);
+		const std::size_t
+			iccp_index = *iccp_opt,
+			chunk_size_index = iccp_index - MASTODON_SIZE_INDEX_OFFSET,
+			raw_chunk_size = getValue(png_vec, chunk_size_index);
 
 		return {
 			.data_start  = iccp_index + MASTODON_DATA_OFFSET,
@@ -53,9 +57,10 @@ ChunkLocation locateEmbeddedData(const vBytes& png_vec) {
 	}
 
 	// Default mode: PDV signature found directly.
-	const std::size_t pdv_index = *pdv_opt;
-	const std::size_t chunk_size_index = pdv_index - DEFAULT_SIZE_INDEX_OFFSET;
-	const std::size_t chunk_size = getValue<4>(png_vec, chunk_size_index);
+	const std::size_t
+		pdv_index = *pdv_opt,
+		chunk_size_index = pdv_index - DEFAULT_SIZE_INDEX_OFFSET,
+		chunk_size = getValue(png_vec, chunk_size_index);
 
 	return {
 		.data_start  = chunk_size_index + DEFAULT_DATA_OFFSET,
