@@ -85,7 +85,6 @@ void zlibDeflate(vBytes& data_vec, Option option, bool is_compressed_file) {
 			flush = Z_FINISH;
 		}
 	}
-
 	data_vec = std::move(result);
 }
 
@@ -129,6 +128,5 @@ void zlibInflate(vBytes& data_vec) {
 			strm.msg ? strm.msg : std::to_string(ret)
 		));
 	}
-
 	data_vec = std::move(result);
 }

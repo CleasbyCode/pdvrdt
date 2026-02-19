@@ -2,10 +2,7 @@
 
 #include "common.h"
 
-[[nodiscard]] std::optional<std::size_t> searchSig(
-	std::span<const Byte> data,
-	std::span<const Byte> sig,
-	std::size_t start = 0);
+[[nodiscard]] std::optional<std::size_t> searchSig(std::span<const Byte> data, std::span<const Byte> sig, std::size_t start = 0);
 
 // Write an integer as big-endian bytes into `vec` at the given byte offset.
 // Length must be 2, 4, or 8.

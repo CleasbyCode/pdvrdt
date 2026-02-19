@@ -17,12 +17,6 @@ inline constexpr ProfileOffsets
 
 [[nodiscard]] std::size_t getPin();
 
-[[nodiscard]] std::size_t encryptDataFile(
-	vBytes& profile_vec,
-	vBytes& data_vec,
-	const std::string& data_filename,
-	bool has_mastodon_option);
+[[nodiscard]] std::size_t encryptDataFile(vBytes& profile_vec, vBytes& data_vec, const std::string& data_filename, bool has_mastodon_option);
 
-[[nodiscard]] std::optional<std::string> decryptDataFile(
-	vBytes& png_vec,
-	bool is_mastodon_file);
+[[nodiscard]] std::optional<std::string> decryptDataFile(vBytes& png_vec, bool is_mastodon_file);

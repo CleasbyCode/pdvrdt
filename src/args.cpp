@@ -94,8 +94,9 @@ std::optional<ProgramArgs> ProgramArgs::parse(int argc, char** argv) {
 		return (i >= 0 && i < argc) ? argv[i] : std::string_view{};
 	};
 
-	const std::string prog = fs::path(argv[0]).filename().string();
-	const std::string usage = std::format(
+	const std::string
+		prog = fs::path(argv[0]).filename().string(),
+		usage = std::format(
 		"Usage: {} conceal [-m|-r] <cover_image> <secret_file>\n"
 		"       {} recover <cover_image>\n"
 		"       {} --info",
