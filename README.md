@@ -31,14 +31,13 @@ https://github.com/user-attachments/assets/7a1557d1-4772-4d3d-94a6-ec58d0977a59
 
 ```console
 
-user1@mx:~/Downloads/pdvrdt-main/src$ sudo apt install libsodium-dev
-user1@mx:~/Downloads/pdvrdt-main/src$ chmod +x compile_pdvrdt.sh
-user1@mx:~/Downloads/pdvrdt-main/src$ ./compile_pdvrdt.sh
-user1@mx:~/Downloads/pdvrdt-main/src$ Compiling pdvrdt...
-user1@mx:~/Downloads/pdvrdt-main/src$ Compilation successful. Executable 'pdvrdt' created.
-user1@mx:~/Downloads/pdvrdt-main/src$ sudo cp pdvrdt /usr/bin
-
-user1@mx:~/Desktop$ pdvrdt 
+$ sudo apt install libsodium-dev
+$ chmod +x compile_pdvrdt.sh
+$ ./compile_pdvrdt.sh
+ Compiling pdvrdt...
+ Compilation successful. Executable 'pdvrdt' created.
+$ sudo cp pdvrdt /usr/bin
+$ pdvrdt 
 
 Usage: pdvrdt conceal [-m|-r] <cover_image> <secret_file>
        pdvrdt recover <cover_image>  
