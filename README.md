@@ -34,8 +34,10 @@ https://github.com/user-attachments/assets/7a1557d1-4772-4d3d-94a6-ec58d0977a59
 $ sudo apt install libsodium-dev
 $ chmod +x compile_pdvrdt.sh
 $ ./compile_pdvrdt.sh
- Compiling pdvrdt...
- Compilation successful. Executable 'pdvrdt' created.
+
+Compiling pdvrdt...
+Compilation successful. Executable 'pdvrdt' created.
+
 $ sudo cp pdvrdt /usr/bin
 $ pdvrdt 
 
@@ -43,7 +45,7 @@ Usage: pdvrdt conceal [-m|-r] <cover_image> <secret_file>
        pdvrdt recover <cover_image>  
        pdvrdt --info
 
-user1@mx:~/Desktop$ pdvrdt conceal your_cover_image.png your_secret_file.doc
+$ pdvrdt conceal your_cover_image.png your_secret_file.doc
 
 Platform compatibility for output image:-
 
@@ -61,7 +63,7 @@ Important: Keep your PIN safe, so that you can extract the hidden file.
 
 Complete!
         
-user1@mx:~/Desktop$ pdvrdt recover prdt_12462.png
+$ pdvrdt recover prdt_12462.png
 
 PIN: *******************
 
