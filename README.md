@@ -21,7 +21,7 @@ $ sudo apt install libsodium-dev
 $ chmod +x compile_pdvrdt.sh
 $ ./compile_pdvrdt.sh
 
-Compiling pdvrdt...
+Compiling pdvrdt (hardened release build)...
 Compilation successful. Executable 'pdvrdt' created.
 
 $ sudo cp pdvrdt /usr/bin
