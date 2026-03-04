@@ -11,22 +11,6 @@ Unlike the common steganography method of concealing data within the pixels of a
 
 For increased storage capacity and better security, your embedded data file is compressed with ***Zlib*** (*if not already a compressed file type*) and encrypted using the ***Libsodium*** cryptographic library.  
 
-https://github.com/user-attachments/assets/76732196-815b-45ac-b71d-6e1aca672e25  
-
-https://github.com/user-attachments/assets/7a1557d1-4772-4d3d-94a6-ec58d0977a59  
-
-*Image credit: ***"Red_Dragon / [@ultra_arcane](https://x.com/ultra_arcane)"****
-
-## Compatible Platforms
-*Posting size limit measured by the combined size of the cover image + compressed data file:* 
- 
-* ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** | ***-r option***),
-* ***Mastodon*** (**16MB** | ***-m option***), ***ImgPile*** (**8MB**), ***X-Twitter*** (**5MB** + ****Dimension limits, see below***)
-  
-*X-Twitter image dimension size limits:* 
-* ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
-* ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
-
 ## Usage (Linux)
 
 ```console
@@ -72,6 +56,22 @@ Extracted hidden file: your_secret_file.doc (6165 bytes).
 Complete! Please check your file.
 
 ```
+## Compatible Platforms
+*Posting size limit measured by the combined size of the cover image + compressed data file:* 
+ 
+* ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** | ***-r option***),
+* ***Mastodon*** (**16MB** | ***-m option***), ***ImgPile*** (**8MB**), ***X-Twitter*** (**5MB** + ****Dimension limits, see below***)
+  
+*X-Twitter image dimension size limits:* 
+* ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
+* ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
+
+https://github.com/user-attachments/assets/76732196-815b-45ac-b71d-6e1aca672e25  
+
+https://github.com/user-attachments/assets/7a1557d1-4772-4d3d-94a6-ec58d0977a59  
+
+*Image credit: ***"Red_Dragon / [@ultra_arcane](https://x.com/ultra_arcane)"****
+
 pdvrdt ***mode*** arguments:
  
   ***conceal*** - Compresses, encrypts and embeds your secret data file within a ***PNG*** cover image.  
