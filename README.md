@@ -11,7 +11,7 @@ Unlike the common steganography method of concealing data within the pixels of a
 
 You can conceal any file type up to ***2GB***, although compatible hosting sites (*listed below*) have their own ***much smaller*** size limits and *other requirements.  
 
-For increased storage capacity and better security, your embedded data file is compressed with ***Zlib*** (*if not already a compressed file type*) and encrypted using the ***Libsodium*** cryptographic library.  
+For increased storage capacity and better security, your embedded data file is compressed with ***zlib*** and encrypted using the ***libsodium*** cryptographic library.  
 
 ## Usage (Linux)
 
