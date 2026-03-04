@@ -1,13 +1,13 @@
 # pdvrdt
 
-A fast steganography command-line tool used for embedding and extracting any file type via a **PNG** cover image.  
+***pdvrdt*** is a fast, easy-to-use steganography command-line tool used for concealing and extracting any file type via a PNG image.
 
 There is also a [***Web edition***](https://cleasbycode.co.uk/pdvrdt/app/), which you can use immediately, as a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to **20MB**.    
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_80983.png)  
-*Image: "Wolf" / ***PIN: 1816136426548255229****
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_526501.png)  
+*Image: "Wolf" / ***PIN: 1856140514119088821****
 
-Unlike the common steganography method of concealing data within the pixels of a cover image ([***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/)), ***pdvrdt*** hides files within various ***chunks*** of a ***PNG*** image, such as iCCP and IDAT. You can embed any file type up to ***2GB***, although compatible hosting sites (*listed below*) have their own ***much smaller*** size limits and *other requirements.  
+Unlike the common steganography method of concealing data within the pixels of a cover image ([***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/)), ***pdvrdt*** hides files within various ***chunks*** of a ***PNG*** image, such as iCCP and IDAT. You can conceal any file type up to ***2GB***, although compatible hosting sites (*listed below*) have their own ***much smaller*** size limits and *other requirements.  
 
 For increased storage capacity and better security, your embedded data file is compressed with ***Zlib*** (*if not already a compressed file type*) and encrypted using the ***Libsodium*** cryptographic library.  
 
