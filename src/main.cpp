@@ -1,4 +1,5 @@
 // PNG Data Vehicle (pdvrdt v4.7). Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023
+// Extensively refactored using Codex (ChatGPT 5.4) and Claude Code (Opus 4.6)
 
 #include "args.h"
 #include "conceal.h"
