@@ -26,6 +26,7 @@ COMMON_CXXFLAGS=(
   -Wformat
   -Wformat-security
   "$OPT_LEVEL"
+  -march=native
   -pipe
   -fstack-protector-strong
   -fstack-clash-protection
