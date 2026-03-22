@@ -264,7 +264,7 @@ EmbeddedProfile locateEmbeddedData(const vBytes& png_vec) {
 		const std::uint32_t stored_crc = static_cast<std::uint32_t>(getValue(png_vec, crc_index, 4));
 		const std::uint32_t computed_crc = lodepng_crc32(
 			png_vec.data() + static_cast<std::ptrdiff_t>(type_index),
-			static_cast<unsigned>(chunk_len + 4)
+			chunk_len + 4
 		);
 		if (stored_crc != computed_crc) {
 			throw std::runtime_error("Image File Error: Corrupt PNG chunk CRC.");

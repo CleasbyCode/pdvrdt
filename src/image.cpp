@@ -23,7 +23,7 @@ struct PaletteLookup {
 	std::array<Byte, table_size> occupied{};
 
 	[[nodiscard]] static constexpr std::size_t slotFor(std::uint32_t key) {
-		return (static_cast<std::size_t>(key) * 2654435761u) & (table_size - 1);
+		return (static_cast<std::size_t>(key) * 2654435761u) >> (64 - 9);
 	}
 
 	void insert(std::uint32_t key, Byte value) {
@@ -271,7 +271,7 @@ void stripAndCopyChunks(vBytes& image_file_vec, Byte color_type) {
 		const std::uint32_t stored_crc = static_cast<std::uint32_t>(getValue(image_file_vec, crc_index, 4));
 		const std::uint32_t computed_crc = lodepng_crc32(
 			image_file_vec.data() + static_cast<std::ptrdiff_t>(type_index),
-			static_cast<unsigned>(chunk_len + 4)
+			chunk_len + 4
 		);
 		if (stored_crc != computed_crc) {
 			throw std::runtime_error("PNG Error: Corrupt PNG chunk CRC.");
@@ -351,6 +351,7 @@ ImageCheckResult optimizeImage(vBytes& image_file_vec) {
 		return { .has_bad_dims = check_dims(MAX_PLTE_DIMS) };
 	}
 
+	const uint16_t max_dim = (color_type == INDEXED_PLTE) ? MAX_PLTE_DIMS : MAX_RGB_DIMS;
 	stripAndCopyChunks(image_file_vec, color_type);
-	return { .has_bad_dims = check_dims(MAX_RGB_DIMS) };
+	return { .has_bad_dims = check_dims(max_dim) };
 }
