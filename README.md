@@ -17,7 +17,7 @@ For increased storage capacity and better security, your embedded data file is c
 
 ```console
 
-$ sudo apt install libsodium-dev
+$ sudo apt install libsodium-dev libdeflate-dev
 $ chmod +x compile_pdvrdt.sh
 $ ./compile_pdvrdt.sh
 
