@@ -10,7 +10,7 @@ namespace {
 void displayInfo() {
 	std::print(R"(
 
-PNG Data Vehicle (pdvrdt v4.7)
+PNG Data Vehicle (pdvrdt v4.8)
 Created by Nicholas Cleasby (@CleasbyCode) 24/01/2023.
 
 pdvrdt is a metadata "steganography-like" command-line tool used for concealing and extracting
