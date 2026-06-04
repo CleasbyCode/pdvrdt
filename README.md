@@ -41,7 +41,7 @@ Platform compatibility for output image:-
   ✓ ImgBB
   ✓ Flickr
   
-Saved "file-embedded" PNG image: prdt_12462.png (143029 bytes).
+Saved "file-embedded" PNG image: prdt_531618.png (143029 bytes).
 
 Recovery PIN: [***2166776980318349924***]
 
@@ -49,7 +49,7 @@ Important: Keep your PIN safe, so that you can extract the hidden file.
 
 Complete!
         
-$ pdvrdt recover prdt_12462.png
+$ pdvrdt recover prdt_531618.png
 
 PIN: *******************
 
