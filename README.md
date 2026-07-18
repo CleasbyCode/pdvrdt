@@ -15,11 +15,10 @@ You can conceal any file type up to ***2GB***, although compatible hosting sites
 
 For increased storage capacity and better security, your embedded data file is compressed with ***libdeflate/zlib*** — unless it's already a compressed file type — and encrypted with ***XChaCha20-Poly1305*** using the ***libsodium*** cryptographic library.
 
-## Usage (Linux)
+## Compilation & Usage (Linux)
 
 ```console
-
-$ sudo apt install libsodium-dev libdeflate-dev
+$ sudo apt-get install g++ cmake ninja-build util-linux libsodium-dev zlib1g-dev libdeflate-dev
 $ chmod +x compile_pdvrdt.sh
 $ ./compile_pdvrdt.sh
 
