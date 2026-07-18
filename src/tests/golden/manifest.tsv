@@ -1,8 +1,0 @@
-case_id	option	payload_rel	golden_rel	pin	kind
-default_text	.	testdata/payloads/payload_text.txt	golden/default_text/embedded.png	10479510958359240708	default
-default_bin	.	testdata/payloads/payload_bin.bin	golden/default_bin/embedded.png	15741765173268990804	default
-default_stored	.	testdata/payloads/payload_stored.gz	golden/default_stored/embedded.png	8291128002355577329	default
-mastodon_text	-m	testdata/payloads/payload_text.txt	golden/mastodon_text/embedded.png	1223751011223200265	mastodon
-mastodon_bin	-m	testdata/payloads/payload_mast.bin	golden/mastodon_bin/embedded.png	10957324599805730522	mastodon
-reddit_text	-r	testdata/payloads/payload_text.txt	golden/reddit_text/embedded.png	5591780960597432000	reddit
-reddit_bin	-r	testdata/payloads/payload_bin.bin	golden/reddit_bin/embedded.png	7357369103221514332	reddit
