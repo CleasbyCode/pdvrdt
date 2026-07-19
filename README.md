@@ -92,20 +92,39 @@ pdvrdt ***conceal*** mode platform options:
     
  To correctly download images from ***X-Twitter*** or ***Reddit***, click the image in the post to fully expand it, before saving.
 
-## Third-Party Libraries
+## Third-Party Software and Assets
 
-This project makes use of the following third-party libraries:
-- **LodePNG** by Lode Vandevenne
-  - License: zlib/libpng (see [***LICENSE***](https://github.com/lvandeve/lodepng/blob/master/LICENSE) file)
-  - Copyright (c) 2005-2024 Lode Vandevenne
-- [**libsodium**](https://libsodium.org/) for cryptographic functions.
-  - [**LICENSE**](https://github.com/jedisct1/libsodium/blob/master/LICENSE)
-  - Copyright (c) 2013-2025 Frank Denis (github@pureftpd.org)
-- **zlib**: General-purpose compression library
-  - License: zlib/libpng license (see [***LICENSE***](https://github.com/madler/zlib/blob/develop/LICENSE) file)
-  - Copyright (C) 1995-2024 Jean-loup Gailly and Mark Adler
-- **libdeflate**: Fast, whole-buffer DEFLATE/zlib/gzip compression and decompression library
-  - License: MIT (Expat) license (see [***LICENSE***](https://raw.githubusercontent.com/ebiggers/libdeflate/master/COPYING) file)
-  - Copyright (C) 2016-2024 Eric Biggers.
+  This project uses or incorporates:
+
+  - [LodePNG](https://github.com/lvandeve/lodepng) — PNG decoding, encoding, and image processing.
+    - Vendored version: 20260119
+    - License: [zlib License](https://github.com/lvandeve/lodepng/blob/master/lodepng.h#L1-L22)
+    - Copyright (c) 2005-2026 Lode Vandevenne
+
+  - [libsodium](https://github.com/jedisct1/libsodium) — cryptographic random generation, Argon2id
+  key derivation, and XChaCha20-Poly1305 secret streams.
+    - License: [ISC License](https://github.com/jedisct1/libsodium/blob/master/LICENSE)
+    - Copyright holder: Frank Denis
+    - Dynamically linked as a system library
+
+  - [zlib](https://github.com/madler/zlib) — streaming DEFLATE/zlib compression and decompression.
+    - License: [zlib License](https://github.com/madler/zlib/blob/develop/LICENSE)
+    - Authors: Jean-loup Gailly and Mark Adler
+    - Dynamically linked as a system library
+
+  - [libdeflate](https://github.com/ebiggers/libdeflate) — fast whole-buffer DEFLATE/zlib
+  compression and decompression.
+    - License: [MIT License](https://github.com/ebiggers/libdeflate/blob/master/COPYING)
+    - Copyright holders: Eric Biggers and Google LLC
+    - Dynamically linked as a system library
+
+  - [Compact ICC Profiles](https://github.com/saucecontrol/Compact-ICC-Profiles) — the Mastodon ICC
+  carrier template is derived from `sRGB-v2-nano.icc`.
+    - License: [CC0 1.0 Universal](https://github.com/saucecontrol/Compact-ICC-Profiles/blob/master/
+    license)
+
+  - [hash-prospector](https://github.com/skeeto/hash-prospector) — the `lowbias32` integer hash
+  finalizer is used by the palette lookup table.
+    - License: [Unlicense](https://github.com/skeeto/hash-prospector/blob/master/UNLICENSE)
 
 ##
