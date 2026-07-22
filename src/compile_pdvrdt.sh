@@ -139,4 +139,6 @@ if [[ ! -f "$OUTPUT" ]] || ! cmp -s -- "$BUILT_BINARY" "$OUTPUT"; then
   mv -f -- "$TEMP_OUTPUT" "$OUTPUT"
   trap - EXIT
 fi
+echo ""
 echo "Compilation successful. Executable '$OUTPUT' is up to date."
+echo ""
