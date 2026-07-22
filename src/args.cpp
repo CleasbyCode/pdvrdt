@@ -20,11 +20,6 @@ any file type within and from a PNG image.
 Compile & run (Linux)
 ──────────────────────────
 
-  Requires CMake 3.20+, flock (util-linux), Ninja or Make, and GCC 14+
-  (or a compatible Clang toolchain with a C++23 standard library).
-
-  Debian/Ubuntu packages:
-
   $ sudo apt update
   $ sudo apt install g++ cmake ninja-build util-linux libsodium-dev zlib1g-dev libdeflate-dev
 
