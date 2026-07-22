@@ -24,9 +24,6 @@ $ sudo apt install g++ cmake ninja-build util-linux libsodium-dev zlib1g-dev lib
 $ chmod +x compile_pdvrdt.sh
 $ ./compile_pdvrdt.sh
 
-Compiling pdvrdt (hardened release build)...
-Compilation successful. Executable 'pdvrdt' created.
-
 $ sudo cp pdvrdt /usr/bin
 $ pdvrdt 
 
