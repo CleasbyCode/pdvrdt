@@ -25,11 +25,8 @@ Compile & run (Linux)
 
   Debian/Ubuntu packages:
 
-  $ sudo apt-get update
-  $ sudo apt-get install g++ cmake ninja-build util-linux libsodium-dev zlib1g-dev libdeflate-dev
-
-  Confirm that g++ --version reports GCC 14 or newer. On distributions where
-  GCC 14 is versioned separately, install g++-14 and build with CXX=g++-14.
+  $ sudo apt update
+  $ sudo apt install g++ cmake ninja-build util-linux libsodium-dev zlib1g-dev libdeflate-dev
 
   $ chmod +x compile_pdvrdt.sh
   $ ./compile_pdvrdt.sh
