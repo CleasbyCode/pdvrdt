@@ -94,37 +94,46 @@ pdvrdt ***conceal*** mode platform options:
 
 ## Third-Party Software and Assets
 
-  This project uses or incorporates:
+  ### Core applications
 
   - [LodePNG](https://github.com/lvandeve/lodepng) — PNG decoding, encoding, and image processing.
-    - Vendored version: 20260119
-    - License: [zlib License](https://github.com/lvandeve/lodepng/blob/master/lodepng.h#L1-L22)
-    - Copyright (c) 2005-2026 Lode Vandevenne
+    
+     License: [zlib License](https://github.com/lvandeve/lodepng/blob/master/lodepng.h#L1-L22)
+    
+     Copyright (c) 2005-2026 Lode Vandevenne
 
   - [libsodium](https://github.com/jedisct1/libsodium) — cryptographic random generation, Argon2id
-  key derivation, and XChaCha20-Poly1305 secret streams.
-    - License: [ISC License](https://github.com/jedisct1/libsodium/blob/master/LICENSE)
-    - Copyright holder: Frank Denis
-    - Dynamically linked as a system library
+  key derivation and XChaCha20-Poly1305 secret streams. Dynamically linked as a system library.
 
-  - [zlib](https://github.com/madler/zlib) — streaming DEFLATE/zlib compression and decompression.
-    - License: [zlib License](https://github.com/madler/zlib/blob/develop/LICENSE)
-    - Authors: Jean-loup Gailly and Mark Adler
-    - Dynamically linked as a system library
+     License: [ISC License](https://github.com/jedisct1/libsodium/blob/master/LICENSE)
+    
+     Copyright (c) 2013–2026 Frank Denis.
+     
+   - [zlib](https://github.com/madler/zlib) — Streaming zlib compression and decompression. Dynamically linked as a system library.
 
-  - [libdeflate](https://github.com/ebiggers/libdeflate) — fast whole-buffer DEFLATE/zlib
-  compression and decompression.
-    - License: [MIT License](https://github.com/ebiggers/libdeflate/blob/master/COPYING)
-    - Copyright holders: Eric Biggers and Google LLC
-    - Dynamically linked as a system library
+     License: [zlib License](https://github.com/madler/zlib/blob/develop/LICENSE)
+    
+     Copyright (C) 1995–2026 Jean-loup Gailly and Mark Adler.
 
+  - [libdeflate](https://github.com/ebiggers/libdeflate) — Fast whole-buffer zlib-format compression. Dynamically linked as a system library.
+
+     License: [MIT](https://github.com/ebiggers/libdeflate/blob/master/COPYING)
+    
+     Copyright 2016 Eric Biggers.
+    
+     Copyright 2024 Google LLC.
+
+  ### Incorporated code and assets
+  
   - [Compact ICC Profiles](https://github.com/saucecontrol/Compact-ICC-Profiles) — the Mastodon ICC
-  carrier template is derived from `sRGB-v2-nano.icc`.
-    - License: [CC0 1.0 Universal](https://github.com/saucecontrol/Compact-ICC-Profiles/blob/master/
+  carrier template is derived from sRGB-v2-nano.icc.
+
+     License: [CC0 1.0 Universal](https://github.com/saucecontrol/Compact-ICC-Profiles/blob/master/
     license)
 
-  - [hash-prospector](https://github.com/skeeto/hash-prospector) — the `lowbias32` integer hash
+  - [hash-prospector](https://github.com/skeeto/hash-prospector) — the lowbias32 integer hash
   finalizer is used by the palette lookup table.
-    - License: [Unlicense](https://github.com/skeeto/hash-prospector/blob/master/UNLICENSE)
+
+     License: [Unlicense](https://github.com/skeeto/hash-prospector/blob/master/UNLICENSE)
 
 ##
