@@ -18,6 +18,7 @@ For increased storage capacity and better security, your embedded data file is c
 ## Compilation & Usage (Linux)
 
 ```console
+$ sudo apt-get update
 $ sudo apt-get install g++ cmake ninja-build util-linux libsodium-dev zlib1g-dev libdeflate-dev
 $ chmod +x compile_pdvrdt.sh
 $ ./compile_pdvrdt.sh
