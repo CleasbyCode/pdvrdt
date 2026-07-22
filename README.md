@@ -128,8 +128,7 @@ pdvrdt ***conceal*** mode platform options:
   - [Compact ICC Profiles](https://github.com/saucecontrol/Compact-ICC-Profiles) — the Mastodon ICC
   carrier template is derived from sRGB-v2-nano.icc.
 
-     License: [CC0 1.0 Universal](https://github.com/saucecontrol/Compact-ICC-Profiles/blob/master/
-    license)
+     License: [CC0 1.0 Universal](https://github.com/saucecontrol/Compact-ICC-Profiles/blob/master/license)
 
   - [hash-prospector](https://github.com/skeeto/hash-prospector) — the lowbias32 integer hash
   finalizer is used by the palette lookup table.
