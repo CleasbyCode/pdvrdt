@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(pdvrdt VERSION 4.8 LANGUAGES CXX)
+project(pdvrdt VERSION 4.9 LANGUAGES CXX)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
   message(FATAL_ERROR "pdvrdt requires Linux.")
