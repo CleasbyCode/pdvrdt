@@ -27,7 +27,7 @@ $ ./compile_pdvrdt.sh
 $ sudo cp pdvrdt /usr/bin
 $ pdvrdt 
 
-Usage: pdvrdt conceal [-m|-r] <cover_image> <secret_file>
+Usage: pdvrdt conceal [-m] <cover_image> <secret_file>
        pdvrdt recover <cover_image>  
        pdvrdt --info
 
@@ -61,8 +61,8 @@ Complete! Please check your file.
 ## Compatible Platforms
 *Posting size limit measured by the combined size of the cover image + compressed data file:* 
  
-* ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Reddit*** (**19MB** | ***-r option***),
-* ***Mastodon*** (**16MB** | ***-m option***), ***ImgPile*** (**8MB**), ***X-Twitter*** (**5MB** + ****Dimension limits, see below***)
+* ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Mastodon*** (**16MB** | ***-m option***),
+* ***ImgPile*** (**8MB**), ***X-Twitter*** (**5MB** + ****Dimension limits, see below***)
   
 *X-Twitter image dimension size limits:* 
 * ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
@@ -82,14 +82,8 @@ pdvrdt ***conceal*** mode platform options:
   "***-m***" - To create compatible "*file-embedded*" ***PNG*** images for posting on the ***Mastodon*** platform, you must use the ***-m*** option with ***conceal*** mode.
   ```console
   $ pdvrdt conceal -m my_image.png hidden.doc
-  ```
-  "***-r***" - To create compatible "*file-embedded*" ***PNG*** images for posting on the ***Reddit*** platform, you must use the ***-r*** option with ***conceal*** mode.
-  ```console
-  $ pdvrdt conceal -r my_image.png secret.mp3 
-   ```
-   From the ***Reddit*** site, select "***Create Post***" followed by "***Images & Video***" tab, to attach and post your ***PNG*** image.
-    
- To correctly download images from ***X-Twitter*** or ***Reddit***, click the image in the post to fully expand it, before saving.
+  ```   
+ To correctly download images from ***X-Twitter***, click the image in the post to fully expand it, before saving.
 
 ## Third-Party Software and Assets
 
