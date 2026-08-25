@@ -88,6 +88,12 @@ pdvrdt ***mode*** arguments:
   ***recover*** - Decrypts, uncompresses and extracts the concealed data file from a ***PNG*** cover image.
  
 pdvrdt ***conceal*** mode platform options:
+
+ "***-r***" To create compatible "*data-conclealed*" ***PNG*** images for posting on the ***Reddit*** platform, you must use the ***-r*** option with ***conceal*** mode.
+  ```console
+  $ pdvrdt conceal -r my_image.png hidden.txt
+```
+  These images are only compatible for posting on ***Reddit***. Your embedded data file will be removed if posted on a different platform.  
  
   "***-m***" - To create compatible "*file-embedded*" ***PNG*** images for posting on the ***Mastodon*** platform, you must use the ***-m*** option with ***conceal*** mode.
   ```console
