@@ -33,7 +33,7 @@ $ ./compile_pdvrdt.sh
 $ sudo cp pdvrdt /usr/bin
 $ pdvrdt 
 
-Usage: pdvrdt conceal [-m] <cover_image> <secret_file>
+Usage: pdvrdt conceal [-m|-r] <cover_image> <secret_file>
        pdvrdt recover <cover_image>  
        pdvrdt --info
 
