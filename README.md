@@ -9,7 +9,7 @@ An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_526501.png)  
 *Image: "Wolf" / ***PIN: 1856140514119088821****
 
-Unlike the common steganography method of concealing data within the pixels of a cover image ([***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/)), ***pdvrdt*** mostly hides files within various metadata ***chunks*** of a ***PNG*** image, such as iCCP and IDAT. 
+Unlike the common steganography method of concealing data within the pixels of a cover image ([***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/)), ***pdvrdt*** mostly hides data within various metadata ***chunks*** of a ***PNG*** image, such as iCCP and IDAT. 
 
 The exception to this is the ***Reddit*** platform conceal mode (-r), where we use the steganography method of ***content-adaptive spatial embedding in the pixel LSBs***. Each 4 bits of payload is carried by 15 RGB samples drawn from a keyed permutation over the whole image, using ***Hamming-syndrome matrix embedding*** — the syndrome is moved to the target by a single ±1 change (LSB matching, not LSB replacement). Which sample to change is chosen by a per-sample distortion cost derived from local image activity and channel sensitivity, so edits land in textured regions rather than flat ones. Where two changes cost less than the one required change, it takes them: measured on a 4.3-megapixel cover, 93% of groups need one change, 0.4% take two, and 6% need none — about 4.25 bits per changed sample.
 
