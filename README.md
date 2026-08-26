@@ -11,7 +11,7 @@ An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode
 
 Unlike the common steganography method of concealing data within the pixels of a cover image ([***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/)), ***pdvrdt*** mostly hides data within various metadata ***chunks*** of a ***PNG*** image, such as iCCP and IDAT. 
 
-The exception to this is the ***Reddit*** platform conceal mode (-r), where we use the advanced steganography technique of ***content-adaptive spatial embedding in the pixel LSBs (Least Significant Bits)***.  
+The exception to this is the ***Reddit*** platform conceal mode (-r), where we use the advanced steganography technique of ([***content-adaptive spatial embedding in the pixel LSBs](https://www.nature.com/articles/s41598-025-33920-9)) (Least Significant Bits)***.  
 
 Each 4 bits of payload is carried by 15 RGB samples drawn from a keyed permutation over the whole image, using ***Hamming-syndrome matrix embedding*** — the syndrome is moved to the target by a single ±1 change (LSB matching, not LSB replacement).  
 
