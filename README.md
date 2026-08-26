@@ -93,7 +93,7 @@ pdvrdt ***conceal*** mode platform options:
   ```console
   $ pdvrdt conceal -r my_image.png hidden.txt
 ```
-  These images are only compatible for posting on ***Reddit***. Your embedded data file will be removed if posted on a different platform.  
+  These images are only compatible for posting on ***Reddit***. Your conclealed data file will be lost if posted on a different platform.  
  
   "***-m***" - To create compatible "*file-embedded*" ***PNG*** images for posting on the ***Mastodon*** platform, you must use the ***-m*** option with ***conceal*** mode.
   ```console
