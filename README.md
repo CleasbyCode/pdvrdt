@@ -1,10 +1,14 @@
 # pdvrdt
 
-***pdvrdt*** is a fast, easy-to-use steganography command-line tool used for concealing and extracting any file type via a PNG image.
+***pdvrdt*** is a fast, easy-to-use steganography command-line tool used for concealing and extracting any file type via a PNG image.  
 
-There is also a [***Web edition***](https://cleasbycode.co.uk/pdvrdt/app/), which you can use immediately, as a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to **20MB**.    
+You can conceal any file type up to ***2GB*** for the default conceal mode, although other platform conceal modes and compatible sites (*listed below*) have their own ***much smaller*** size limits and *other requirements.  
 
-An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode/pdvrdt-rs) is available for those interested in that language. 
+For increased storage capacity and better security, your data file is compressed with ***libdeflate/zlib*** — unless it's already a compressed file type — and encrypted with ***XChaCha20-Poly1305*** using the ***libsodium*** cryptographic library.
+
+There is a [***Web edition***](https://cleasbycode.co.uk/pdvrdt/app/) of ***pdvrdt***, which you can use immediately, as a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to **20MB**.    
+
+An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode/pdvrdt-rs) is also available for those interested in that language. 
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_526501.png)  
 *Image: "Wolf" / ***PIN: 1856140514119088821****
@@ -16,10 +20,6 @@ The exception to this is the ***Reddit*** platform conceal mode (***-r***), wher
 Each 4 bits of payload is carried by 15 RGB samples drawn from a keyed permutation over the whole image, using ***Hamming-syndrome matrix embedding*** — the syndrome is moved to the target by a single ±1 change (LSB matching, not LSB replacement).  
 
 Which sample to change is chosen by a per-sample distortion cost derived from local image activity and channel sensitivity, so edits land in textured regions rather than flat ones. Where two changes cost less than the one required change, it takes them: measured on a 4.3-megapixel cover, 93% of groups need one change, 0.4% take two, and 6% need none — about 4.25 bits per changed sample.
-
-You can conceal any file type up to ***2GB*** for the default conceal mode, although other platform conceal modes and compatible sites (*listed below*) have their own ***much smaller*** size limits and *other requirements.  
-
-For increased storage capacity and better security, your data file is compressed with ***libdeflate/zlib*** — unless it's already a compressed file type — and encrypted with ***XChaCha20-Poly1305*** using the ***libsodium*** cryptographic library.
 
 ## Compilation & Usage (Linux)
 
