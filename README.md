@@ -34,7 +34,8 @@ $ sudo cp pdvrdt /usr/bin
 $ pdvrdt 
 
 Usage: pdvrdt conceal [-m|-r] <cover_image> <secret_file>
-       pdvrdt recover <cover_image>  
+       pdvrdt recover <cover_image>
+       pdvrdt capsize <cover_image>
        pdvrdt --info
 
 $ pdvrdt conceal your_cover_image.png your_secret_file.doc
@@ -69,14 +70,14 @@ Complete! Please check your file.
  
 * ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Mastodon*** (**16MB** | ***-m option***),
 * ***ImgPile*** (**8MB**), ***X-Twitter*** (**5MB** + ****Dimension limits, see below***)
+  *X-Twitter image dimension size limits:* 
+  ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
+  ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
+  
 * ***Reddit*** (***-r option***). While the ***Reddit*** platform has an image upload size limit of **20MB**, the data storage capacity for your cover image is ***much smaller*** and depends on ***image dimension size***:-  
 
 For example, a cover image with **1024x1024** dimensions can store only **~103KB** of data,  
 ***2048x2048*** can store **~418KB** and an image with **4096x4096** dimensions can store **~1.5MB**. 
-  
-*X-Twitter image dimension size limits:* 
-* ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
-* ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
 
 https://github.com/user-attachments/assets/76732196-815b-45ac-b71d-6e1aca672e25  
 
