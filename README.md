@@ -70,6 +70,7 @@ Complete! Please check your file.
  
 * ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Mastodon*** (**16MB** | ***-m option***),
 * ***ImgPile*** (**8MB**), ***X-Twitter*** (**5MB** + ****Dimension limits, see below***)
+  
   *X-Twitter image dimension size limits:* 
   ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
   ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
