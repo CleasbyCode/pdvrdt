@@ -74,6 +74,7 @@ Complete! Please check your file.
   *X-Twitter image dimension size limits:*
   
   ****PNG-32/24*** (*Truecolor*) **68x68** Min. - **900x900** Max.
+  
   ***PNG-8*** (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
   
 * ***Reddit*** (***-r option***). While the ***Reddit*** platform has an image upload size limit of **20MB**, the data storage capacity for your cover image is ***much smaller*** and depends on ***image dimension size***:-  
