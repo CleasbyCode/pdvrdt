@@ -17,7 +17,7 @@ Unlike the common [***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy
 
 The exception to this is the ***Reddit*** platform conceal mode (***-r***), where we use the advanced steganography technique of [***content-adaptive spatial embedding in the pixel LSBs***](https://www.nature.com/articles/s41598-025-33920-9).  
 
-Each 4 bits of payload is carried by 15 RGB samples drawn from a keyed permutation over the whole image, using ***Hamming-syndrome matrix embedding*** — the syndrome is moved to the target by a single ±1 change (LSB matching, not LSB replacement).  
+Each 4 bits of payload is carried by 15 RGB samples drawn from a keyed permutation over the whole image, using [***Hamming-syndrome matrix embedding***](https://www.google.com/search?q=Hamming-syndrome+matrix+embedding&sourceid=chrome&ie=UTF-8&source=chrome.ctxt) — the syndrome is moved to the target by a single ±1 change (LSB matching, not LSB replacement).  
 
 Which sample to change is chosen by a per-sample distortion cost derived from local image activity and channel sensitivity, so edits land in textured regions rather than flat ones. Where two changes cost less than the one required change, it takes them: measured on a 4.3-megapixel cover, 93% of groups need one change, 0.4% take two, and 6% need none — about 4.25 bits per changed sample.
 
