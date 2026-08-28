@@ -79,7 +79,7 @@ Complete! Please check your file.
   
 * ***Reddit*** (***-r option***). While the ***Reddit*** platform has an image upload size limit of **20MB**, the data storage capacity for your cover image is ***much smaller*** and depends on ***image dimension size***:-  
 
-For example, a cover image with **1024x1024** dimensions can store only **~103KB** of data,  
+For example, a cover image with **1024x1024** dimensions has a compressed storage capacity of around **~103KB**,  
 ***2048x2048*** can store **~418KB** and an image with **4096x4096** dimensions can store **~1.5MB**. 
 
 https://github.com/user-attachments/assets/76732196-815b-45ac-b71d-6e1aca672e25  
