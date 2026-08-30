@@ -2,11 +2,11 @@
 
 ***pdvrdt*** is a fast, easy-to-use steganography command-line tool used for concealing and extracting any file type via a PNG image.  
 
-You can conceal any file type up to ***2GB*** for the default conceal mode, although other platform conceal modes and compatible sites (*listed below*) have their own ***much smaller*** size limits and *other requirements.  
+You can conceal any file type up to ***2GiB*** for the default conceal mode, although other platform conceal modes and compatible sites (*listed below*) have their own ***much smaller*** size limits and *other requirements.  
 
 For increased storage capacity and better security, your data file is compressed with ***libdeflate/zlib*** — unless it's already a compressed file type — and encrypted with ***XChaCha20-Poly1305*** using the ***libsodium*** cryptographic library.
 
-There is a [***Web edition***](https://cleasbycode.co.uk/pdvrdt/app/) of ***pdvrdt***, which you can use immediately, as a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to **20MB**.    
+There is a [***Web edition***](https://cleasbycode.co.uk/pdvrdt/app/) of ***pdvrdt***, which you can use immediately, as a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to **20MiB**.    
 
 An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode/pdvrdt-rs) is also available for those interested in that language. 
 
@@ -15,11 +15,7 @@ An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode
 
 Unlike the common [***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/) (*Least Significant Bit*) steganography method of concealing data within the pixels of a cover image, ***pdvrdt*** mostly hides data within various metadata ***chunks*** of a ***PNG*** image, such as iCCP and IDAT. 
 
-The exception to this is the ***Reddit*** platform conceal mode (***-r***), where we use the advanced steganography technique of [***content-adaptive spatial embedding in the pixel LSBs***](https://www.google.com/search?q=content-adaptive+spatial+embedding+in+the+pixel+LSBs.&sourceid=chrome&ie=UTF-8&source=chrome.ctxt).  
-
-Each 4 bits of payload is carried by 15 RGB samples drawn from a keyed permutation over the whole image, using [***Hamming-syndrome matrix embedding***](https://www.google.com/search?q=Hamming-syndrome+matrix+embedding&sourceid=chrome&ie=UTF-8&source=chrome.ctxt) — the syndrome is moved to the target by a single ±1 change (LSB matching, not LSB replacement).  
-
-Which sample to change is chosen by a per-sample distortion cost derived from local image activity and channel sensitivity, so edits land in textured regions rather than flat ones. Where two changes cost less than the one required change, it takes them: measured on a 4.3-megapixel cover, 93% of groups need one change, 0.4% take two, and 6% need none — about 4.25 bits per changed sample.
+The exception to this is the ***Reddit*** platform conceal mode (***-r***), where we use the advanced steganography technique of [***content-adaptive spatial embedding in the pixel LSBs***](https://www.google.com/search?q=content-adaptive+spatial+embedding+in+the+pixel+LSBs.&sourceid=chrome&ie=UTF-8&source=chrome.ctxt), using [***Hamming-syndrome matrix embedding***](https://www.google.com/search?q=Hamming-syndrome+matrix+embedding&sourceid=chrome&ie=UTF-8&source=chrome.ctxt).  
 
 ## Compilation & Usage (Linux)
 
@@ -68,8 +64,8 @@ Complete! Please check your file.
 ## Compatible Platforms
 *Posting size limit measured by the combined size of the cover image + compressed data file:* 
  
-* ***Flickr*** (**200MB**), ***ImgBB*** (**32MB**), ***PostImage*** (**32MB**), ***Mastodon*** (**16MB** | ***-m option***),
-* ***ImgPile*** (**8MB**), ***X-Twitter*** (**5MB** + ****Dimension limits, see below***)
+* ***Flickr*** (**200MiB**), ***ImgBB*** (**32MiB**), ***PostImage*** (**32MiB**), ***Mastodon*** (**16MiB** | ***-m option***),
+* ***ImgPile*** (**8MiB**), ***X-Twitter*** (**5MiB** + ****Dimension limits, see below***)
   
   *X-Twitter image dimension size limits:*
   
@@ -77,10 +73,16 @@ Complete! Please check your file.
   
   ***PNG-8***     (*Indexed-color*) **68x68** Min. - **4096x4096** Max.
   
-* ***Reddit*** (***-r option***). While the ***Reddit*** platform has an image upload size limit of **20MB**, the data storage capacity for your cover image is ***much smaller*** and depends on ***image dimension size***:-  
+* ***Reddit*** (***-r option***). While the ***Reddit*** platform has an image upload size limit of **20MiB**, the data storage capacity for your cover image is ***much smaller*** and depends on ***image dimension size***:-  
 
-For example, a cover image with **1024x1024** dimensions has a compressed storage capacity of around **~103KB**,  
-***2048x2048*** can store **~418KB** and an image with **4096x4096** dimensions can store **~1.5MB**. 
+To maximise storage capacity for this method, use cover images with large dimension sizes: 1024x1024, 2048x2048, 4096x4096, 8192x8192 (max), etc.
+
+Quality of cover image is not important for this method and should be kept basic for the largest dimensions to help minimise cover image file size.
+
+To check the storage capacity of your cover image for this steganography method, run the following command:- 
+```console
+$ pdvrdt capsize my_cover.jpg
+```
 
 https://github.com/user-attachments/assets/76732196-815b-45ac-b71d-6e1aca672e25  
 
