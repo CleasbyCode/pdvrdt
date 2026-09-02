@@ -100,8 +100,8 @@ pdvrdt ***conceal*** mode platform options "***-r***" and "***-m***":
   $ pdvrdt conceal -r my_image.png hidden.txt
 ```
   These images are only compatible for posting on ***Reddit***. Your conclealed data file will be lost if posted on a different platform.  
-  
-https://github.com/user-attachments/assets/ce02addc-945f-4b42-8862-b64b724e22e1
+
+https://github.com/user-attachments/assets/4cf9aeb9-c450-4d25-96ba-542f1b8a8f0e
 
   ***Note:*** To correctly download images from ***X-Twitter*** or ***Reddit***, click the image in the post to fully expand it, before saving.
  
