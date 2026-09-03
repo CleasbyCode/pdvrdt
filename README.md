@@ -13,7 +13,7 @@ An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_526501.png)  
 *Image: "Wolf" / ***PIN: 1856140514119088821****
 
-Unlike the common [***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/) (*Least Significant Bit*) steganography method of concealing data within the pixels of a cover image, ***pdvrdt*** mostly hides data within various metadata ***chunks*** of a ***PNG*** image, such as iCCP and IDAT. 
+Unlike the common [***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/) (*Least Significant Bit*) steganography method of concealing data within the pixels of a cover image, ***pdvrdt*** mostly hides data within metadata ***chunks*** of a ***PNG*** image, such as iCCP (*Mastodon*) and IDAT (*Default*). 
 
 The exception to this is the ***Reddit*** platform conceal mode (***-r***), where we use the advanced steganography technique of [***content-adaptive spatial embedding in the pixel LSBs***](https://www.google.com/search?q=content-adaptive+spatial+embedding+in+the+pixel+LSBs.&sourceid=chrome&ie=UTF-8&source=chrome.ctxt), using [***Hamming-syndrome matrix embedding***](https://www.google.com/search?q=Hamming-syndrome+matrix+embedding&sourceid=chrome&ie=UTF-8&source=chrome.ctxt).  
 
