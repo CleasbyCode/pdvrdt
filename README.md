@@ -33,7 +33,7 @@ Because the sample positions come from the PIN, an image reveals nothing without
 
 In the default and ***-m*** modes, by contrast, the presence of a payload-carrying chunk is visible to anyone; what is hidden is its contents.
 
-To maximise storage capacity for the ***Reddit*** platform, use a cover image with large dimension sizes. The ***-r*** mode carries far less data than the default mode, so use ***capsize*** to measure a cover image before choosing a payload (see [Checking capacity](#checking-capacity-with-capsize)).
+To maximise storage capacity for the ***Reddit*** platform, use a cover image with large dimension sizes, up to the **8192x8192** maximum. The ***-r*** mode carries far less data than the default mode, so use ***capsize*** to measure a cover image before choosing a payload (see [Checking capacity](#checking-capacity-with-capsize)).
 
 https://github.com/user-attachments/assets/76732196-815b-45ac-b71d-6e1aca672e25  
 
@@ -111,7 +111,9 @@ pdvrdt ***mode*** arguments:
 
 Requirements for the cover image:
 
-● PNG only. The cover must be **8MiB** or smaller in the default and ***-m*** modes; ***-r*** instead allows a cover up to **20MiB**.
+● PNG only. The cover must be **4MiB** or smaller in the default and ***-m*** modes; ***-r*** instead allows a cover up to **16MiB**.
+
+● Neither side may exceed **4096** pixels in the default and ***-m*** modes. ***-r*** allows up to **8192x8192**, because its capacity comes from the pixels themselves rather than from a chunk appended to the image.
 
 ● Animated PNG (***APNG***) covers are rejected. Static PNG colour metadata is preserved.
 
@@ -141,9 +143,9 @@ The source file may be larger than a platform limit: ***pdvrdt*** applies the li
 
 **Other: platforms with their own conceal mode:**
 
-● ***Mastodon*** (***-m option***). The finished "*file-embedded*" ***PNG*** must not exceed **16MiB**, so the cover image and the compressed data file share one budget. Because the ***-m*** payload lives in a small chunk rather than the pixels, these images also remain postable on ***X-Twitter*** when they fit its own limits.
+● ***Mastodon*** (***-m option***). The finished "*file-embedded*" ***PNG*** must not exceed **16MiB**, so the cover image (itself capped at **4MiB** and **4096x4096**) and the compressed data file share one budget. Because the ***-m*** payload lives in a small chunk rather than the pixels, these images also remain postable on ***X-Twitter*** when they fit its own limits.
 
-● ***Reddit*** (***-r option***). The cover image and the data file must each be no larger than **20MiB**, and the finished image must also stay within **20MiB**, but the actual carrier capacity of the cover image is ***much smaller*** and depends on its dimension sizes. Use `pdvrdt capsize` to measure it.
+● ***Reddit*** (***-r option***). The cover image must be no larger than **16MiB** and **8192x8192** pixels; the data file and the finished image must each stay within Reddit's **20MiB** upload ceiling. The actual carrier capacity of the cover is ***much smaller*** than any of those numbers and depends on its dimension sizes. Use `pdvrdt capsize` to measure it.
 
 For platforms such as ***X-Twitter*** & ***ImgPile***, which have smaller data size limits, you may want to focus on data that compresses well, such as text files, etc.
 
