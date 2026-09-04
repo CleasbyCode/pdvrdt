@@ -8,7 +8,7 @@ Using the ***default conceal mode***, you can conceal any file type, with the fi
 
 There is a [***Web edition***](https://cleasbycode.co.uk/pdvrdt/app/) of ***pdvrdt***, which you can use immediately, as a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to **20MiB**.
 
-A ***Rust*** port, ***pdvrdt-rs***, lives alongside the C++ source in [`pdvrdt-rust/`](pdvrdt-rust/README.md) for those interested in that language. It is format-compatible: either build can recover the other's images.
+An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode/pdvrdt-rs) is also available for those interested in that language. It is format-compatible: either build can recover the other's images.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_526501.png)  
 *Demo Image: **"Wolf"** / ***PIN: 1816136426548255229****
