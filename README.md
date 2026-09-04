@@ -25,9 +25,13 @@ Unlike the common [***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy
 
 The one platform exception to the default chunk storage method is ***Reddit***, which has its own conceal mode. ***Reddit*** re-encodes uploaded images and discards the metadata chunks the default mode relies on, so ***-r*** is the only mode that works there, and it carries the payload in the image's pixels instead.
 
-For the ***Reddit*** conceal mode (***-r***), each 4 bits of payload are carried by 15 RGB samples drawn from a permutation keyed by the recovery PIN, using ***(1,15,4) Hamming-syndrome matrix embedding***: the syndrome is moved to the target by a single ±1 change (*LSB matching, not LSB replacement*). Which sample to change is chosen by a per-sample distortion cost derived from local image activity and channel sensitivity, so edits land in textured regions rather than flat ones. Where two changes cost less than the one required change, it takes them — measured on a 4.3-megapixel cover, 93% of groups need one change, 0.4% take two and 6% need none, about 4.25 bits per changed sample.
+For the ***Reddit*** conceal mode (***-r***), each 4 bits of payload are carried by 15 RGB samples drawn from a permutation keyed by the recovery PIN, using ***(1,15,4) Hamming-syndrome matrix embedding***: the syndrome is moved to the target by a single ±1 change (*LSB matching, not LSB replacement*).  
 
-Because the sample positions come from the PIN, an image reveals nothing without it: a wrong PIN and an ordinary PNG are indistinguishable. In the default and ***-m*** modes, by contrast, the presence of a payload-carrying chunk is visible to anyone; what is hidden is its contents.
+Which sample to change is chosen by a per-sample distortion cost derived from local image activity and channel sensitivity, so edits land in textured regions rather than flat ones. Where two changes cost less than the one required change, it takes them — measured on a 4.3-megapixel cover, 93% of groups need one change, 0.4% take two and 6% need none, about 4.25 bits per changed sample.
+
+Because the sample positions come from the PIN, an image reveals nothing without it: a wrong PIN and an ordinary PNG are indistinguishable.  
+
+In the default and ***-m*** modes, by contrast, the presence of a payload-carrying chunk is visible to anyone; what is hidden is its contents.
 
 To maximise storage capacity for the ***Reddit*** platform, use a cover image with large dimension sizes. The ***-r*** mode carries far less data than the default mode, so use ***capsize*** to measure a cover image before choosing a payload (see [Checking capacity](#checking-capacity-with-capsize)).
 
@@ -102,7 +106,7 @@ Complete! Please check your file.
 pdvrdt ***mode*** arguments:
 
   ***conceal*** - Compresses, encrypts and embeds your secret data file within a ***PNG*** cover image.  
-  ***recover*** - Decrypts, uncompresses and extracts the concealed data file from a ***PNG*** cover image (*recovery PIN required*).  
+  ***recover*** - Decrypts, uncompresses and extracts the concealed data file from a ***PNG*** cover image.  
   ***capsize*** - Reports the adaptive carrier capacity of a cover image for ***-r*** mode. No image is saved.
 
 Requirements for the cover image:
