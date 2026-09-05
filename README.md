@@ -25,7 +25,9 @@ Unlike the common [***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy
 
 The one platform exception to the default chunk storage method is ***Reddit***, which has its own conceal mode. ***Reddit*** re-encodes uploaded images and discards the metadata chunks the default mode relies on, so ***-r*** is the only mode that works there, and it carries the payload in the image's pixels instead.
 
-For the ***Reddit*** conceal mode (***-r***), each 4 bits of payload are carried by 15 RGB samples drawn from a permutation keyed by the recovery PIN, using ***(1,15,4) Hamming-syndrome matrix embedding***: the syndrome is moved to the target by a single ±1 change (*LSB matching, not LSB replacement*).  
+For the ***Reddit*** conceal mode (***-r***), we use [***content-adaptive LSB matching with Hamming-code matrix embedding***](https://www.google.com/search?q=content-adaptive+LSB+matching+with+Hamming+code+matrix+embedding), a spatial-domain [***syndrome coding***](https://www.google.com/search?q=matrix+embedding+syndrome+coding+steganography) scheme, as this is the only storage method that currently works for ***Reddit***. The matrix-embedding half is the construction popularised by ***F5***, moved from JPEG coefficients to image pixels.
+
+Each 4 bits of payload are carried by 15 RGB samples drawn from a permutation keyed by the recovery PIN, using ***(1,15,4) Hamming-syndrome matrix embedding***: the syndrome is moved to the target by a single ±1 change (*LSB matching, not LSB replacement*).  
 
 Which sample to change is chosen by a per-sample distortion cost derived from local image activity and channel sensitivity, so edits land in textured regions rather than flat ones. Where two changes cost less than the one required change, it takes them — measured on a 4.3-megapixel cover, 93% of groups need one change, 0.4% take two and 6% need none, about 4.25 bits per changed sample.
 
@@ -113,7 +115,7 @@ Requirements for the cover image:
 
 ● PNG only. The cover must be **4MiB** or smaller in the default and ***-m*** modes; ***-r*** instead allows a cover up to **16MiB**.
 
-● Neither side may exceed **4096** pixels in the default and ***-m*** modes. ***-r*** allows up to **8192x8192**, because its capacity comes from the pixels themselves rather than from a chunk embedded within the image.
+● Neither side may exceed **4096** pixels in the default and ***-m*** modes. ***-r*** allows up to **8192x8192**, because its capacity comes from the pixels themselves rather than from a chunk appended to the image.
 
 ● Animated PNG (***APNG***) covers are rejected. Static PNG colour metadata is preserved.
 
@@ -146,6 +148,8 @@ The source file may be larger than a platform limit: ***pdvrdt*** applies the li
 ● ***Mastodon*** (***-m option***). The finished "*file-embedded*" ***PNG*** must not exceed **16MiB**, so the cover image (itself capped at **4MiB** and **4096x4096**) and the compressed data file share one budget. Because the ***-m*** payload lives in a small chunk rather than the pixels, these images also remain postable on ***X-Twitter*** when they fit its own limits.
 
 ● ***Reddit*** (***-r option***). The cover image must be no larger than **16MiB** and **8192x8192** pixels; the data file and the finished image must each stay within Reddit's **20MiB** upload ceiling. The actual carrier capacity of the cover is ***much smaller*** than any of those numbers and depends on its dimension sizes. Use `pdvrdt capsize` to measure it.
+
+For platforms such as ***X-Twitter*** & ***ImgPile***, which have smaller data size limits, you may want to focus on data that compresses well, such as text files, etc.
 
 ***ImgPile***: sign in to an account before sharing, otherwise the embedded data will not be preserved.
 
