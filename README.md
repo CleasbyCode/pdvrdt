@@ -187,9 +187,7 @@ To create compatible "*data-concealed*" ***PNG*** images for posting on the ***R
 
   These images are only compatible for posting on ***Reddit***. Your embedded data file will be lost if posted on a different platform.
 
-  When saving/downloading an image from ***Reddit*** make sure to click on the image within the post to fully expand it before saving.
-
-  To correctly download images from ***X-Twitter***, also click the image within the post to fully expand it, before saving.
+  When saving/downloading an image from ***Reddit*** or ***X-Twitter*** make sure to click on the image within the post to fully expand it before saving.
 
 ## Tests
 
