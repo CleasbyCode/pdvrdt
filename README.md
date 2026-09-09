@@ -39,7 +39,7 @@ To maximise storage capacity for the ***Reddit*** platform, use a cover image wi
 
 The ***-r*** mode carries far less data than the default mode, so use ***capsize*** to measure a cover image before choosing a payload (see [Checking capacity](#checking-capacity-with-capsize)).
 
-https://github.com/user-attachments/assets/76732196-815b-45ac-b71d-6e1aca672e25  
+https://github.com/user-attachments/assets/8dea1edc-df1f-479e-99d9-37ed4f7dd170
 
 https://github.com/user-attachments/assets/7a1557d1-4772-4d3d-94a6-ec58d0977a59  
 
