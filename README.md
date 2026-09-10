@@ -45,10 +45,6 @@ https://github.com/user-attachments/assets/ea5420e3-88a3-4dbc-9218-25b93f96575f
 
 https://github.com/user-attachments/assets/8dea1edc-df1f-479e-99d9-37ed4f7dd170
 
-https://github.com/user-attachments/assets/7a1557d1-4772-4d3d-94a6-ec58d0977a59  
-
-*Image credit: ***"Red_Dragon / [@ultra_arcane](https://x.com/ultra_arcane)"****
-
 ## Requirements & Compilation (Linux)
 
 Building requires **CMake 3.20 or newer**, `flock` from **util-linux**, and either **Ninja** (preferred) or **Make**. The compiler must be **GCC 14 or newer**, or **Clang 18 or newer** paired with a C++23 standard library that implements features such as `std::format` and `std::print`. The native libraries required are **libsodium**, **zlib** and **libdeflate** (*1.8 or newer*). ***LodePNG*** is vendored in `src/lodepng`, so it needs no separate package.
