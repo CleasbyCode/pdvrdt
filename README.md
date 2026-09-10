@@ -37,7 +37,9 @@ In the default and ***-m*** modes, by contrast, the presence of a payload-carryi
 
 To maximise storage capacity for the ***Reddit*** platform, use a cover image with large dimension sizes, up to the **8192x8192** maximum.  Quality of cover image is not important for this method and should be kept basic for the largest dimensions to help minimise cover image file size.
 
-The ***-r*** mode carries far less data than the default mode, so use ***capsize*** to measure a cover image before choosing a payload (see [Checking capacity](#checking-capacity-with-capsize)).
+The ***-r*** mode carries far less data than the default mode, so use ***capsize*** to measure a cover image before choosing a payload (see [Checking capacity](#checking-capacity-with-capsize)).  
+
+https://github.com/user-attachments/assets/5c045cab-515c-4d7a-92ca-4ec79477f929
 
 https://github.com/user-attachments/assets/8dea1edc-df1f-479e-99d9-37ed4f7dd170
 
