@@ -31,7 +31,9 @@ Each 4 bits of payload are carried by 15 RGB samples drawn from a permutation ke
 
 Which sample to change is chosen by a per-sample distortion cost derived from local image activity and channel sensitivity, so edits land in textured regions rather than flat ones. Where two changes cost less than the one required change, it takes them — measured on a 4.3-megapixel cover, 93% of groups need one change, 0.4% take two and 6% need none, about 4.25 bits per changed sample.
 
-Because the sample positions come from the PIN, an image reveals nothing without it: a wrong PIN and an ordinary PNG are indistinguishable.  
+Carrier positions are derived from the recovery PIN using ***Argon2id*** and ***ChaCha20***, so testing whether an image holds a payload costs a full ***Argon2id*** PIN guess, and recovery reports the same error for a wrong PIN as for an ordinary PNG. Keyed positions alone do not guarantee that an image is undetectable as steganography.  
+
+***Reddit*** images created with ***pdvrdt 5.2*** or later cannot be recovered by older versions. Images created with ***5.0*** and ***5.1*** remain recoverable; recreate them to gain the stronger protection.  
 
 In the default and ***-m*** modes, by contrast, the presence of a payload-carrying chunk is visible to anyone; what is hidden is its contents.
 
@@ -127,7 +129,7 @@ Requirements for the cover image:
 
 Requirements for the secret data file:
 
-● The embedded filename must be no longer than **20 characters** and must not begin with `.` or `-`. The name is stored in the image and restored on ***recover***.
+● The embedded filename must be no longer than **20 bytes**, must not begin with `.` or `-` or end with a space or `.`, and must not contain control characters. The name is stored in the image and restored on ***recover***.
 
 ● Your data file is compressed before encryption. Recognised already-compressed file types (`.zip`, `.7z`, `.mp4`, `.jpg`, `.png`, etc) are stored in a level-0 zlib stream instead. For anything else destined for a small platform limit, consider compressing it yourself first (*zip, rar, 7z, etc.*) so that you know its exact stored size.
 
@@ -199,6 +201,14 @@ $ bash tests/run_roundtrip_tests.sh --bin ./pdvrdt           # fresh conceal/rec
 $ bash tests/run_safety_regression_tests.sh --bin ./pdvrdt   # negative-path and boundary checks
 $ bash tests/run_image_regression_tests.sh --bin ./pdvrdt    # cover-image handling and PNG output
 $ python3 tests/run_terminal_regression_tests.py --bin ./pdvrdt  # terminal / PIN-entry behaviour
+$ python3 tests/run_recovery_path_tests.py --bin ./pdvrdt        # output-file publishing and recovery paths
+```
+
+These two build their own test binaries, so they take no `--bin`:
+
+```console
+$ bash tests/run_carrier_kdf_tests.sh        # carrier key derivation, v1/v2/v3 compatibility
+$ bash tests/run_png_decode_limit_tests.sh   # PNG decode bounds and zlib adapter limits
 ```
 
 ## Third-Party Libraries
