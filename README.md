@@ -2,7 +2,9 @@
 
 ***pdvrdt*** (*PNG Data Vehicle*) is a fast, easy-to-use steganography command-line tool for concealing and extracting any file type via a **PNG** image. ***Linux only***.
 
-Your data file is compressed with ***libdeflate/zlib***, then encrypted with ***XChaCha20-Poly1305*** (***libsodium*** secretstream) under a key derived by ***Argon2id*** from a randomly generated ***recovery PIN***, and finally embedded in the cover image. The PIN is displayed once, at the end of ***conceal***, and is never stored anywhere: without it the concealed file cannot be recovered.
+Your data file is compressed with ***libdeflate/zlib***, then encrypted with ***XChaCha20-Poly1305*** (***libsodium*** secretstream) under a key derived by ***Argon2id*** from a randomly generated 128-bit ***recovery KEY***, and finally embedded in the cover image. The KEY is displayed once, at the end of ***conceal***, as 24 letters and digits in groups of four (*XXXX-XXXX-XXXX-XXXX-XXXX-XXXX*), and is never stored anywhere: without it the concealed file cannot be recovered. Its last two characters are a check, so most typing mistakes are reported straight away.
+
+Images created before ***pdvrdt 6.0*** used a numeric ***recovery PIN*** instead. They remain recoverable with that PIN: ***recover*** reads the image's version where it can and prompts for a ***KEY*** or ***PIN*** to match (*see [Usage](#usage)*).
 
 Using the ***default conceal mode***, you can conceal any file type, with the finished image capped at ***2GiB***. The other platform conceal modes and the compatible social media sites (*listed below*) have their own ***much smaller*** size limits and other requirements.
 
@@ -11,7 +13,7 @@ There is a [***Web edition***](https://cleasbycode.co.uk/pdvrdt/app/) of ***pdvr
 An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode/pdvrdt-rs) is also available for those interested in that language. It is format-compatible: either build can recover the other's images.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_258943.png)  
-***Demo Image -*** ***PIN: 5133642387662617178***
+***Demo Image -*** ***PIN: 5133642387662617178*** (*made before 6.0, so it takes a numeric PIN*)
 
 ## How pdvrdt conceals data
 
@@ -27,13 +29,13 @@ The one platform exception to the default chunk storage method is ***Reddit***, 
 
 For the ***Reddit*** conceal mode (***-r***), we use the advanced steganography method [***content-adaptive LSB matching with Hamming-code matrix embedding***](https://www.google.com/search?q=content-adaptive+LSB+matching+with+Hamming+code+matrix+embedding), a spatial-domain [***syndrome coding***](https://www.google.com/search?q=matrix+embedding+syndrome+coding+steganography) scheme, as this is the only storage method that currently works for ***Reddit***. The matrix-embedding half is the construction popularised by [***F5***](https://www.google.com/search?q=F5+steganography+algorithm&sca_esv=4d27f527c866718f&sxsrf=APpeQntqxu1_cdXHpivTEHGFUCf3iPCyEQ%3A1788620777939&udm=50&source=chrome.ob&fbs=ABfTbFVyMZGZf1hfvX9uKjN_-G8c4u0nXx4bEIpwm1lnNH832VTJOOCxW_fyN-Q_ezyf8gKCPb62Sv4Y60wQDsMxJw_GUn1N2yN6o6cIH09xVUI5GF-pNWYoKsCUVySpQOvnQdt_MelXBidhIpc5HOZsc1f3gAPL6dlcX1g-NBn-Ei3lMb4Lvaqg1pMoVwpJyVdX52HDQNTPvlD3Mr-zL1jEdjjuQ6WXCQ&vsint=&aep=1&ntc=1&cs=1&sa=X&ved=2ahUKEwi4iO3Q29eWAxWLh_0HHefkKIYQ2J8OegQIFRAD&biw=1883&bih=992&dpr=1&atvm=2), moved from JPEG coefficients to image pixels.
 
-Each 4 bits of payload are carried by 15 RGB samples drawn from a permutation keyed by the recovery PIN, using ***(1,15,4) Hamming-syndrome matrix embedding***: the syndrome is moved to the target by a single ±1 change (*LSB matching, not LSB replacement*).  
+Each 4 bits of payload are carried by 15 RGB samples drawn from a permutation keyed by the recovery KEY, using ***(1,15,4) Hamming-syndrome matrix embedding***: the syndrome is moved to the target by a single ±1 change (*LSB matching, not LSB replacement*).  
 
 Which sample to change is chosen by a per-sample distortion cost derived from local image activity and channel sensitivity, so edits land in textured regions rather than flat ones. Where two changes cost less than the one required change, it takes them — measured on a 4.3-megapixel cover, 93% of groups need one change, 0.4% take two and 6% need none, about 4.25 bits per changed sample.
 
-Carrier positions are derived from the recovery PIN using ***Argon2id*** and ***ChaCha20***, so testing whether an image holds a payload costs a full ***Argon2id*** PIN guess, and recovery reports the same error for a wrong PIN as for an ordinary PNG. Keyed positions alone do not guarantee that an image is undetectable as steganography.  
+Carrier positions are derived from the 128-bit recovery KEY using ***Argon2id*** and ***ChaCha20***, so testing whether an image holds a payload costs a full ***Argon2id*** evaluation per guessed KEY, and recovery reports the same error for a wrong KEY/PIN as for an ordinary PNG. Keyed positions alone do not guarantee that an image is undetectable as steganography.  
 
-***Reddit*** images created with ***pdvrdt 5.2*** or later cannot be recovered by older versions. Images created with ***5.0*** and ***5.1*** remain recoverable; recreate them to gain the stronger protection.  
+***Reddit*** images created with ***pdvrdt 6.0*** or later cannot be recovered by older versions. Images created with ***5.x***, which use a numeric PIN, remain recoverable with that PIN.  
 
 In the default and ***-m*** modes, by contrast, the presence of a payload-carrying chunk is visible to anyone; what is hidden is its contents.
 
@@ -93,15 +95,15 @@ Platform compatibility for output image:-
 
 Saved "file-embedded" PNG image: prdt_221863.png (57643 bytes).
 
-Recovery PIN: [***14011155878481853319***]
+Recovery KEY: [***Ad1u-LDhm-KKmU-opwq-FkZp-FCzc***]
 
-Important: Keep your PIN safe, so that you can extract the hidden file.
+Important: Keep your KEY safe, so that you can extract the hidden file.
 
 Complete!
 
 $ pdvrdt recover prdt_221863.png
 
-PIN: ********************
+KEY: ****-****-****-****-****-****
 
 Extracted hidden file: your_secret_file.doc (6165 bytes).
 
@@ -112,8 +114,18 @@ Complete! Please check your file.
 pdvrdt ***mode*** arguments:
 
   ***conceal*** - Compresses, encrypts and embeds your secret data file within a ***PNG*** cover image.  
-  ***recover*** - Decrypts, uncompresses and extracts the concealed data file from a ***PNG*** cover image.  
+  ***recover*** - Decrypts, uncompresses and extracts the concealed data file from a ***PNG*** cover image (*recovery KEY/PIN required*).  
   ***capsize*** - Reports the adaptive carrier capacity of a cover image for ***-r*** mode. No image is saved.
+
+The ***recover*** prompt says which secret the image takes:
+
+| Image | Prompt |
+| --- | --- |
+| Default or ***-m*** image made with ***pdvrdt 6.0*** or later | `KEY:` |
+| Default or ***-m*** image made before ***pdvrdt 6.0*** | `PIN:` |
+| ***-r*** (*Reddit*) image (*any version*) | `KEY/PIN:` |
+
+A ***-r*** image cannot be identified until the KEY or PIN has been entered, because it is what locates the hidden data. Error messages follow the same rule.
 
 Requirements for the cover image:
 
@@ -169,11 +181,11 @@ Reddit capacity check for conceal -r mode only.
 Cover Image: 5400KiB, 1600x1600, Non-interlaced 8-bit RGB PNG, Adaptive (1,15,4) matrix embedding.
 
 Theoretical adaptive capacity limit for this cover image:              255980 bytes (~249KiB).
-Conservative maximum compressed capacity with a 20-character filename: 255762 bytes (~249KiB).
-Recommended  maximum compressed capacity with a 20-character filename: 254738 bytes (~248KiB).
+Conservative maximum stored payload capacity with a 20-byte filename:  255762 bytes (~249KiB).
+Recommended  maximum stored payload capacity with a 20-byte filename:  254738 bytes (~248KiB).
 ```
 
-The figure reported is the total encrypted ***envelope*** capacity, not a raw secret-file limit: for a payload contained in one encryption frame, the filename, encryption and recovery metadata consume 199 to 218 bytes, and larger payloads add framing overhead. Don't aim at the theoretical limit — where capacity allows, keep the compressed payload at least **1KiB** below the conservative maximum. The size check performed by ***conceal*** is the authoritative one.
+The figure reported is the total encrypted ***envelope*** capacity, not a raw secret-file limit: for a payload contained in one encryption frame, the filename, encryption and recovery metadata consume 199 to 218 bytes, and larger payloads add framing overhead. Don't aim at the theoretical limit — where capacity allows, keep the stored payload at least **1KiB** below the conservative maximum. The size check performed by ***conceal*** is the authoritative one.
 
 ## Conceal mode platform options
 
@@ -191,23 +203,55 @@ To create compatible "*data-concealed*" ***PNG*** images for posting on the ***R
 
   When saving/downloading an image from ***Reddit*** or ***X-Twitter*** make sure to click on the image within the post to fully expand it before saving.
 
+## Recovery KEY format
+
+This section is for anyone writing a compatible implementation. Everything below is fixed by pdvrdt 6.0.
+
+***The KEY*** is 16 bytes from a cryptographic random number generator (*never all zero*). It is written as:
+
+1. ***Body*** — the 16 bytes read as one 128-bit big-endian integer, written in Base58 as exactly 22 digits, most significant first, padded on the left with `1` (*the zero digit*). Alphabet (*Bitcoin's*): `123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz`.
+2. ***Check*** — two more characters:
+
+   ```
+   digest = BLAKE2b-256(ASCII("pdvrdt key check v1") || key_bytes)   (19-byte label, no NUL; unkeyed)
+   value  = big_endian_u32(digest[0..4]) mod 3364
+   check  = alphabet[value / 58] || alphabet[value mod 58]
+   ```
+3. ***Display*** — the 24 characters in six groups of four, joined with `-`.
+
+When a KEY is entered, spaces, tabs and `-` are ignored and letters are case-sensitive. A numeric entry of 1–20 digits (*no leading zero, at most 18446744073709551615, never 0*) is an old (*pre-6.0*) PIN.
+
+| Key bytes (hex) | KEY |
+| --- | --- |
+| `00000000000000000000000000000001` | `1111-1111-1111-1111-1111-12BZ` |
+| `000000000000000000000000000001bb` | `1111-1111-1111-1111-1111-8e11` (*check value 0*) |
+| `00000000000000000000000000003b26` | `1111-1111-1111-1111-1115-W5zz` (*check value 3363*) |
+| `000102030405060708090a0b0c0d0e0f` | `112d-rXXU-ifSr-RnXL-GbXg-8Eyf` |
+| `80000000000000000000000000000000` | `GokL-Usho-3eiV-vNYN-d1wg-fywf` |
+| `ffffffffffffffffffffffffffffffff` | `YcVf-xkQb-6JRz-qk5k-F2tN-Lvdj` |
+
+***Encryption key*** — Argon2id (*libsodium `crypto_pwhash`, ALG_ARGON2ID13, opslimit 2, memlimit 64 MiB*) with the 16 raw key bytes as the password and the random salt stored in the image (*metadata version KDF3*). Old images (*KDF2*) hash the PIN's decimal digits instead.
+
+***Reddit carrier key (-r, carrier version 4)*** — `D` = Argon2id(password = the 16 key bytes, salt = ASCII `pdvrdtcarrier-v4`, opslimit 2, memlimit 64 MiB, 32-byte output); the carrier key is BLAKE2b-256 of ASCII `pdvrdt carrier v4` keyed with `D`. For key bytes `000102…0f` it is `6eba642bddf8a83f77945ef0d588a818a6810090beb97729990957f6f97e91c8`. That 256-bit key drives the same ChaCha20 sample permutation and whitening as carrier version 3 (*see `reddit_steg.cpp`*), which old PIN images still use. This hides *where* the data is. It does not stop statistical steganalysis from detecting that an image carries hidden data.
+
 ## Tests
 
 The test scripts in `src/tests` each take the binary to exercise:
 
 ```console
-$ bash tests/run_golden_tests.sh --bin ./pdvrdt              # recover pre-built images with known PINs
+$ bash tests/run_golden_tests.sh --bin ./pdvrdt              # recover pre-built images with known KEYs and old PINs
 $ bash tests/run_roundtrip_tests.sh --bin ./pdvrdt           # fresh conceal/recover round-trips
 $ bash tests/run_safety_regression_tests.sh --bin ./pdvrdt   # negative-path and boundary checks
 $ bash tests/run_image_regression_tests.sh --bin ./pdvrdt    # cover-image handling and PNG output
-$ python3 tests/run_terminal_regression_tests.py --bin ./pdvrdt  # terminal / PIN-entry behaviour
+$ python3 tests/run_terminal_regression_tests.py --bin ./pdvrdt  # terminal / KEY- and PIN-entry behaviour
 $ python3 tests/run_recovery_path_tests.py --bin ./pdvrdt        # output-file publishing and recovery paths
 ```
 
-These two build their own test binaries, so they take no `--bin`:
+These three build their own test binaries, so they take no `--bin`:
 
 ```console
-$ bash tests/run_carrier_kdf_tests.sh        # carrier key derivation, v1/v2/v3 compatibility
+$ bash tests/run_pin_codec_tests.sh          # recovery KEY format: display, parsing, check characters
+$ bash tests/run_carrier_kdf_tests.sh        # carrier key derivation, v4 and v1/v2/v3 compatibility
 $ bash tests/run_png_decode_limit_tests.sh   # PNG decode bounds and zlib adapter limits
 ```
 
