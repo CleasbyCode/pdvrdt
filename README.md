@@ -12,8 +12,8 @@ There is a [***Web edition***](https://cleasbycode.co.uk/pdvrdt/app/) of ***pdvr
 
 An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode/pdvrdt-rs) is also available for those interested in that language. It is format-compatible: either build can recover the other's images.
 
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_258943.png)  
-***Demo Image -*** ***PIN: 5133642387662617178*** (*made before 6.0, so it takes a numeric PIN*)
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_100054.png)  
+***Demo Image -*** ***KEY: 6LiS-jxwC-VMPC-KDCm-F63h-zbKP***
 
 ## How pdvrdt conceals data
 
