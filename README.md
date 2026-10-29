@@ -21,10 +21,10 @@ An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode
 
 Unlike the common [***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/) (*Least Significant Bit*) steganography method of concealing data within the pixels of a cover image, ***pdvrdt*** mostly hides data within the ***chunks*** of a ***PNG*** image (IDAT, iCCP).
 
-| Conceal mode | Storage Method | Compatible Platforms |
-| --- | --- | --- |
-| *(no option)* | IDAT chunk | X-Twitter, ImgPile, PostImage, ImgBB, Flickr |
-| ***-m*** | iCCP profile chunk | ***Mastodon*** (also X-Twitter, within its limits) |
+| Conceal&nbsp;mode | Storage Method | Compatible Platforms |
+| :---: | :---: | :---: |
+| *(no option)* | IDAT chunk | X-Twitter, ImgPile, PostImage,<br>ImgBB, Flickr |
+| ***-m*** | iCCP profile chunk | ***Mastodon***<br>(also X-Twitter, within its limits) |
 | ***-r*** | RGB pixel samples (***adaptive matrix embedding***) | ***Reddit*** only |
 
 The one platform exception to the default chunk storage method is ***Reddit***, which has its own conceal mode. ***Reddit*** re-encodes uploaded images and discards the metadata chunks the default mode relies on, so ***-r*** is the only mode that works there, and it carries the payload in the image's pixels instead.
