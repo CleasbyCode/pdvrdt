@@ -21,7 +21,7 @@ An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode
 
 Unlike the common [***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy/) (*Least Significant Bit*) steganography method of concealing data within the pixels of a cover image, ***pdvrdt*** mostly hides data within the ***chunks*** of a ***PNG*** image (IDAT, iCCP).
 
-| Conceal mode | Where the data goes | Share the output image on |
+| Conceal mode | Storage Method | Compatible Platforms |
 | --- | --- | --- |
 | *(no option)* | IDAT chunk | X-Twitter, ImgPile, PostImage, ImgBB, Flickr |
 | ***-m*** | iCCP profile chunk | ***Mastodon*** (also X-Twitter, within its limits) |
