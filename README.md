@@ -25,7 +25,7 @@ Unlike the common [***LSB***](https://ctf101.org/forensics/what-is-stegonagraphy
 | :---: | :---: | :---: |
 | *(no option)* | Last IDAT Chunk | X-Twitter, ImgPile, PostImage,<br>ImgBB, Flickr |
 | ***-m*** | iCCP Profile Chunk | ***Mastodon***<br>(also X-Twitter, within its limits) |
-| ***-r*** | RGB pixel samples<br>(***adaptive matrix embedding***) | ***Reddit*** only |
+| ***-r*** | RGB Pixel Samples<br>(***Adaptive Matrix Embedding***) | ***Reddit*** only |
 
 The one platform exception to the default chunk storage method is ***Reddit***, which has its own conceal mode. ***Reddit*** re-encodes uploaded images and discards the metadata chunks the default mode relies on, so ***-r*** is the only mode that works there, and it carries the payload in the image's pixels instead.
 
