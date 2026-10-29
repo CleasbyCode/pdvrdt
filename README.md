@@ -1,6 +1,9 @@
 # pdvrdt
 
-***pdvrdt*** (*PNG Data Vehicle*) is a fast, easy-to-use steganography command-line tool for concealing and extracting any file type via a **PNG** image. ***Linux only***.
+***pdvrdt*** is a steganography command-line tool for concealing and extracting any file type via a **PNG** image.
+
+![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_986700.png)  
+***Demo Image -*** ***KEY: V8zh-FPeF-C1cU-rjC1-e5nF-Lazc***
 
 Your data file is compressed with ***libdeflate/zlib***, then encrypted with ***XChaCha20-Poly1305 (libsodium secretstream)*** under a ***256-bit encryption key derived by Argon2id*** from a randomly generated ***128-bit recovery KEY***, and finally embedded in the cover image.  
 
@@ -13,9 +16,6 @@ Using the ***default conceal mode***, you can conceal any file type, with the fi
 There is a [***Web edition***](https://cleasbycode.co.uk/pdvrdt/app/) of ***pdvrdt***, which you can use immediately, as a convenient alternative to downloading and compiling the CLI source code. Web file uploads are limited to **20MiB**.
 
 An experimental ***Rust*** port [***pdvrdt-rs***](https://github.com/CleasbyCode/pdvrdt-rs) is also available for those interested in that language. It is format-compatible: either build can recover the other's images.
-
-![Demo Image](https://github.com/CleasbyCode/pdvrdt/blob/main/demo_image/prdt_986700.png)  
-***Demo Image -*** ***KEY: V8zh-FPeF-C1cU-rjC1-e5nF-Lazc***
 
 ## How pdvrdt conceals data
 
