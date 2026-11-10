@@ -1,0 +1,10 @@
+case_id	option	payload_rel	golden_rel	key	kind
+key_default_text	.	testdata/payloads/payload_text.txt	golden/key_default_text/embedded.png	WNwr-hwLw-drpx-PKAt-wcLA-gcMQ	default
+key_default_bin	.	testdata/payloads/payload_bin.bin	golden/key_default_bin/embedded.png	HFDf-KQBt-s7Et-pvAz-d5LA-fJNW	default
+key_default_stored	.	testdata/payloads/payload_stored.gz	golden/key_default_stored/embedded.png	GaKQ-7xh5-Ni3g-8bKy-QanE-LGTz	default
+key_mastodon_text	-m	testdata/payloads/payload_text.txt	golden/key_mastodon_text/embedded.png	JgMq-HiS6-mAaP-Sctv-gwzj-7x6K	mastodon
+key_mastodon_bin	-m	testdata/payloads/payload_mast.bin	golden/key_mastodon_bin/embedded.png	4Qhy-poFV-7oYP-yYMk-ZDr4-c3kV	mastodon
+reddit_v4_even_domain	-r	testdata/payloads/payload_text.txt	golden/reddit_v4_even_domain/embedded.png	ERWk-iXmx-QZgW-tvfs-pSf8-Uhxi	reddit
+reddit_v4_odd_domain	-r	testdata/payloads/payload_odd.bin	golden/reddit_v4_odd_domain/embedded.png	TEDt-XPwo-TPMi-J1Fa-MLeJ-MDei	reddit
+pre_v6_default_text	.	testdata/payloads/payload_text.txt	golden/pre_v6_default_text/embedded.png	-	pre_v6_default
+pre_v6_mastodon_text	-m	testdata/payloads/payload_text.txt	golden/pre_v6_mastodon_text/embedded.png	-	pre_v6_mastodon
