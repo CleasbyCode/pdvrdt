@@ -151,9 +151,9 @@ Requirements for the cover image:
 
 ● Animated PNG (***APNG***) covers are rejected. Static PNG colour metadata is preserved.
 
-● ***-m*** mode accepts covers with iCCP or sRGB declarations, but because its payload occupies the iCCP chunk, those declarations are replaced in the output while compatible colour metadata is retained. Its payload travels in an RGB ICC profile, which PNG does not allow on a greyscale image, so a greyscale cover is saved as RGB (or RGBA, if it has an alpha channel) with the same pixels.
+● ***-m*** (*Mastodon*) mode accepts covers with iCCP or sRGB declarations, but because its payload occupies the iCCP chunk, those declarations are replaced in the output while compatible colour metadata is retained. Its payload travels in an RGB ICC profile, which PNG does not allow on a greyscale image, so a greyscale cover is saved as RGB (or RGBA, if it has an alpha channel) with the same pixels.
 
-● ***-r*** mode emits a non-interlaced, metadata-free, 8-bit RGB PNG, and rejects covers containing transparency.
+● ***-r*** (*Reddit*) mode emits a non-interlaced, metadata-free, 8-bit RGB PNG, and rejects covers containing transparency.
 
 Requirements for the secret data file:
 
